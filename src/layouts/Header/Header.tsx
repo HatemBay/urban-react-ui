@@ -16,11 +16,8 @@ import {
   useBreakpointValue,
   useDisclosure,
   Grid,
-  HStack,
-  VStack,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";

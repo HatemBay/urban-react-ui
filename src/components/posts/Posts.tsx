@@ -38,6 +38,7 @@ export const Posts = (props: Props) => {
   };
 
   const BgColor = useColorModeValue("gray.800", "white");
+  const textColor = useColorModeValue("white", "gray.800");
 
   const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
     query: PostsQuery,
@@ -53,8 +54,10 @@ export const Posts = (props: Props) => {
   if (fetching || !data) return <p>Loading...</p>;
 
   return (
-    <Box w="100%" color={BgColor}>
-      <Heading textTransform="capitalize">posts</Heading>
+    <Box w="100%" color={"gray.800"}>
+      <Heading textTransform="capitalize" mb={4}>
+        posts
+      </Heading>
 
       <VStack spacing={4}>
         {data.posts.map((post) => (

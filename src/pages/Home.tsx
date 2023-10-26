@@ -26,7 +26,8 @@ const Users = gql`
 `;
 
 export const Home = () => {
-  const BgColor = useColorModeValue("gray.800", "gray.50");
+  const BgColor = useColorModeValue("gray.300", "gray.600");
+  const BgColor2 = useColorModeValue("gray.100", "gray.700");
 
   const [{ data, fetching, error }] = useQuery({
     query: Users,
@@ -38,12 +39,13 @@ export const Home = () => {
     <>
       <WithSubnavigation />
       <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3} bg="gray.100">
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Text>
-              Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-            </Text>
+        <Grid minH="100vh" p={3} bg={BgColor2}>
+          <ColorModeSwitcher
+            color={"black"}
+            bg={BgColor}
+            justifySelf="flex-end"
+          />
+          <VStack spacing={8} bg={BgColor2}>
             <Posts />
           </VStack>
         </Grid>
