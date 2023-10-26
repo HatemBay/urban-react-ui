@@ -1,10 +1,10 @@
 import { ColorModeScript } from "@chakra-ui/react";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { Home } from "./pages/Home";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import { Client, Provider, cacheExchange, fetchExchange } from "urql";
+import { App } from "./App";
 // import { createClient as createWSClient } from "graphql-ws";
 // import { Header } from "./components/Header";
 
@@ -51,7 +51,7 @@ root.render(
   <React.StrictMode>
     <ColorModeScript />
     <Provider value={client}>
-      <Home />
+      <App />
     </Provider>
   </React.StrictMode>
 );

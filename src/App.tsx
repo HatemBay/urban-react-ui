@@ -3,43 +3,31 @@ import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/300.css";
 
 import * as React from "react";
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  VStack,
-  Code,
-  Grid,
-  Heading,
-} from "@chakra-ui/react";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { Logo } from "./Logo";
+import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Home } from "./pages/Home";
 
-// example theme
 const theme = extendTheme({
+  // colors: {
+  //     primary: "gray.900",
+  //     secondary: "gray.300",
+  //   },
   fonts: {
     body: "Montserrat",
     heading: "Montserrat",
   },
 });
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+]);
+
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3} bg="gray.100">
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="32" pointerEvents="none" />
-          <Heading as="h1" size="4xl" fontWeight="bold">
-            Wassup my nibbas
-          </Heading>
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          Learn Chakra
-        </VStack>
-      </Grid>
-    </Box>
+    <RouterProvider router={router} />
   </ChakraProvider>
 );
