@@ -33,6 +33,10 @@ type Props = {};
 export const Posts = (props: Props) => {
   const [field, setOrderByField] = useState("created_at");
 
+  const changeField = (field: string) => {
+    setOrderByField(() => field);
+  };
+
   const BgColor = useColorModeValue("gray.800", "white");
 
   const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
