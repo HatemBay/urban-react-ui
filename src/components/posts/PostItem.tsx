@@ -22,6 +22,16 @@ const PostItem = ({ post }: Props) => {
   const TextColor = useColorModeValue("gray.800", "white");
   const BgColor = useColorModeValue("white", "gray.800");
 
+  const reactionButtonStyles = {
+    border: "1px",
+    borderColor: TextColor,
+    width: "70px",
+    px: 6,
+    borderBottom: "2px",
+    background: BgColor,
+    _hover: { background: "green" },
+  };
+
   return (
     <Flex
       boxShadow="md"
@@ -67,18 +77,9 @@ const PostItem = ({ post }: Props) => {
           </Text>
           <HStack spacing={0} w="100%" h="100%">
             <Button
-              display="inline"
-              role="button"
-              border="1px"
-              borderColor={TextColor}
-              width="70px"
-              px={6}
-              py={2}
               borderRightRadius="none"
               borderLeftRadius="full"
-              borderBottom="2px"
-              background={BgColor}
-              _hover={{ background: "green" }}
+              sx={reactionButtonStyles}
             >
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsUp}></Icon>
@@ -88,18 +89,9 @@ const PostItem = ({ post }: Props) => {
               </HStack>
             </Button>
             <Button
-              role="button"
-              border="1px"
-              borderColor={TextColor}
-              width="70px"
-              px={6}
-              py={2}
+              sx={reactionButtonStyles}
               borderRightRadius="full"
               borderLeftRadius="none"
-              borderBottom="2px"
-              textAlign="center"
-              background={BgColor}
-              _hover={{ background: "green" }}
             >
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsDown}></Icon>
