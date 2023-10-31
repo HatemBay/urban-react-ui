@@ -2,15 +2,14 @@ export interface Post {
   id?: number;
   title: string;
   content: string;
-  author_id?: number;
+  authorId?: number;
   author: User;
   published?: boolean;
-  is_u_18?: boolean;
-  email_verified?: boolean;
-  likes_count?: number;
-  dislikes_count?: number;
-  created_at: string;
-  updated_at?: string;
+  isU18?: boolean;
+  likesCount?: number;
+  dislikesCount?: number;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface User {
@@ -18,11 +17,11 @@ export interface User {
   username: string;
   email: string;
   name?: string;
-  country_id?: number;
+  countryId?: number;
   role?: string;
-  is_u_18?: boolean;
-  email_verified?: boolean;
-  google_id?: string;
-  created_at: string;
-  updated_at?: string;
+  isU18?: boolean;
+  emailVerified?: boolean;
+  googleId?: string;
+  createdAt: string;
+  updatedAt?: string;
 }

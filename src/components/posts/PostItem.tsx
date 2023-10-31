@@ -14,6 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { IoMdThumbsDown, IoMdThumbsUp } from "react-icons/io";
 import formatDate from "../../utils/formatDate";
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+} from "react-share";
 interface Props {
   post: Post;
 }
@@ -41,19 +47,38 @@ const PostItem = ({ post }: Props) => {
       maxWidth="2xl"
       w="100%"
     >
-      <HStack spacing={10}>
+      <HStack spacing={10} px={5} py={2}>
         <Avatar size="lg" />
         <Flex flexDirection="column" textAlign="left" color={TextColor}>
-          <Heading
-            mb={3}
-            fontWeight="bold"
-            fontFamily="lora"
-            color="blue"
-            textTransform="capitalize"
-            fontSize="3xl"
-          >
-            {post.title}
-          </Heading>
+          <Flex direction={"row"} justifyContent={"space-between"}>
+            <Heading
+              mb={3}
+              fontWeight="bold"
+              fontFamily="lora"
+              color="blue"
+              textTransform="capitalize"
+              fontSize="3xl"
+            >
+              {post.title}
+            </Heading>
+            <Flex justifyContent={"flex-end"} gap={2}>
+              {/* // TODO: change the link to a single post page view */}
+              <FacebookShareButton
+                url="https://www.npmjs.com/package/react-share"
+                quote={"slmslm"}
+                hashtag="#programing joke"
+              >
+                <FacebookIcon size={30} round={true}></FacebookIcon>
+              </FacebookShareButton>
+              <TwitterShareButton
+                url="https://www.npmjs.com/package/react-share"
+                title="slmslm"
+                hashtags={["#programing joke"]}
+              >
+                <TwitterIcon size={30} round={true}></TwitterIcon>
+              </TwitterShareButton>
+            </Flex>
+          </Flex>
           <Text
             mb={2}
             fontFamily="Source Sans Pro"
@@ -71,7 +96,7 @@ const PostItem = ({ post }: Props) => {
             <Text as="span" color="blue">
               {post.author.username}
             </Text>{" "}
-            {formatDate(post.created_at)}
+            {formatDate(post.createdAt)}
             {/* {month} {date}, {year} */}
             {/* //TODO: check time formatting after using data from db */}
           </Text>
@@ -84,7 +109,7 @@ const PostItem = ({ post }: Props) => {
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsUp}></Icon>
                 <Text fontSize="10px" fontWeight="bold">
-                  {post.likes_count}
+                  {post.likesCount}
                 </Text>
               </HStack>
             </Button>
@@ -96,7 +121,7 @@ const PostItem = ({ post }: Props) => {
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsDown}></Icon>
                 <Text fontSize="10px" fontWeight="bold">
-                  {post.dislikes_count}
+                  {post.dislikesCount}
                 </Text>
               </HStack>
             </Button>

@@ -125,7 +125,7 @@ export default function WithSubnavigation() {
                 bg={"blue"}
                 href={"#"}
                 _hover={{
-                  bg: "pink.300",
+                  bg: "blue.500",
                 }}
               >
                 Sign Up
@@ -174,7 +174,7 @@ export default function WithSubnavigation() {
 const DesktopNav = () => {
   const linkColor = useColorModeValue("white", "gray.200");
   const linkHoverColor = useColorModeValue("blue", "white");
-  const popoverContentBgColor = useColorModeValue("white", "gray.800");
+  const popoverContentBgColor = useColorModeValue("white", "gray.700");
 
   return (
     <Flex direction={"row"} gap={4}>

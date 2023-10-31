@@ -3,14 +3,7 @@ import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/300.css";
 
 import * as React from "react";
-import {
-  Box,
-  Text,
-  VStack,
-  Code,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, VStack, Grid, useColorModeValue } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { gql, useQuery } from "urql";
 import { Posts } from "../components/posts/Posts";
@@ -45,7 +38,7 @@ export const Home = () => {
             bg={BgColor}
             justifySelf="flex-end"
           />
-          <VStack spacing={8} bg={BgColor2}>
+          <VStack spacing={8} mt={{ base: 0, md: -40 }} bg={BgColor2}>
             <Posts />
           </VStack>
         </Grid>
