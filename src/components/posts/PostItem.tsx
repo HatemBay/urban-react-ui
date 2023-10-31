@@ -93,7 +93,7 @@ const PostItem = ({ post }: Props) => {
           </Text>
           <Text mb={3} fontWeight="bold" fontSize="sm">
             by{" "}
-            <Text as="span" color="blue">
+            <Text as="span" color="blue" textTransform={"capitalize"}>
               {post.author.username}
             </Text>{" "}
             {formatDate(post.createdAt)}

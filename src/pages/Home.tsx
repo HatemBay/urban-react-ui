@@ -30,19 +30,9 @@ export const Home = () => {
   if (error) return <p>Oh no... {error.message}</p>;
   return (
     <>
-      <WithSubnavigation />
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3} bg={BgColor2}>
-          <ColorModeSwitcher
-            color={"black"}
-            bg={BgColor}
-            justifySelf="flex-end"
-          />
-          <VStack spacing={8} mt={{ base: 0, md: -40 }} bg={BgColor2}>
-            <Posts />
-          </VStack>
-        </Grid>
-      </Box>
+      <VStack spacing={8} mt={{ base: 0, md: -40 }} bg={BgColor2}>
+        <Posts />
+      </VStack>
     </>
   );
 };

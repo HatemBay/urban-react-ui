@@ -1,5 +1,5 @@
 import { Box, Heading, VStack, useColorModeValue } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import PostItem from "./PostItem";
 import { gql, useQuery } from "urql";
 import { Post } from "../../types";
@@ -11,15 +11,15 @@ const PostsQuery = gql`
       author {
         username
       }
-      author_id
+      authorId
       title
       content
       published
-      is_u_18
-      likes_count
-      dislikes_count
-      created_at
-      updated_at
+      isU18
+      likesCount
+      dislikesCount
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -31,7 +31,7 @@ type PostsQueryRes = {
 type Props = {};
 
 export const Posts = (props: Props) => {
-  const [field, setOrderByField] = useState("created_at");
+  const [field, setOrderByField] = React.useState("createdAt");
 
   const changeField = (field: string) => {
     setOrderByField(() => field);
@@ -39,6 +39,7 @@ export const Posts = (props: Props) => {
 
   const BgColor = useColorModeValue("gray.800", "white");
   const textColor = useColorModeValue("white", "gray.800");
+  console.log("slm");
 
   const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
     query: PostsQuery,

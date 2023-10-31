@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import { Client, Provider, cacheExchange, fetchExchange } from "urql";
 import { App } from "./App";
+import { authExchange } from "@urql/exchange-auth";
 // import { createClient as createWSClient } from "graphql-ws";
 // import { Header } from "./components/Header";
 
@@ -33,14 +34,23 @@ import { App } from "./App";
 
 const client = new Client({
   url: "http://localhost:3001/graphql",
-  exchanges: [cacheExchange, fetchExchange],
-  // fetchOptions: () => {
-  //   // TODO: add args
-  //   const token = getToken("", "");
-  //   return {
-  //     headers: { authorization: token ? `Bearer ${token}` : "" },
-  //   };
-  // },
+  exchanges: [
+    cacheExchange,
+    fetchExchange,
+    // authExchange(async (utils) => {
+    //   let token = await localStorage.getItem("TOKEN_KEY");
+    //   return {
+    //     /* config... */
+    //   };
+    // }),
+  ],
+  fetchOptions: () => {
+    // TODO: add args
+    const token = localStorage.getItem("TOKEN_KEY");
+    return {
+      headers: { authorization: token ? `Bearer ${token}` : "" },
+    };
+  },
 });
 
 const container = document.getElementById("root");
