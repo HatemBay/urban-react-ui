@@ -7,7 +7,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   VStack,
   Box,
   useColorModeValue,
@@ -16,12 +15,9 @@ import {
   Flex,
   Link,
   Spacer,
-  Text,
-  color,
 } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
-import { Link as ReactRouterLink } from "react-router-dom";
 import { gql, useMutation } from "urql";
 
 const LOGIN_MUTATION = gql`
@@ -45,6 +41,7 @@ const LOGIN_MUTATION = gql`
     }
   }
 `;
+
 type Props = {};
 
 const SignIn = (props: Props) => {
@@ -61,31 +58,24 @@ const SignIn = (props: Props) => {
   };
   const [state, executeMutation] = useMutation(LOGIN_MUTATION);
 
-  const handleSubmit = React.useCallback(() => {
+  const handleSubmit = () => {
     const loginUserInput = {
-      username: email as string,
-      password: password as string,
+      username: email,
+      password: password,
     };
 
     executeMutation({ loginUserInput }).then((res) => {
-      const { accessToken } = res.data.login;
-      // TODO: improve
-      localStorage.setItem("TOKEN_KEY", accessToken);
-    });
-  }, [executeMutation, email, password]);
+      if (res.error) {
+        // TODO: improve error handling
+        console.error("Oh no!", res.error);
+      } else {
+        const { accessToken } = res.data.login;
+        console.log(res);
 
-  const fetch = () => {
-    const user = gql`
-      query User($findUserInput: FindUserInput!) {
-        user(findUserInput: $findUserInput) {
-          id
-          username
-          email
-          password
-        }
+        // TODO: improve
+        localStorage.setItem("TOKEN_KEY", accessToken);
       }
-    `;
-    console.log(user);
+    });
   };
 
   return (
@@ -151,9 +141,6 @@ const SignIn = (props: Props) => {
                   onClick={handleSubmit}
                 >
                   Login
-                </Button>
-                <Button colorScheme="blue" size={"lg"} onClick={fetch}>
-                  Fetch
                 </Button>
               </VStack>
             </FormControl>
