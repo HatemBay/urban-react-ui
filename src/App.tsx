@@ -8,8 +8,8 @@ import { extendTheme } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
 import SignIn from "./pages/SignIn";
-import WithSubnavigation from "./layouts/Header/Header";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import Header from "./layouts/Header/Header";
 
 const theme = extendTheme({
   fonts: {
@@ -35,7 +35,7 @@ export const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <WithSubnavigation />
+      <Header />
       <Box textAlign="center" fontSize="xl">
         <Grid minH="100vh" p={3} bg={BgColor2}>
           <ColorModeSwitcher

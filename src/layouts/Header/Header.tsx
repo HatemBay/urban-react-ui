@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/icons";
 import { IoIosShuffle } from "react-icons/io";
 
-export default function WithSubnavigation() {
+export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
