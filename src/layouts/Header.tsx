@@ -20,6 +20,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Link,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -79,6 +80,10 @@ export default function Header() {
               >
                 <Flex display={{ base: "flex", md: "flex" }} ml={{ md: 10 }}>
                   <Text
+                    // TODO: figure out a way to use react dom links
+                    as={Link}
+                    href="/"
+                    _hover={{ cursor: "pointer" }}
                     textAlign={useBreakpointValue({
                       base: "right",
                       md: "left",
