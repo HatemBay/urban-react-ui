@@ -7,7 +7,7 @@ import { Box, VStack, Grid, useColorModeValue } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { gql, useQuery } from "urql";
 import { Posts } from "../components/posts/Posts";
-import WithSubnavigation from "../layouts/Header/Header";
+import WithSubnavigation from "../layouts/Header";
 
 const Users = gql`
   query {
@@ -21,6 +21,7 @@ const Users = gql`
 export const Home = () => {
   const BgColor = useColorModeValue("gray.300", "gray.600");
   const BgColor2 = useColorModeValue("gray.100", "gray.700");
+  const TextColor = useColorModeValue("gray.800", "white");
 
   const [{ data, fetching, error }] = useQuery({
     query: Users,
@@ -31,7 +32,7 @@ export const Home = () => {
   return (
     <>
       <VStack spacing={8} mt={{ base: 0, md: -40 }} bg={BgColor2}>
-        <Posts />
+        <Posts colors={{ BgColor, TextColor }} />
       </VStack>
     </>
   );

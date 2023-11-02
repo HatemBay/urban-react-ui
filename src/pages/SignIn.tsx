@@ -9,7 +9,6 @@ import {
   InputLeftElement,
   VStack,
   Box,
-  useColorModeValue,
   Avatar,
   Checkbox,
   Flex,
@@ -19,6 +18,7 @@ import {
 import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { gql, useMutation } from "urql";
+import { signal } from "@preact/signals-react";
 
 const LOGIN_MUTATION = gql`
   mutation login($loginUserInput: LoginUserInput!) {
@@ -45,10 +45,8 @@ const LOGIN_MUTATION = gql`
 type Props = {};
 
 const SignIn = (props: Props) => {
-  const BgColor = useColorModeValue("gray.300", "gray.600");
-  const BgColor2 = useColorModeValue("gray.100", "gray.700");
-
   const [email, setEmail] = React.useState("");
+  // const email = signal("");
   const [password, setPassword] = React.useState("");
   const handleEmail = (e: any) => {
     setEmail(e.target.value);

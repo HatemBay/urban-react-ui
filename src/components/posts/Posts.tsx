@@ -1,8 +1,9 @@
-import { Box, Heading, VStack, useColorModeValue } from "@chakra-ui/react";
+import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import React from "react";
 import PostItem from "./PostItem";
 import { gql, useQuery } from "urql";
 import { Post } from "../../types";
+import { colors } from "../../utils/interfaces/colors";
 
 const PostsQuery = gql`
   query posts($orderBy: OrderByParams) {
@@ -28,18 +29,16 @@ type PostsQueryRes = {
   posts: Post[];
 };
 
-type Props = {};
+type Props = {
+  colors: colors;
+};
 
-export const Posts = (props: Props) => {
+export const Posts = ({ colors }: Props) => {
   const [field, setOrderByField] = React.useState("createdAt");
 
-  const changeField = (field: string) => {
-    setOrderByField(() => field);
+  const changeField = (e: any) => {
+    setOrderByField(() => "title");
   };
-
-  const BgColor = useColorModeValue("gray.800", "white");
-  const textColor = useColorModeValue("white", "gray.800");
-  console.log("slm");
 
   const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
     query: PostsQuery,
@@ -55,14 +54,15 @@ export const Posts = (props: Props) => {
   if (fetching || !data) return <p>Loading...</p>;
 
   return (
-    <Box w="100%" color={"gray.800"}>
+    <Box w="100%" color={colors.TextColor}>
       <Heading textTransform="capitalize" mb={4}>
         posts
       </Heading>
+      <Button onClick={changeField}>Change</Button>
 
       <VStack spacing={4}>
         {data.posts.map((post) => (
-          <PostItem post={post}></PostItem>
+          <PostItem colors={colors} post={post}></PostItem>
         ))}
       </VStack>
     </Box>

@@ -1,8 +1,6 @@
 import React from "react";
 import { Post } from "../../types";
 import {
-  Box,
-  VStack,
   Heading,
   Flex,
   Avatar,
@@ -20,21 +18,22 @@ import {
   TwitterIcon,
   TwitterShareButton,
 } from "react-share";
+import { colors } from "../../utils/interfaces/colors";
 interface Props {
   post: Post;
+  colors: colors;
 }
 
-const PostItem = ({ post }: Props) => {
-  const TextColor = useColorModeValue("gray.800", "white");
-  const BgColor = useColorModeValue("white", "gray.800");
+const PostItem = ({ post, colors }: Props) => {
+  const PostBgColor = useColorModeValue("white", "gray.800");
 
   const reactionButtonStyles = {
     border: "1px",
-    borderColor: TextColor,
+    borderColor: colors.TextColor,
     width: "70px",
     px: 6,
     borderBottom: "2px",
-    background: BgColor,
+    background: PostBgColor,
     _hover: { background: "green" },
   };
 
@@ -42,14 +41,14 @@ const PostItem = ({ post }: Props) => {
     <Flex
       boxShadow="md"
       p={5}
-      bg={BgColor}
+      bg={PostBgColor}
       borderRadius="lg"
       maxWidth="2xl"
       w="100%"
     >
       <HStack spacing={10} px={5} py={2}>
         <Avatar size="lg" />
-        <Flex flexDirection="column" textAlign="left" color={TextColor}>
+        <Flex flexDirection="column" textAlign="left" color={colors.TextColor}>
           <Flex direction={"row"} justifyContent={"space-between"}>
             <Heading
               mb={3}

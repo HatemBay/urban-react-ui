@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import { Client, Provider, cacheExchange, fetchExchange } from "urql";
 import { App } from "./App";
-import { authExchange } from "@urql/exchange-auth";
 // import { createClient as createWSClient } from "graphql-ws";
 // import { Header } from "./components/Header";
 
