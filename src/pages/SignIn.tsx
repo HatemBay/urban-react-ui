@@ -19,6 +19,8 @@ import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { gql, useMutation } from "urql";
 import { signal } from "@preact/signals-react";
+import Header from "../layouts/Navbar";
+import Layer from "../layouts/Layer";
 
 const LOGIN_MUTATION = gql`
   mutation login($loginUserInput: LoginUserInput!) {
@@ -78,73 +80,75 @@ const SignIn = (props: Props) => {
 
   return (
     <>
-      <Container p={0}>
-        <VStack bg={"white"} spacing={8} textAlign="center" fontSize="xl">
-          <Box width={"100%"} bg={"blue"} py={5}>
-            <Heading color={"white"}>Sign In</Heading>
-          </Box>
-          <VStack width={"100%"} px={4} pb={8}>
-            <Avatar size={"2xl"} rounded={"3xl"}></Avatar>
-            <FormControl p={3} pt={8}>
-              <VStack gap={5}>
-                <InputGroup>
-                  <InputLeftElement>
-                    <EmailIcon></EmailIcon>
-                  </InputLeftElement>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={handleEmail}
-                    placeholder="Email"
-                  ></Input>
-                </InputGroup>
-                <InputGroup>
-                  <InputLeftElement>
-                    <BiDotsHorizontal></BiDotsHorizontal>
-                  </InputLeftElement>
-                  <Input
-                    id="password"
-                    type="password"
-                    pr={5}
-                    placeholder="Password"
-                    value={password}
-                    onChange={handlePassword}
-                  ></Input>
-                </InputGroup>
-                <Flex
-                  mt={2}
-                  width={"100%"}
-                  alignItems="center"
-                  minWidth="max-content"
-                  direction={"row"}
-                >
-                  <Checkbox _hover={{ color: "blue.400" }}>
-                    Remember me{" "}
-                  </Checkbox>
-                  <Spacer />
-                  <Link
-                    href="#"
-                    color={"blue"}
-                    fontSize={"sm"}
-                    _hover={{ color: "blue.400" }}
+      <Layer>
+        <Container p={0}>
+          <VStack bg={"white"} spacing={8} textAlign="center" fontSize="xl">
+            <Box width={"100%"} bg={"blue"} py={5}>
+              <Heading color={"white"}>Sign In</Heading>
+            </Box>
+            <VStack width={"100%"} px={4} pb={8}>
+              <Avatar size={"2xl"} rounded={"3xl"}></Avatar>
+              <FormControl p={3} pt={8}>
+                <VStack gap={5}>
+                  <InputGroup>
+                    <InputLeftElement>
+                      <EmailIcon></EmailIcon>
+                    </InputLeftElement>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={handleEmail}
+                      placeholder="Email"
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup>
+                    <InputLeftElement>
+                      <BiDotsHorizontal></BiDotsHorizontal>
+                    </InputLeftElement>
+                    <Input
+                      id="password"
+                      type="password"
+                      pr={5}
+                      placeholder="Password"
+                      value={password}
+                      onChange={handlePassword}
+                    ></Input>
+                  </InputGroup>
+                  <Flex
+                    mt={2}
+                    width={"100%"}
+                    alignItems="center"
+                    minWidth="max-content"
+                    direction={"row"}
                   >
-                    Forgot password?
-                  </Link>
-                </Flex>
-                <Button
-                  colorScheme="blue"
-                  size={"lg"}
-                  role="submit"
-                  onClick={handleSubmit}
-                >
-                  Login
-                </Button>
-              </VStack>
-            </FormControl>
+                    <Checkbox _hover={{ color: "blue.400" }}>
+                      Remember me{" "}
+                    </Checkbox>
+                    <Spacer />
+                    <Link
+                      href="#"
+                      color={"blue"}
+                      fontSize={"sm"}
+                      _hover={{ color: "blue.400" }}
+                    >
+                      Forgot password?
+                    </Link>
+                  </Flex>
+                  <Button
+                    colorScheme="blue"
+                    size={"lg"}
+                    role="submit"
+                    onClick={handleSubmit}
+                  >
+                    Login
+                  </Button>
+                </VStack>
+              </FormControl>
+            </VStack>
           </VStack>
-        </VStack>
-      </Container>
+        </Container>
+      </Layer>
     </>
   );
 };
