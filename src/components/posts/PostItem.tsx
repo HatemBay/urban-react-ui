@@ -18,16 +18,15 @@ import {
   TwitterIcon,
   TwitterShareButton,
 } from "react-share";
-import { RootState } from "../../redux/store";
-import sharedColors, { LDColor } from "../../utils/shared/colors";
+import { useLightDark } from "../../utils/hooks/useLightDark";
+import { SHARED_COLORS } from "../../utils/constants/constants";
 interface Props {
   post: Post;
 }
 
 const PostItem = ({ post }: Props) => {
-  const PostBgColor = useColorModeValue("white", "gray.800");
-
-  const TextColor = useColorModeValue(...[...Object.values(sharedColors.textColor)] as LDColor);
+  const TextColor = useLightDark(SHARED_COLORS.TextColor);
+  const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
 
   const reactionButtonStyles = {
     border: "1px",
@@ -35,7 +34,7 @@ const PostItem = ({ post }: Props) => {
     width: "70px",
     px: 6,
     borderBottom: "2px",
-    background: PostBgColor,
+    background: PrimaryBgColor,
     _hover: { background: "green" },
   };
 
@@ -43,7 +42,7 @@ const PostItem = ({ post }: Props) => {
     <Flex
       boxShadow="md"
       p={5}
-      bg={PostBgColor}
+      bg={PrimaryBgColor}
       borderRadius="lg"
       maxWidth="2xl"
       w="100%"

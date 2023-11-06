@@ -1,18 +1,20 @@
-import { Button, HStack } from '@chakra-ui/react';
+import { Button, HStack, useColorModeValue } from '@chakra-ui/react';
 import React from 'react'
-import store, { AppDispatch, RootState } from '../../redux/store';
+import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPage } from '../../redux/reducers/pageSlice';
+import { decremented, incremented, setPage } from '../../redux/reducers/pageSlice';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { useLightDark } from '../../utils/hooks/useLightDark';
+import { SHARED_COLORS } from '../../utils/constants/constants';
 
 type Props = {}
 
 const PageNavigator = (props: Props) => {
-    const dispatch = useDispatch()
+    const { currPage } = useSelector((state: RootState) => state.page);
 
-    store.subscribe(() => {
-        console.log("slmslm");
-        console.log(store.getState())
-    })
+    const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
+
+    const dispatch = useDispatch();
 
     // TODO: get total posts
     const pages = 5;
@@ -21,17 +23,22 @@ const PageNavigator = (props: Props) => {
         pageItems.push(i);
     }
 
-    const goToPage = (e: any) => dispatch(setPage(1 + (+e.target.value)))
+    const goToPage = (e: any) => dispatch(setPage(1 + (+e.target.value)));
 
     return (<>
         <HStack>
             {/* TODO: make a request to retrieve number of total posts */}
-            {pageItems.map((item) => (
-                <Button value={item} onClick={goToPage}>
+            <Button _hover={{ background: "blue", color: "white" }} {...(currPage === 1 ? ({ isDisabled: true }) : {})} onClick={() => dispatch(decremented())}><ChevronLeftIcon></ChevronLeftIcon></Button>
+            {pageItems.map((item, iterator) => (
+                <Button {...(currPage === (iterator + 1) && ({ isActive: true }))} _hover={{ background: "blue", color: "white" }}
+                    _active={{ background: "blue", color: "white" }} value={item} onClick={goToPage}>
                     {item + 1}
                 </Button>
             ))}
-        </HStack></>)
+            <Button _hover={{ background: "blue", color: "white" }} {...(currPage === pages && { isDisabled: true })} onClick={() => dispatch(incremented())}> <ChevronRightIcon></ChevronRightIcon></Button>
+
+        </HStack >
+    </>)
 }
 
 export default PageNavigator;

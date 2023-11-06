@@ -22,9 +22,7 @@ const Users = gql`
 const posts = Math.random();
 
 export const Home = () => {
-  const BgColor = useColorModeValue("gray.300", "gray.600");
-  const BgColor2 = useColorModeValue("gray.100", "gray.700");
-  const TextColor = useColorModeValue("gray.800", "white");
+  const BgColor = useColorModeValue("gray.100", "gray.700");
 
   const [{ data, fetching, error }] = useQuery({
     query: Users,
@@ -40,8 +38,8 @@ export const Home = () => {
   return (
     <>
       <Layer>
-        <VStack spacing={8} mt={mt} bg={BgColor2}>
-          <Posts colors={{ BgColor, TextColor }} />
+        <VStack spacing={8} mt={mt} bg={BgColor}>
+          <Posts />
         </VStack>
       </Layer>
     </>

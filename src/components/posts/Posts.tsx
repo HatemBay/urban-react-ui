@@ -1,12 +1,13 @@
-import { Box, Button, HStack, Heading, Select, VStack } from "@chakra-ui/react";
+import { Box, Button, Colors, HStack, Heading, Select, VStack } from "@chakra-ui/react";
 import React from "react";
 import PostItem from "./PostItem";
 import { gql, useQuery } from "urql";
 import { Post } from "../../types";
-import { colors } from "../../utils/interfaces/colors";
 import PageNavigator from "./PageNavigator";
-import store, { RootState } from "../../redux/store";
+import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
+import { useLightDark } from "../../utils/hooks/useLightDark";
+import { SHARED_COLORS } from "../../utils/constants/constants";
 
 const PostsQuery = gql`
   query posts($orderBy: OrderByParams, $pagination: PaginationParams) {
@@ -33,18 +34,19 @@ type PostsQueryRes = {
 };
 
 type Props = {
-  colors: colors;
 };
 
-export const Posts = ({ colors }: Props) => {
+export const Posts = (props: Props) => {
+  const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
+  const TextColor = useLightDark(SHARED_COLORS.TextColor);
+
+
   const [field, setOrderByField] = React.useState("createdAt");
   const [take, setTake] = React.useState(5);
 
-  const { page } = useSelector((state: RootState) => state.page)
+  const { currPage: page } = useSelector((state: RootState) => state.page)
 
   const changeTake = (e: any) => {
-    console.log(e.target.value);
-
     setTake(+e.target.value);
   };
 
@@ -67,12 +69,10 @@ export const Posts = ({ colors }: Props) => {
     },
   });
 
-  console.log(data);
-
   if (error) return <p>Something went wrong...</p>;
   if (fetching || !data) return <p>Loading...</p>;
   return (
-    <Box w="100%" color={colors.TextColor}>
+    <Box w="100%" color={TextColor}>
       <Heading textTransform="capitalize" mb={4}>
         posts
       </Heading>
@@ -84,7 +84,7 @@ export const Posts = ({ colors }: Props) => {
           value={take}
           placeholder={take.toString()}
           width={"50%"}
-          bg={colors.BgColor}
+          bg={PrimaryBgColor}
         >
           <option value={3}>3</option>
           <option value={5}>5</option>
