@@ -4,7 +4,9 @@ import * as ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import { Client, Provider, cacheExchange, fetchExchange } from "urql";
+import { Provider as ReduxProvider } from "react-redux";
 import { App } from "./App";
+import store from "./redux/store";
 // import { createClient as createWSClient } from "graphql-ws";
 // import { Header } from "./components/Header";
 
@@ -60,7 +62,9 @@ root.render(
   <React.StrictMode>
     <ColorModeScript />
     <Provider value={client}>
-      <App />
+      <ReduxProvider store={store}>
+        <App />
+      </ReduxProvider>
     </Provider>
   </React.StrictMode>
 );
