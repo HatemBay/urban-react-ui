@@ -1,5 +1,11 @@
-export interface colors {
-  BgColor?: string;
-  BgColor2?: string;
-  TextColor?: string;
+export interface lightDark {
+  light: string;
+  dark: string;
 }
+
+export interface globalColors {
+  PrimaryBgColor: lightDark;
+  SecondaryBgColor: lightDark;
+  TextColor: lightDark;
+}
+
