@@ -8,34 +8,53 @@ import { extendTheme } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
 import SignIn from "./pages/SignIn";
-import Header from "./layouts/Header";
-import Layer from "./layouts/Layer";
+import Navbar from "./layouts/Navbar";
 
 const theme = extendTheme({
   fonts: {
     body: "Montserrat",
     heading: "Montserrat",
   },
+  colors: {
+    primary: {
+      light: "gray.300",
+      dark: "gray.600",
+    },
+    secondary: {
+      light: "gray.100",
+      dark: "gray.700",
+    },
+    text: {
+      light: "gray.800",
+      dark: "white",
+    },
+  },
 });
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
+    element: <Navbar />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/sign-in",
+        element: <SignIn />,
+      },
+    ],
   },
   {
-    path: "/sign-in",
-    element: <SignIn />,
+    path: "*",
+    element: (<h1>Not found</h1>),
   },
 ]);
 
 export const App = () => {
   return (
     <ChakraProvider theme={theme}>
-      <Header />
-      <Layer>
-        <RouterProvider router={router} />
-      </Layer>
+      <RouterProvider router={router} />
     </ChakraProvider>
   );
 };
