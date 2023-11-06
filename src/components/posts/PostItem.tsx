@@ -19,15 +19,15 @@ import {
   TwitterShareButton,
 } from "react-share";
 import { RootState } from "../../redux/store";
-import { useSelector } from "react-redux";
+import sharedColors, { LDColor } from "../../utils/shared/colors";
 interface Props {
   post: Post;
 }
 
 const PostItem = ({ post }: Props) => {
   const PostBgColor = useColorModeValue("white", "gray.800");
-  // TODO: check if this is optimal (providing that we might be passing those values across many components)
-  const { TextColor } = useSelector((state: RootState) => state.color)
+
+  const TextColor = useColorModeValue(...[...Object.values(sharedColors.textColor)] as LDColor);
 
   const reactionButtonStyles = {
     border: "1px",
