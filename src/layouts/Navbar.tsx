@@ -30,7 +30,9 @@ import {
 import { IoIosShuffle } from "react-icons/io";
 import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
 import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
-import { Home } from "../pages/Home";
+import { useDispatch } from "react-redux";
+import { setFilter } from "../redux/reducers/pageSlice";
+import { useRef } from "react";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -189,10 +191,9 @@ const DesktopNav = () => {
           <Popover trigger={"click"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Flex
-                as="a"
+                as="button"
                 role="group"
                 p={2}
-                href={navItem.href ?? "#"}
                 fontSize={"sm"}
                 fontWeight={900}
                 color={linkColor}
@@ -225,26 +226,40 @@ const DesktopNav = () => {
                   gap={1}
                 >
                   {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
+                    <DesktopSubNav value={child.value} key={child.label} {...child} />
                   ))}
                 </Grid>
               </PopoverContent>
             )}
           </Popover>
         </Box>
-      ))}
-    </Flex>
+      ))
+      }
+    </Flex >
   );
 };
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+const DesktopSubNav = ({ label, value, href }: NavItem) => {
+  const dispatch = useDispatch();
+  const handleFilter = (e: any) => {
+    return dispatch(setFilter(e));
+  };
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const focus = () => {
+    handleFilter(buttonRef.current?.value);
+  }
+
   return (
     <Stack>
       <Flex
         justifyContent={"center"}
         alignItems={"center"}
-        as="a"
-        href={href}
+        as="button"
+        ref={buttonRef}
+        value={value}
+        onClick={focus}
         role={"group"}
         background={"gray.100"}
         h={"3em"}
@@ -280,7 +295,7 @@ const MobileNav = () => {
       display={{ md: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <MobileNavItem key={navItem.label} value={navItem.value} {...navItem} />
       ))}
     </Stack>
   );
@@ -335,61 +350,76 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             gap={1}
           >
             {children &&
-              children.map((child) => (
-                <Box as="a" key={child.label} py={2} href={child.href}>
-                  {child.label}
-                </Box>
-              ))}
+              children.map((child) => {
+                // console.log(child.value);
+
+                return (
+                  <MobileNavSubItem key={child.label} value={child.value} {...child} />
+                )
+              })}
           </Grid>
         </Stack>
-      </Collapse>
-    </Stack>
+      </Collapse >
+    </Stack >
   );
 };
+
+const MobileNavSubItem = ({ value, label, children, href }: NavItem) => {
+  const dispatch = useDispatch();
+  const handleFilter = (e: any) => {
+    return dispatch(setFilter(e));
+  };
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const focus = () => {
+    handleFilter(buttonRef.current?.value);
+  }
+
+  return (
+    <Box
+      as="button"
+      ref={buttonRef}
+      value={value}
+      onClick={focus}
+      py={2}>
+      {label}
+    </Box>
+  )
+}
+
 
 interface NavItem {
   label: string;
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
+  value?: string;
+}
+
+const arr = []
+for (let i = 97; i < 122; i++) {
+  arr.push(String.fromCharCode(i))
+}
+
+const FILTER_CRITERIA = {
+  hashtag: "#",
+  newLabel: "new",
 }
 
 const BrowseItems = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "c",
-  "y",
-  "z",
-  "#",
-  "new",
+  ...arr,
+  ...Object.values(FILTER_CRITERIA)
 ];
 
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Browse",
     children: BrowseItems.map((item): NavItem => {
-      return { label: item[0].toUpperCase() + item.substring(1).toLowerCase() };
+      return {
+        label: item[0].toUpperCase() + item.substring(1).toLowerCase(),
+        value: item
+      };
     }),
   },
   {
