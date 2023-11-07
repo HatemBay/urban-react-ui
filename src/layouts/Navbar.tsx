@@ -20,6 +20,8 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  PopoverCloseButton,
+  grid,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -31,7 +33,7 @@ import { IoIosShuffle } from "react-icons/io";
 import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
 import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
 import { useDispatch } from "react-redux";
-import { setFilter } from "../redux/reducers/pageSlice";
+import { setFilter, setPage } from "../redux/reducers/pageSlice";
 import { useRef } from "react";
 
 export default function Navbar() {
@@ -184,11 +186,13 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue("blue", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.700");
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex direction={"row"} gap={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover trigger={"click"} placement={"bottom-start"}>
+          <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} trigger={"click"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Flex
                 as="button"
@@ -226,7 +230,7 @@ const DesktopNav = () => {
                   gap={1}
                 >
                   {navItem.children.map((child) => (
-                    <DesktopSubNav value={child.value} key={child.label} {...child} />
+                    <DesktopSubNav onclose={onClose} value={child.value} key={child.label} {...child} />
                   ))}
                 </Grid>
               </PopoverContent>
@@ -239,9 +243,10 @@ const DesktopNav = () => {
   );
 };
 
-const DesktopSubNav = ({ label, value, href }: NavItem) => {
+const DesktopSubNav = ({ label, value, href, onclose }: NavItem) => {
   const dispatch = useDispatch();
   const handleFilter = (e: any) => {
+    dispatch(setPage(1))
     return dispatch(setFilter(e));
   };
 
@@ -249,6 +254,7 @@ const DesktopSubNav = ({ label, value, href }: NavItem) => {
 
   const focus = () => {
     handleFilter(buttonRef.current?.value);
+    onclose()
   }
 
   return (
@@ -268,14 +274,14 @@ const DesktopSubNav = ({ label, value, href }: NavItem) => {
         align-self="center"
         rounded={"full"}
         _hover={{
-          bg: useColorModeValue("blue.100", "gray.900"),
+          bg: useColorModeValue("blue.100", "blue"),
           cursor: "pointer",
         }}
       >
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "blue.400" }}
+            _groupHover={{ color: useColorModeValue("blue.400", "white") }}
             fontWeight={900}
             color={"black"}
           >
@@ -395,6 +401,7 @@ interface NavItem {
   children?: Array<NavItem>;
   href?: string;
   value?: string;
+  onclose?: any;
 }
 
 const arr = []
