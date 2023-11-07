@@ -93,7 +93,8 @@ export const Posts = (props: Props) => {
       </Heading>
       {/* <Button onClick={changeField}>Change</Button> */}
 
-      {data.posts.length > 0 && <VStack spacing={4}>
+      {/* {data.posts.length > 0 && <VStack spacing={4}> */}
+      {<VStack spacing={4}>
         < Select
           onChange={changeTake}
           value={take}
