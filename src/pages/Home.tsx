@@ -5,9 +5,8 @@ import "@fontsource/montserrat/300.css";
 import * as React from "react";
 import { VStack, useColorModeValue } from "@chakra-ui/react";
 import { gql, useQuery } from "urql";
-import { Posts } from "../components/posts/Posts";
-import { Link } from "react-router-dom";
 import Layer from "../layouts/Layer";
+import { Posts } from "./postFeed/Posts";
 
 const Users = gql`
   query {
