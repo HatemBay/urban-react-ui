@@ -101,7 +101,7 @@ export const Posts = (props: Props) => {
           bg={PrimaryBgColor}
           maxWidth="2xl"
           w="100%"
-          _hover={{ background: "blue.500", color: "white", cursor: "pointer" }}
+          _hover={{ cursor: "pointer" }}
         >
           <option value={3}>3</option>
           <option value={5}>5</option>
