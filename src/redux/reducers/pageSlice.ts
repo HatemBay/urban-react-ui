@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 export interface PageState {
-  currPage: number
+  currPage: number,
+  filter: string
 }
 
 const initialState: PageState = {
   currPage: 1,
+  filter: "",
 }
 
 const pageSlice = createSlice({
@@ -20,11 +22,17 @@ const pageSlice = createSlice({
     },
     decremented: state => {
       state.currPage -= 1
-    }
+    },
+    setFilter: (state, action: PayloadAction<string>) => {
+      state.filter = action.payload;
+    },
+    clear: state => {
+      state.filter = "";
+    },
   }
 })
 
-export const { setPage, incremented, decremented } = pageSlice.actions
+export const { setPage, incremented, decremented, setFilter, clear } = pageSlice.actions
 
 export const selectPage = (state: PageState) => state.currPage
 
