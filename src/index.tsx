@@ -7,6 +7,7 @@ import { Client, Provider, cacheExchange, fetchExchange } from "urql";
 import { Provider as ReduxProvider } from "react-redux";
 import { App } from "./App";
 import store from "./redux/store";
+import { authExchange } from "@urql/exchange-auth";
 // import { createClient as createWSClient } from "graphql-ws";
 // import { Header } from "./components/Header";
 
@@ -38,12 +39,32 @@ const client = new Client({
   exchanges: [
     cacheExchange,
     fetchExchange,
-    // authExchange(async (utils) => {
-    //   let token = await localStorage.getItem("TOKEN_KEY");
-    //   return {
-    //     /* config... */
-    //   };
-    // }),
+    authExchange(async (utils) => {
+      let token = localStorage.getItem('TOKEN_KEY');
+      // let refreshToken = localStorage.getItem('refreshToken');
+      return {
+        addAuthToOperation(operation) {
+          console.log('token');
+          console.log(token);
+          if (!token) return operation;
+          return utils.appendHeaders(operation, {
+            Authorization: `Bearer ${token}`,
+          });
+        },
+        didAuthError(error) {
+          return error.graphQLErrors.some(e => e.extensions?.code === 'FORBIDDEN');
+        },
+        async refreshAuth() {
+          //   const result = await utils.mutate(REFRESH, { token });
+          //   if (result.data?.refreshLogin) {
+          //     token = result.data.refreshLogin.token;
+          //     refreshToken = result.data.refreshLogin.refreshToken;
+          //     localStorage.setItem('token', token);
+          //     localStorage.setItem('refreshToken', refreshToken);
+          //   }
+        },
+      };
+    }),
   ],
   fetchOptions: () => {
     // TODO: add args
