@@ -44,7 +44,7 @@ const SignIn = (props: Props) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const [state, executeMutation] = useMutation(LOGIN_MUTATION);
+  const [signInResult, signIn] = useMutation(LOGIN_MUTATION);
 
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const SignIn = (props: Props) => {
     };
 
     // TODO: improve login 
-    executeMutation({ loginUserInput }).then((res) => {
+    signIn({ loginUserInput }).then((res) => {
       if (res.error) {
         setIsInvalidData(true);
         setPassword('')
