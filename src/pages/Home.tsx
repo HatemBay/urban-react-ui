@@ -2,20 +2,12 @@ import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/300.css";
 
-import * as React from "react";
 import { VStack, useColorModeValue } from "@chakra-ui/react";
-import { gql, useQuery } from "urql";
+import { useQuery } from "urql";
 import Layer from "../layouts/Layer";
 import { Posts } from "./postFeed/Posts";
+import { USERS_QUERY } from "../graphql/queries/usersQuery";
 
-const Users = gql`
-  query {
-    users {
-      id
-      username
-    }
-  }
-`;
 
 // TODO: get number of total posts
 const posts = Math.random();
@@ -24,7 +16,7 @@ export const Home = () => {
   const BgColor = useColorModeValue("gray.100", "gray.700");
 
   const [{ data, fetching, error }] = useQuery({
-    query: Users,
+    query: USERS_QUERY,
   });
 
   let mt = {};
@@ -36,11 +28,9 @@ export const Home = () => {
   if (error) return <p>Oh no... {error.message}</p>;
   return (
     <>
-      <Layer>
-        <VStack spacing={8} mt={mt} bg={BgColor}>
-          <Posts />
-        </VStack>
-      </Layer>
+      <VStack spacing={8} mt={mt} bg={BgColor}>
+        <Posts />
+      </VStack>
     </>
   );
 };

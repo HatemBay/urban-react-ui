@@ -20,8 +20,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  PopoverCloseButton,
-  grid,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -32,14 +30,18 @@ import {
 import { IoIosShuffle } from "react-icons/io";
 import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
 import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFilter, setPage } from "../redux/reducers/pageSlice";
 import { useRef } from "react";
+import { RootState } from "../redux/store";
+import Layer from "./Layer";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
+
+  const { userToken } = useSelector((state: RootState) => state.auth);
 
   return (
     <>
@@ -176,7 +178,10 @@ export default function Navbar() {
           <MobileNav />
         </Collapse>
       </Box>
-      <Outlet />
+
+      <Layer>
+        <Outlet />
+      </Layer>
     </>
   );
 }
