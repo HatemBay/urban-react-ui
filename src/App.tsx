@@ -9,6 +9,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Navbar from "./layouts/Navbar";
+import CreatePost from "./pages/postFeed/CreatePost";
 
 const theme = extendTheme({
   fonts: {
@@ -31,6 +32,7 @@ const theme = extendTheme({
   },
 });
 
+// TODO: implement lazy loading for conditional pages if necessary
 const router = createBrowserRouter([
   {
     element: <Navbar />,
@@ -42,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/sign-in",
         element: <SignIn />,
+      },
+      {
+        path: "/create-post",
+        element: <CreatePost />,
       },
     ],
   },

@@ -117,15 +117,26 @@ export default function Navbar() {
                 ml={10}
                 spacing={6}
               >
-                <Button
-                  as={ReactRouterLink}
-                  fontSize={"sm"}
-                  fontWeight={400}
-                  variant={"link"}
-                  to={"/sign-in"}
-                >
-                  Sign In
-                </Button>
+                {
+                  ((userToken !== null) ? (<Button
+                    as={ReactRouterLink}
+                    fontSize={"sm"}
+                    fontWeight={400}
+                    variant={"link"}
+                    to={"/create-post"}
+                  >
+                    Create Post
+                  </Button>) :
+                    (<Button
+                      as={ReactRouterLink}
+                      fontSize={"sm"}
+                      fontWeight={400}
+                      variant={"link"}
+                      to={"/sign-in"}
+                    >
+                      Sign In
+                    </Button>))
+                }
                 <Button
                   as={ReactRouterLink}
                   display={{ base: "none", md: "inline-flex" }}
@@ -178,7 +189,7 @@ export default function Navbar() {
           <MobileNav />
         </Collapse>
       </Box>
-
+      
       <Layer>
         <Outlet />
       </Layer>
