@@ -1,5 +1,4 @@
-import { Button, HStack, useColorModeValue } from '@chakra-ui/react';
-import React from 'react'
+import { Button, HStack } from '@chakra-ui/react';
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { decremented, incremented, setPage } from '../../redux/reducers/pageSlice';
@@ -34,18 +33,22 @@ const PageNavigator = (props: Props) => {
             </Button>
             {pageItems.map((item, iterator) => {
                 const i = iterator + 1
+                // TODO: reduce if that's what needs to be done
                 if (pages > 5) {
                     if ((currPage > 3) && (((pages - currPage > 1) && ((currPage - i > 2) || (i - currPage > 2))) || ((pages - currPage === 1) && (currPage - i > 3)) || ((pages === currPage) && (currPage - i > 4)))) {
                         return
                     } else if ((currPage < 4) && (i > 5)) {
                         return
                     }
-                } else if (pages < 6) {
+                } else
                     if (i > 5) {
                         return
                     }
-                }
-
+                // } else if (pages < 6) {
+                //     if (i > 5) {
+                //         return
+                //     }
+                // }
                 return (
                     <Button {...(currPage === (i) && ({ isActive: true }))} _hover={{ background: "blue", color: "white" }}
                         _active={{ background: "blue", color: "white" }} value={item} onClick={goToPage}>

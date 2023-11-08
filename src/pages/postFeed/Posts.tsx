@@ -1,33 +1,14 @@
-import { Box, Button, Colors, HStack, Heading, Select, VStack } from "@chakra-ui/react";
+import { Box, Heading, Select, VStack } from "@chakra-ui/react";
 import React from "react";
 import PostItem from "./PostItem";
-import { gql, useQuery } from "urql";
+import { useQuery } from "urql";
 import { Post } from "../../data/types";
 import PageNavigator from "./PageNavigator";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
-
-const PostsQuery = gql`
-  query posts($orderBy: OrderByParams, $pagination: PaginationParams) {
-    posts(orderBy: $orderBy, pagination: $pagination) {
-      id
-      author {
-        username
-      }
-      authorId
-      title
-      content
-      published
-      isU18
-      likesCount
-      dislikesCount
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import { POSTS_QUERY } from "../../graphql/queries/postsQuery"
 
 type PostsQueryRes = {
   posts: Post[];
@@ -69,7 +50,7 @@ export const Posts = (props: Props) => {
   };
 
   const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
-    query: PostsQuery,
+    query: POSTS_QUERY,
     variables: {
       orderBy: {
         field,
