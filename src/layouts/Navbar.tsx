@@ -42,6 +42,7 @@ export default function Navbar() {
   const navbarItemColor = useColorModeValue("white", "white");
 
   const { userToken } = useSelector((state: RootState) => state.auth);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
 
   return (
     <>
@@ -137,20 +138,36 @@ export default function Navbar() {
                       Sign In
                     </Button>))
                 }
-                <Button
-                  as={ReactRouterLink}
-                  display={{ base: "none", md: "inline-flex" }}
-                  fontSize={"sm"}
-                  fontWeight={600}
-                  color={"white"}
-                  bg={"blue"}
-                  to={"#"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                >
-                  Sign Up
-                </Button>
+                {
+                  ((userToken !== null) ? (<Button
+                    as={ReactRouterLink}
+                    display={{ base: "none", md: "inline-flex" }}
+                    fontSize={"sm"}
+                    fontWeight={600}
+                    color={"white"}
+                    to={"/profile"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                    textTransform={"capitalize"}
+                  >
+                    {userInfo.username}
+                  </Button>) :
+                    (<Button
+                      as={ReactRouterLink}
+                      display={{ base: "none", md: "inline-flex" }}
+                      fontSize={"sm"}
+                      fontWeight={600}
+                      color={"white"}
+                      bg={"blue"}
+                      to={"#"}
+                      _hover={{
+                        bg: "blue.500",
+                      }}
+                    >
+                      Sign Up
+                    </Button>))
+                }
               </Stack>
             </Flex>
             <Stack direction={"row"}>
@@ -189,7 +206,7 @@ export default function Navbar() {
           <MobileNav />
         </Collapse>
       </Box>
-      
+
       <Layer>
         <Outlet />
       </Layer>

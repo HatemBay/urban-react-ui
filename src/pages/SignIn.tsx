@@ -28,7 +28,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "../graphql/mutations/loginMutation";
 import { useDispatch } from "react-redux";
-import { setUserToken } from "../redux/reducers/authSlice";
+import { setUserInfo, setUserToken } from "../redux/reducers/authSlice";
 
 
 
@@ -86,6 +86,7 @@ const SignIn = (props: Props) => {
 
       localStorage.setItem("TOKEN_KEY", accessToken);
       dispatch(setUserToken(accessToken))
+      dispatch(setUserInfo(user))
 
       return navigate('/', { replace: true })
     });
