@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "../graphql/mutations/loginMutation";
 import { useDispatch } from "react-redux";
 import { setUserInfo, setUserToken } from "../redux/reducers/authSlice";
+import { getUserInfo, setAuthTokens } from "../utils/authUtils";
 
 
 
@@ -39,7 +40,6 @@ const SignIn = (props: Props) => {
   const [password, setPassword] = useState("");
   const [isEmailError, setIsEmailError] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
-  const [isEmail, setIsEmail] = useState(true);
   const [isInvalidData, setIsInvalidData] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,7 +69,7 @@ const SignIn = (props: Props) => {
     };
 
     // TODO: improve login 
-    signIn({ loginUserInput }).then((res) => {
+    signIn({ loginUserInput }).then(async (res) => {
       if (res.error) {
         setIsInvalidData(true);
         setPassword('')
@@ -77,18 +77,16 @@ const SignIn = (props: Props) => {
       }
       const { accessToken } = res.data.login;
 
-      let payload = accessToken.split(".")[1];
-      payload = window.atob(payload);
-      console.log(payload);
 
-      const user = { ...JSON.parse(payload) }
-      console.log(user);
 
-      localStorage.setItem("TOKEN_KEY", accessToken);
-      dispatch(setUserToken(accessToken))
-      dispatch(setUserInfo(user))
+      setTimeout(() => {
+        setAuthTokens(accessToken);
 
-      return navigate('/', { replace: true })
+        dispatch(setUserToken(accessToken))
+        dispatch(setUserInfo(getUserInfo))
+      })
+
+      navigate('/')
     });
   };
 
