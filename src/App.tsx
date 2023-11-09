@@ -2,7 +2,6 @@ import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/300.css";
 
-import * as React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -10,6 +9,7 @@ import { Home } from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Navbar from "./layouts/Navbar";
 import CreatePost from "./pages/postFeed/CreatePost";
+import { Profile } from "./pages/profile/Profile";
 
 const theme = extendTheme({
   fonts: {
@@ -49,11 +49,15 @@ const router = createBrowserRouter([
         path: "/create-post",
         element: <CreatePost />,
       },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
     ],
   },
   {
     path: "*",
-    element: (<h1>Not found</h1>),
+    element: (<h1>Not found (Replcae me with a page)</h1>),
   },
 ]);
 
