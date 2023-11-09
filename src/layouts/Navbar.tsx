@@ -42,6 +42,8 @@ export default function Navbar() {
   const navbarItemColor = useColorModeValue("white", "white");
 
   const { userToken } = useSelector((state: RootState) => state.auth);
+  // const userToken = localStorage.getItem("TOKEN_KEY");
+
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
   return (
