@@ -27,6 +27,7 @@ interface Props {
 const PostItem = ({ post }: Props) => {
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
+  const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
   const reactionButtonStyles = {
     border: "1px",
@@ -55,7 +56,7 @@ const PostItem = ({ post }: Props) => {
               mb={3}
               fontWeight="bold"
               fontFamily="lora"
-              color="blue"
+              color={ButtonPrimary}
               textTransform="capitalize"
               fontSize="3xl"
             >
@@ -93,7 +94,7 @@ const PostItem = ({ post }: Props) => {
           </Text>
           <Text mb={3} fontWeight="bold" fontSize="sm">
             by{" "}
-            <Text as="span" color="blue" textTransform={"capitalize"}>
+            <Text as="span" color={ButtonPrimary} textTransform={"capitalize"}>
               {post.author.username}
             </Text>{" "}
             {formatDate(post.createdAt)}

@@ -7,5 +7,6 @@ export interface globalColors {
   PrimaryBgColor: lightDark;
   SecondaryBgColor: lightDark;
   TextColor: lightDark;
+  ButtonPrimary: lightDark;
 }
 
