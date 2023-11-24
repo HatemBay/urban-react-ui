@@ -5,15 +5,17 @@ export const setAuthTokens = (accessToken: any) => {
     let payload = accessToken.split(".")[1];
     payload = window.atob(payload);
     const user = { ...JSON.parse(payload) }
-    localStorage.setItem("USER_INFO", user);
+
+    localStorage.setItem("USER_INFO", JSON.stringify(user));
 
     const expirationTime = new Date(user.exp);
+
     localStorage.setItem("EXPIRATION_TIME", expirationTime.toString());
 
 };
 
 export const getToken = () => {
-    const token = localStorage.getItem('TOKEN_KEY');
+    const token = localStorage.getItem('USER_INFO');
     const expirationTime = localStorage.getItem('EXPIRATION_TIME');
 
 
@@ -26,7 +28,7 @@ export const getToken = () => {
         return null;
     }
 
-    return token;
+    return JSON.parse(token);
 };
 
 
@@ -43,7 +45,7 @@ export const getUserInfo = () => {
         return null;
     }
 
-    return userInfo;
+    return JSON.parse(userInfo);
 };
 
 export const isTokenExpired = (expirationTime: string) => {

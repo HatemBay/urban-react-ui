@@ -83,7 +83,7 @@ const SignIn = (props: Props) => {
         setAuthTokens(accessToken);
 
         dispatch(setUserToken(accessToken))
-        dispatch(setUserInfo(getUserInfo))
+        dispatch(setUserInfo(getUserInfo()))
       })
 
       navigate('/')

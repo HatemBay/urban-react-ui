@@ -35,17 +35,22 @@ import { setFilter, setPage } from "../redux/reducers/pageSlice";
 import { useRef } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
+import useLightDark from "../hooks/useLightDark";
+import { SHARED_COLORS } from "../data/constants";
+import { getToken, getUserInfo } from "../utils/authUtils";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
+  const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
-  const { userToken } = useSelector((state: RootState) => state.auth);
-  // const userToken = localStorage.getItem("TOKEN_KEY");
+  // const { userToken } = useSelector((state: RootState) => state.auth);
+  const userToken = getToken();
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-
+  // const { userInfo } = useSelector((state: RootState) => state.auth);
+  const userInfo = getUserInfo();
+  
   return (
     <>
       <Box>
