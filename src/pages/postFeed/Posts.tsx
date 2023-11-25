@@ -76,7 +76,7 @@ export const Posts = (props: Props) => {
 
       {/* {data.posts.length > 0 && <VStack spacing={4}> */}
       {<VStack spacing={4}>
-        < Select
+        <Select
           onChange={changeTake}
           value={take}
           width={"50%"}
@@ -90,7 +90,7 @@ export const Posts = (props: Props) => {
           <option value={10}>10</option>
         </Select>
         {data.posts.map((post) => (
-          <PostItem post={post}></PostItem>
+          <PostItem key={post.id} post={post}></PostItem>
         ))}
         <PageNavigator />
       </VStack>}
