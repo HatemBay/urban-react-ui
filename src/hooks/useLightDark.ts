@@ -1,9 +1,9 @@
 import { useColorModeValue } from "@chakra-ui/react"
-import { lightDark } from "../utils/interfaces/globalColors"
+import { LightDark } from "../utils/interfaces/globalColors"
 
 // export type LDColor = [string, string];
 
-const useLightDark = (x: lightDark): string => {
+const useLightDark = (x: LightDark): string => {
     return useColorModeValue(x.light, x.dark)
     // return useColorModeValue(...[...Object.values(x)] as LDColor)
 }
