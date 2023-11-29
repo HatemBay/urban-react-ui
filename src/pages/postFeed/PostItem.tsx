@@ -1,3 +1,4 @@
+import "@fontsource/lora/600.css";
 import React from "react";
 import { Post } from "../../data/types";
 import {
@@ -36,7 +37,7 @@ const PostItem = ({ post }: Props) => {
     px: 6,
     borderBottom: "2px",
     background: PrimaryBgColor,
-    _hover: { background: "green" },
+    _hover: { background: "#85CB33" },
   };
 
   return (
@@ -54,7 +55,6 @@ const PostItem = ({ post }: Props) => {
           <Flex direction={"row"} justifyContent={"space-between"}>
             <Heading
               mb={3}
-              fontWeight="bold"
               fontFamily="lora"
               color={ButtonPrimary}
               textTransform="capitalize"
@@ -81,7 +81,7 @@ const PostItem = ({ post }: Props) => {
             </Flex>
           </Flex>
           <Text
-            mb={2}
+            mb={6}
             fontFamily="Source Sans Pro"
             fontWeight="normal"
             fontSize="1.125rem"
