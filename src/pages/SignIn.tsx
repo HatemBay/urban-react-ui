@@ -23,7 +23,7 @@ import { BiDotsHorizontal } from "react-icons/bi";
 import { useMutation } from "urql";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "../graphql/mutations/loginMutation";
 import { useDispatch } from "react-redux";
@@ -50,6 +50,15 @@ const SignIn = (props: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [email, password]);
+
   const handleEmail = (e: any) => {
     setEmail(e.target.value);
 
@@ -62,7 +71,12 @@ const SignIn = (props: Props) => {
     setPassword(e.target.value);
   };
 
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") handleSubmit();
+  };
+
   const dispatch = useDispatch();
+
   const handleSubmit = () => {
     const loginUserInput = {
       username: email,
@@ -77,8 +91,6 @@ const SignIn = (props: Props) => {
         return
       }
       const { accessToken } = res.data.login;
-
-
 
       setTimeout(() => {
         setAuthTokens(accessToken);
