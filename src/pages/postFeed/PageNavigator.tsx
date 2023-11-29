@@ -21,8 +21,6 @@ const PageNavigator = ({ totalCount, take }: Props) => {
 
     // TODO: get total posts
     const pages = Math.ceil(totalCount / take);
-    console.log(pages);
-
 
     const pageItems = [];
     for (let i = 0; i < pages; i++) {

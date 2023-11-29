@@ -45,12 +45,12 @@ export default function Navbar() {
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
-  // const { userToken } = useSelector((state: RootState) => state.auth);
-  const userToken = getToken();
+  const { userToken } = useSelector((state: RootState) => state.auth);
+  // const userToken = getToken();
 
-  // const { userInfo } = useSelector((state: RootState) => state.auth);
-  const userInfo = getUserInfo();
-  
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+  // const userInfo = getUserInfo();
+
   return (
     <>
       <Box>
@@ -166,10 +166,10 @@ export default function Navbar() {
                       fontSize={"sm"}
                       fontWeight={600}
                       color={"white"}
-                      bg={"blue"}
+                      bg={ButtonPrimary}
                       to={"#"}
                       _hover={{
-                        bg: "blue.500",
+                        bg: "blue.400",
                       }}
                     >
                       Sign Up
@@ -198,7 +198,7 @@ export default function Navbar() {
                   >
                     <Icon
                       as={IoIosShuffle}
-                      color={"blue"}
+                      color={ButtonPrimary}
                       fontSize={"4xl"}
                       mr={2}
                     ></Icon>
