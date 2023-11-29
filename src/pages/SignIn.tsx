@@ -20,8 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
-import { gql, useMutation } from "urql";
-import Layer from "../layouts/Layer";
+import { useMutation } from "urql";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
 import { useState } from "react";
@@ -41,6 +40,8 @@ const SignIn = (props: Props) => {
   const [isEmailError, setIsEmailError] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
   const [isInvalidData, setIsInvalidData] = useState(false);
+
+  const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -94,7 +95,7 @@ const SignIn = (props: Props) => {
     <>
       <Container p={0}>
         <VStack bg={PrimaryBgColor} spacing={8} textAlign="center" fontSize="xl">
-          <Box width={"100%"} bg={"blue"} py={5}>
+          <Box width={"100%"} bg={ButtonPrimary} py={5}>
             <Heading color={"white"}>Sign In</Heading>
           </Box>
           <VStack width={"100%"} px={4} pb={8}>
@@ -145,7 +146,7 @@ const SignIn = (props: Props) => {
                   <Spacer />
                   <Link
                     href="#"
-                    color={"blue"}
+                    color={ButtonPrimary}
                     fontSize={"sm"}
                     _hover={{ color: "blue.400" }}
                   >
@@ -159,7 +160,10 @@ const SignIn = (props: Props) => {
                   </Alert>)
                 }
                 <Button
-                  colorScheme="blue"
+                  // colorScheme={"blue"}
+                  background={ButtonPrimary}
+                  color={"black"}
+                  _hover={{ background: "blue.400" }}
                   size={"lg"}
                   role="submit"
                   onClick={handleSubmit}
