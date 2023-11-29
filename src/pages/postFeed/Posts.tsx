@@ -2,17 +2,13 @@ import { Box, Heading, Select, VStack } from "@chakra-ui/react";
 import React from "react";
 import PostItem from "./PostItem";
 import { useQuery } from "urql";
-import { Post } from "../../data/types";
+import { PaginatedPosts, Post } from "../../data/types";
 import PageNavigator from "./PageNavigator";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
 import { POSTS_QUERY } from "../../graphql/queries/postsQuery"
-
-type PostsQueryRes = {
-  posts: Post[];
-};
 
 type Props = {
 };
@@ -45,11 +41,12 @@ export const Posts = (props: Props) => {
     setTake(+e.target.value);
   };
 
+
   const changeField = (e: any) => {
     setOrderByField(() => "title");
   };
 
-  const [{ data, fetching, error }] = useQuery<PostsQueryRes>({
+  const [{ data, fetching, error }] = useQuery<PaginatedPosts>({
     query: POSTS_QUERY,
     variables: {
       orderBy: {
@@ -64,18 +61,18 @@ export const Posts = (props: Props) => {
     },
   });
 
-  if (error) return <p>Something went wrong...</p>;
+  if (error) return <p> Something went wrong... </p>
   if (fetching || !data) return <p>Loading...</p>;
   return (
     <Box w="100%" color={TextColor}>
       <Heading textTransform="capitalize" mb={4}>
-        {data.posts.length === 0 && "No "}
+        {data.posts.pagination.totalCount === 0 && "No "}
+
         posts
       </Heading>
       {/* <Button onClick={changeField}>Change</Button> */}
 
-      {/* {data.posts.length > 0 && <VStack spacing={4}> */}
-      {<VStack spacing={4}>
+      {data.posts.pagination.totalCount !== 0 && <VStack minH={"2xl"} spacing={4}>
         <Select
           onChange={changeTake}
           value={take}
@@ -89,10 +86,13 @@ export const Posts = (props: Props) => {
           <option value={5}>5</option>
           <option value={10}>10</option>
         </Select>
-        {data.posts.map((post) => (
+        {/* ********************************************* */}
+        {/* TODO: check with undefined and length */}
+        {/* ********************************************* */}
+        {data.posts.data && data.posts.data.map((post) => (
           <PostItem key={post.id} post={post}></PostItem>
         ))}
-        <PageNavigator />
+        <PageNavigator take={take} totalCount={data.posts.pagination.totalCount} />
       </VStack>}
     </Box >
   );
