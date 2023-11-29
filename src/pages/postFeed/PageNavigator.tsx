@@ -6,17 +6,23 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from '../../data/constants';
 
-type Props = {}
+type Props = {
+    totalCount: number;
+    take: number;
+}
 
-const PageNavigator = (props: Props) => {
+const PageNavigator = ({ totalCount, take }: Props) => {
     const { currPage } = useSelector((state: RootState) => state.page);
 
     const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
+    const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
     const dispatch = useDispatch();
 
     // TODO: get total posts
-    const pages = 14;
+    const pages = Math.ceil(totalCount / take);
+    console.log(pages);
+
 
     const pageItems = [];
     for (let i = 0; i < pages; i++) {
@@ -28,9 +34,12 @@ const PageNavigator = (props: Props) => {
     return (<>
         <HStack>
             {/* TODO: make a request to retrieve number of total posts */}
-            <Button _hover={{ background: "blue", color: "white" }} {...(currPage === 1 ? ({ isDisabled: true }) : {})} onClick={() => dispatch(decremented())}>
+            <Button _hover={{ background: { ButtonPrimary }, color: "white" }} {...(currPage === 1 ? ({ isDisabled: true }) : {})} onClick={() => dispatch(decremented())}>
                 <ChevronLeftIcon></ChevronLeftIcon>
             </Button>
+            {/* //***************************
+            //TODO: ADD KEY
+            //*************************** */}
             {pageItems.map((item, iterator) => {
                 const i = iterator + 1
                 // TODO: reduce if that's what needs to be done
@@ -50,15 +59,14 @@ const PageNavigator = (props: Props) => {
                 //     }
                 // }
                 return (
-                    <Button {...(currPage === (i) && ({ isActive: true }))} _hover={{ background: "blue", color: "white" }}
-                        _active={{ background: "blue", color: "white" }} value={item} onClick={goToPage}>
+                    <Button {...(currPage === (i) && ({ isActive: true }))} _hover={{ background: "#758BFD", color: "white" }}
+                        _active={{ background: "#758BFD", color: "white" }} value={item} onClick={goToPage}>
                         {item + 1}
                     </Button>
                 )
             }
             )}
-            <Button _hover={{ background: "blue", color: "white" }} {...(currPage === pages && { isDisabled: true })} onClick={() => dispatch(incremented())}> <ChevronRightIcon></ChevronRightIcon></Button>
-
+            <Button _hover={{ background: "#758BFD", color: "white" }} {...(((currPage === pages) || (pages === 0)) && { isDisabled: true })} onClick={() => dispatch(incremented())}> <ChevronRightIcon></ChevronRightIcon></Button>
         </HStack >
     </>)
 }
