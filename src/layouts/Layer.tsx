@@ -13,7 +13,7 @@ const Layer = ({ children }: Props) => {
       fontSize="xl"
       bg={useColorModeValue("gray.100", "gray.700")}
     >
-      <Grid minH="100vh" p={3}>
+      <Grid minH={"3xl"} p={3}>
         <ColorModeSwitcher
           my={1}
           color={"black"}
