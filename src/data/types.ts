@@ -1,4 +1,4 @@
-export interface Post {
+export type Post = {
   id?: number;
   title: string;
   content: string;
@@ -11,6 +11,15 @@ export interface Post {
   createdAt: string;
   updatedAt?: string;
 }
+
+export type PaginatedPosts = {
+  posts: {
+    pagination: {
+      totalCount: number;
+    }
+    data: Post[];
+  }
+};
 
 export interface User {
   id?: number;
