@@ -29,9 +29,9 @@ import {
 } from "@chakra-ui/icons";
 import { IoIosShuffle } from "react-icons/io";
 import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
-import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
+import { Link as ChakraLink } from '@chakra-ui/react'
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter, setPage } from "../redux/reducers/pageSlice";
+import { setFilter, setPage, setRandomize } from "../redux/reducers/pageSlice";
 import { useRef } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
@@ -50,6 +50,21 @@ export default function Navbar() {
 
   const { userInfo } = useSelector((state: RootState) => state.auth);
   // const userInfo = getUserInfo();
+
+  const dispatch = useDispatch();
+  const handleFilter = (e: any, randomize: boolean = false) => {
+    console.log(randomize);
+
+    if (randomize) {
+      {/* TODO: refresh query on reclick */ }
+      return dispatch(setRandomize(true));
+    }
+
+    dispatch(setRandomize(false));
+    dispatch(setPage(1))
+    return dispatch(setFilter(""));
+  };
+
 
   return (
     <>
@@ -104,6 +119,7 @@ export default function Navbar() {
                       })}
                       fontFamily={"heading"}
                       color={navbarItemColor}
+                      onClick={handleFilter}
                     >
                       Logo
                     </ChakraLink>
@@ -191,10 +207,10 @@ export default function Navbar() {
                   <Box
                     pt={2}
                     as={"a"}
-                    href="#"
                     display={"center"}
                     fontWeight={900}
                     _hover={{ cursor: "pointer" }}
+                    onClick={(e) => handleFilter(e, true)}
                   >
                     <Icon
                       as={IoIosShuffle}
