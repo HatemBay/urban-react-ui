@@ -31,7 +31,7 @@ import { IoIosShuffle } from "react-icons/io";
 import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
 import { Link as ChakraLink } from '@chakra-ui/react'
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter, setPage, setRandomize } from "../redux/reducers/pageSlice";
+import { forceRerender, setFilter, setPage, setRandomize } from "../redux/reducers/pageSlice";
 import { useRef } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
@@ -53,11 +53,10 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
   const handleFilter = (e: any, randomize: boolean = false) => {
-    console.log(randomize);
 
     if (randomize) {
-      {/* TODO: refresh query on reclick */ }
-      return dispatch(setRandomize(true));
+      dispatch(setRandomize(true));
+      return dispatch(forceRerender());
     }
 
     dispatch(setRandomize(false));
