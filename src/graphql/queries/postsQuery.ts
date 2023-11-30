@@ -1,26 +1,26 @@
 import { gql } from "urql";
 
 export const POSTS_QUERY = gql`
-  query posts($orderBy: OrderByParams, $pagination: PaginationParams) {
-    posts(orderBy: $orderBy, pagination: $pagination) {
-      pagination {
-        totalCount
+query Posts($orderBy: OrderByParams, $pagination: PaginationParams, $randomize: Boolean) {
+  posts(orderBy: $orderBy, pagination: $pagination, randomize: $randomize) {
+    data {
+      id
+      author {
+        username
       }
-      data {
-        id
-        authorId
-        author {
-          username
-        }
-        title
-        content
-        published
-        isU18
-        likesCount
-        dislikesCount
-        createdAt
-        updatedAt
-      }
+      authorId
+      title
+      content
+      published
+      isU18
+      likesCount
+      dislikesCount
+      createdAt
+      updatedAt
+    }
+    pagination {
+      totalCount
     }
   }
+}
 `;
