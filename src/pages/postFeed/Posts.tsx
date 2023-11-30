@@ -1,5 +1,5 @@
 import { Box, Button, Heading, Select, VStack } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import PostItem from "./PostItem";
 import { useQuery } from "urql";
 import { PaginatedPosts } from "../../data/types";
@@ -23,6 +23,7 @@ export const Posts = (props: Props) => {
   const { currPage: page } = useSelector((state: RootState) => state.page)
   let { filter } = useSelector((state: RootState) => state.page)
   let { randomize } = useSelector((state: RootState) => state.page)
+  let { rerender } = useSelector((state: RootState) => state.page)
 
   const filterActions: { [key: string]: () => void } = {
     "#": () => {
@@ -42,11 +43,6 @@ export const Posts = (props: Props) => {
     setTake(+e.target.value);
   };
 
-  const handleRandomPosts = () => {
-    reexecuteQuery({ requestPolicy: 'network-only' });
-    return window.scrollTo(0, 0);
-  };
-
   const changeField = (e: any) => {
     setOrderByField(() => "title");
   };
@@ -63,11 +59,18 @@ export const Posts = (props: Props) => {
         page,
         take,
       },
-      randomize
+      randomize,
+      //rerender is a fake value used to bypass the cache when needed and trigger the query
+      rerender
     },
   });
 
   const { data, fetching, error } = result;
+
+  const handleRandomPosts = () => {
+    reexecuteQuery({ requestPolicy: 'network-only' });
+    return window.scrollTo(0, 0);
+  };
 
   if (error) return <p> Something went wrong... {error.name} </p>
   if (fetching || !data) return <p>Loading...</p>;
@@ -79,7 +82,7 @@ export const Posts = (props: Props) => {
       {/* <Button onClick={changeField}>Change</Button> */}
 
       {data.posts.pagination?.totalCount !== 0 && <VStack minH={"2xl"} spacing={4}>
-        <Select
+        {!randomize && <Select
           onChange={changeTake}
           value={take}
           width={"50%"}
@@ -91,7 +94,7 @@ export const Posts = (props: Props) => {
           <option value={3}>3</option>
           <option value={5}>5</option>
           <option value={10}>10</option>
-        </Select>
+        </Select>}
         {/* ********************************************* */}
         {/* TODO: check with undefined and length */}
         {/* ********************************************* */}
