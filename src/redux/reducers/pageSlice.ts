@@ -2,12 +2,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 export interface PageState {
   currPage: number,
-  filter: string
+  filter: string,
+  randomize: boolean,
 }
 
 const initialState: PageState = {
   currPage: 1,
   filter: "",
+  randomize: false,
 }
 
 const pageSlice = createSlice({
@@ -26,13 +28,16 @@ const pageSlice = createSlice({
     setFilter: (state, action: PayloadAction<string>) => {
       state.filter = action.payload;
     },
+    setRandomize: (state, action: PayloadAction<boolean>) => {
+      state.randomize = action.payload;
+    },
     clear: state => {
       state.filter = "";
     },
   }
 })
 
-export const { setPage, incremented, decremented, setFilter, clear } = pageSlice.actions
+export const { setPage, incremented, decremented, setFilter, setRandomize, clear } = pageSlice.actions
 
 export const selectPage = (state: PageState) => state.currPage
 
