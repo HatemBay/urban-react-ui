@@ -34,3 +34,8 @@ export interface User {
   createdAt: string;
   updatedAt?: string;
 }
+
+export type LoginUserInput = {
+  username: string,
+  password: string,
+};
