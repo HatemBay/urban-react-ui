@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User } from "../../data/types";
 
 interface AuthState {
@@ -17,21 +17,38 @@ const initialState: AuthState = {
     success: false, // for monitoring the registration process.
 };
 
-//TODO: improve
+//TODO: handle error state
 const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {
-        setUserToken: (state, action: PayloadAction<any>) => {
+    reducers: {},
+    extraReducers: builder => {
+        builder.addCase(setUserTokenAsync.pending, state => {
+            state.loading = true;
+        }).addCase(setUserTokenAsync.fulfilled, (state, action: PayloadAction<any>) => {
             state.userToken = action.payload;
-        },
-        setUserInfo: (state, action: PayloadAction<any>) => {
+        }).addCase(setUserTokenAsync.rejected, (state, action) => {
+            console.log(action.error);
+            state.error = action.error;
+        });
+
+        builder.addCase(setUserInfoAsync.pending, state => {
+            state.loading = true;
+        }).addCase(setUserInfoAsync.fulfilled, (state, action: PayloadAction<any>) => {
             state.userInfo = action.payload;
-        },
+        }).addCase(setUserInfoAsync.rejected, (state, action) => {
+            state.error = action.error;
+        })
     },
-    extraReducers: {},
 });
 
-export const { setUserToken, setUserInfo } = authSlice.actions;
+export const setUserTokenAsync = createAsyncThunk("auth/setUserTokenAsync",
+    async (signInData: any) => {
+        return await signInData.data.login;
+    })
+export const setUserInfoAsync = createAsyncThunk("auth/setUserInfoAsync",
+    async (userInfo: any) => {
+        return await userInfo;
+    })
 
 export default authSlice.reducer;

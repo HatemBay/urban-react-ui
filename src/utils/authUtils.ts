@@ -1,4 +1,4 @@
-export const setAuthTokens = (accessToken: any) => {
+export const setAuthTokens = async (accessToken: any) => {
 
     localStorage.setItem("TOKEN_KEY", accessToken);
 
