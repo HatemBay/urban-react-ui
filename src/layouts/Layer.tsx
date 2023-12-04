@@ -1,5 +1,4 @@
 import { Box, Grid, useColorModeValue } from "@chakra-ui/react";
-import React from "react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 
 type Props = {
