@@ -28,10 +28,15 @@ import {
   Search2Icon,
 } from "@chakra-ui/icons";
 import { IoIosShuffle } from "react-icons/io";
-import { Outlet, Link as ReactRouterLink } from 'react-router-dom'
-import { Link as ChakraLink } from '@chakra-ui/react'
+import { Outlet, Link as ReactRouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { forceRerender, setFilter, setPage, setRandomize } from "../redux/reducers/pageSlice";
+import {
+  forceRerender,
+  setFilter,
+  setPage,
+  setRandomize,
+} from "../redux/reducers/pageSlice";
 import { useRef } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
@@ -53,17 +58,15 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
   const handleFilter = (e: any, randomize: boolean = false) => {
-
     if (randomize) {
       dispatch(setRandomize(true));
       return dispatch(forceRerender());
     }
 
     dispatch(setRandomize(false));
-    dispatch(setPage(1))
+    dispatch(setPage(1));
     return dispatch(setFilter(""));
   };
-
 
   return (
     <>
@@ -110,7 +113,9 @@ export default function Navbar() {
                   alignItems={"center"}
                 >
                   <Flex display={{ base: "flex", md: "flex" }} ml={{ md: 10 }}>
-                    <ChakraLink as={ReactRouterLink} to='/'
+                    <ChakraLink
+                      as={ReactRouterLink}
+                      to="/"
                       _hover={{ cursor: "pointer" }}
                       textAlign={useBreakpointValue({
                         base: "right",
@@ -140,8 +145,8 @@ export default function Navbar() {
                 ml={10}
                 spacing={6}
               >
-                {
-                  ((userToken !== null) ? (<Button
+                {userToken !== null ? (
+                  <Button
                     as={ReactRouterLink}
                     fontSize={"sm"}
                     fontWeight={400}
@@ -149,19 +154,20 @@ export default function Navbar() {
                     to={"/create-post"}
                   >
                     Create Post
-                  </Button>) :
-                    (<Button
-                      as={ReactRouterLink}
-                      fontSize={"sm"}
-                      fontWeight={400}
-                      variant={"link"}
-                      to={"/sign-in"}
-                    >
-                      Sign In
-                    </Button>))
-                }
-                {
-                  ((userToken !== null) ? (<Button
+                  </Button>
+                ) : (
+                  <Button
+                    as={ReactRouterLink}
+                    fontSize={"sm"}
+                    fontWeight={400}
+                    variant={"link"}
+                    to={"/sign-in"}
+                  >
+                    Sign In
+                  </Button>
+                )}
+                {userToken !== null ? (
+                  <Button
                     as={ReactRouterLink}
                     display={{ base: "none", md: "inline-flex" }}
                     fontSize={"sm"}
@@ -174,28 +180,32 @@ export default function Navbar() {
                     textTransform={"capitalize"}
                   >
                     {userInfo.username}
-                  </Button>) :
-                    (<Button
-                      as={ReactRouterLink}
-                      display={{ base: "none", md: "inline-flex" }}
-                      fontSize={"sm"}
-                      fontWeight={600}
-                      color={"white"}
-                      bg={ButtonPrimary}
-                      to={"#"}
-                      _hover={{
-                        bg: "blue.400",
-                      }}
-                    >
-                      Sign Up
-                    </Button>))
-                }
+                  </Button>
+                ) : (
+                  <Button
+                    as={ReactRouterLink}
+                    display={{ base: "none", md: "inline-flex" }}
+                    fontSize={"sm"}
+                    fontWeight={600}
+                    color={"white"}
+                    bg={ButtonPrimary}
+                    to={"#"}
+                    _hover={{
+                      bg: "blue.400",
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                )}
               </Stack>
             </Flex>
             <Stack direction={"row"}>
               <InputGroup>
                 <InputLeftElement mr={2}>
-                  <Search2Icon color={"gray.300"} fontSize={"2xl"}></Search2Icon>
+                  <Search2Icon
+                    color={"gray.300"}
+                    fontSize={"2xl"}
+                  ></Search2Icon>
                 </InputLeftElement>
                 <Input
                   bg={"white"}
@@ -209,7 +219,7 @@ export default function Navbar() {
                     display={"center"}
                     fontWeight={900}
                     _hover={{ cursor: "pointer" }}
-                    onClick={(e) => handleFilter(e, true)}
+                    onClick={(e: any) => handleFilter(e, true)}
                   >
                     <Icon
                       as={IoIosShuffle}
@@ -247,7 +257,13 @@ const DesktopNav = () => {
     <Flex direction={"row"} gap={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} trigger={"click"} placement={"bottom-start"}>
+          <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            trigger={"click"}
+            placement={"bottom-start"}
+          >
             <PopoverTrigger>
               <Flex
                 as="button"
@@ -285,23 +301,27 @@ const DesktopNav = () => {
                   gap={1}
                 >
                   {navItem.children.map((child) => (
-                    <DesktopSubNav onclose={onClose} value={child.value} key={child.label} {...child} />
+                    <DesktopSubNav
+                      onclose={onClose}
+                      value={child.value}
+                      key={child.label}
+                      {...child}
+                    />
                   ))}
                 </Grid>
               </PopoverContent>
             )}
           </Popover>
         </Box>
-      ))
-      }
-    </Flex >
+      ))}
+    </Flex>
   );
 };
 
 const DesktopSubNav = ({ label, value, href, onclose }: NavItem) => {
   const dispatch = useDispatch();
   const handleFilter = (e: any) => {
-    dispatch(setPage(1))
+    dispatch(setPage(1));
     return dispatch(setFilter(e));
   };
 
@@ -309,8 +329,8 @@ const DesktopSubNav = ({ label, value, href, onclose }: NavItem) => {
 
   const focus = () => {
     handleFilter(buttonRef.current?.value);
-    onclose()
-  }
+    onclose();
+  };
 
   return (
     <Stack>
@@ -415,13 +435,17 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
                 // console.log(child.value);
 
                 return (
-                  <MobileNavSubItem key={child.label} value={child.value} {...child} />
-                )
+                  <MobileNavSubItem
+                    key={child.label}
+                    value={child.value}
+                    {...child}
+                  />
+                );
               })}
           </Grid>
         </Stack>
-      </Collapse >
-    </Stack >
+      </Collapse>
+    </Stack>
   );
 };
 
@@ -435,20 +459,14 @@ const MobileNavSubItem = ({ value, label, children, href }: NavItem) => {
 
   const focus = () => {
     handleFilter(buttonRef.current?.value);
-  }
+  };
 
   return (
-    <Box
-      as="button"
-      ref={buttonRef}
-      value={value}
-      onClick={focus}
-      py={2}>
+    <Box as="button" ref={buttonRef} value={value} onClick={focus} py={2}>
       {label}
     </Box>
-  )
-}
-
+  );
+};
 
 interface NavItem {
   label: string;
@@ -459,20 +477,17 @@ interface NavItem {
   onclose?: any;
 }
 
-const arr = []
+const arr = [];
 for (let i = 97; i < 122; i++) {
-  arr.push(String.fromCharCode(i))
+  arr.push(String.fromCharCode(i));
 }
 
 const FILTER_CRITERIA = {
   hashtag: "#",
   newLabel: "new",
-}
+};
 
-const BrowseItems = [
-  ...arr,
-  ...Object.values(FILTER_CRITERIA)
-];
+const BrowseItems = [...arr, ...Object.values(FILTER_CRITERIA)];
 
 const NAV_ITEMS: Array<NavItem> = [
   {
@@ -480,7 +495,7 @@ const NAV_ITEMS: Array<NavItem> = [
     children: BrowseItems.map((item): NavItem => {
       return {
         label: item[0].toUpperCase() + item.substring(1).toLowerCase(),
-        value: item
+        value: item,
       };
     }),
   },
