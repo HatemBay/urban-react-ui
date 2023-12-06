@@ -50,11 +50,11 @@ export default function Navbar() {
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
-  const { userToken } = useSelector((state: RootState) => state.auth);
-  // const userToken = getToken();
+  // const { userToken } = useSelector((state: RootState) => state.auth);
+  const userToken = getToken();
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  // const userInfo = getUserInfo();
+  // const { userInfo } = useSelector((state: RootState) => state.auth);
+  const userInfo = getUserInfo();
 
   const dispatch = useDispatch();
   const handleFilter = (e: any, randomize: boolean = false) => {
