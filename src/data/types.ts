@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export type Post = {
   id?: number;
   title: string;
@@ -10,15 +12,15 @@ export type Post = {
   dislikesCount?: number;
   createdAt: string;
   updatedAt?: string;
-}
+};
 
 export type PaginatedPosts = {
   posts: {
     pagination: {
       totalCount: number;
-    }
+    };
     data: Post[];
-  }
+  };
 };
 
 export interface User {
@@ -36,6 +38,15 @@ export interface User {
 }
 
 export type LoginUserInput = {
-  username: string,
-  password: string,
+  username: string;
+  password: string;
+};
+
+export type Language = "Arabic" | "French" | "English";
+
+export type Dialect = {
+  label: string;
+  dialect: string;
+  flag?: any;
+  value?: string;
 };
