@@ -42,7 +42,11 @@ export type LoginUserInput = {
   password: string;
 };
 
-export type Language = "Arabic" | "French" | "English";
+export type Language = {
+  arabic: string;
+  english: string;
+  french: string;
+};
 
 export type Dialect = {
   label: string;
