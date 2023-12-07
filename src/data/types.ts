@@ -1,11 +1,13 @@
-import { type } from "os";
-
 export type Post = {
   id?: number;
-  title: string;
-  content: string;
+  titleArabic: string;
+  titleLatin: string;
+  contentArabic: string;
+  contentEnglish: string;
+  contentArabicFrench: string;
   authorId?: number;
   author: User;
+  examples: Example[];
   published?: boolean;
   isU18?: boolean;
   likesCount?: number;
@@ -37,6 +39,15 @@ export interface User {
   updatedAt?: string;
 }
 
+export interface Example {
+  id?: number;
+  contentArabic: string;
+  contentEnglish: string;
+  contentArabicFrench: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 export type LoginUserInput = {
   username: string;
   password: string;
@@ -47,6 +58,7 @@ export type Language = {
   english: string;
   french: string;
 };
+
 export type TermForm = {
   arabic: string;
   latin: string;
