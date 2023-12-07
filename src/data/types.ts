@@ -47,6 +47,10 @@ export type Language = {
   english: string;
   french: string;
 };
+export type TermForm = {
+  arabic: string;
+  latin: string;
+};
 
 export type Dialect = {
   label: string;
