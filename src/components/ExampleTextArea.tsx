@@ -17,8 +17,8 @@ const ExampleTextArea = ({ onChange }: Props) => {
     const boldText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     // We don't want to show the user html elements in the example so we will return a visual version of the text
-    onChange(text);
-    setVisualExample(boldText);
+    setVisualExample(text);
+    onChange(boldText);
   };
 
   return (

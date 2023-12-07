@@ -14,8 +14,8 @@ const DefinitionTextArea = ({ onChange }: Props) => {
     const boldText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     // We don't want to show the user html elements in the definition so we will return a visual version of the text
-    onChange(text);
-    setVisualDefinition(boldText);
+    setVisualDefinition(text);
+    onChange(boldText);
   };
 
   return (

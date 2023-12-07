@@ -1,42 +1,32 @@
 import {
   Box,
   Button,
-  Checkbox,
   Container,
-  Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
   Input,
-  InputGroup,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Select,
-  Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
-  Textarea,
   VStack,
-  useDisclosure,
 } from "@chakra-ui/react";
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
 import { CREATE_POST_MUTATION } from "../../graphql/mutations/createPostMutation";
 import { useMutation } from "urql";
 import { useState } from "react";
-import { Post } from "../../data/types";
+import { Language, Post, TermForm } from "../../data/types";
 import DefinitionTextArea from "../../components/DefinitionTextArea";
 import ExampleTextArea from "../../components/ExampleTextArea";
 import DialectsPopoverButton from "../../components/DialectsPopoverButton";
 import { CREATE_EXAMPLE_MUTATION } from "../../graphql/mutations/createExampleMutation";
 import { useNavigate } from "react-router-dom";
+
 type PostsQueryRes = {
   posts: Post[];
 };
@@ -47,26 +37,45 @@ const CreatePost = (props: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
 
-  // TODO: separate for different languages
-  const [example, setExample] = useState("");
-  // TODO: separate for different languages
-  const [definition, setDefinition] = useState("");
+  const [term, setTerm] = useState<TermForm>({
+    arabic: "",
+    latin: "",
+  });
 
-  const [newPostResult, newPost] = useMutation(CREATE_POST_MUTATION);
-  const [newExampleResult, newExample] = useMutation(CREATE_EXAMPLE_MUTATION);
-  const [content, setContent] = useState("");
+  const [definition, setDefinition] = useState<Language>({
+    arabic: "",
+    english: "",
+    french: "",
+  });
+
+  const [example, setExample] = useState<Language>({
+    arabic: "",
+    english: "",
+    french: "",
+  });
+
+  const [, newPost] = useMutation(CREATE_POST_MUTATION);
+  const [, newExample] = useMutation(CREATE_EXAMPLE_MUTATION);
   const [type, setType] = useState("Term");
-  const [arabicTerm, setArabicTerm] = useState("");
-  const [latinTerm, setLatinTerm] = useState("");
+
+  // const [latinTerm, setLatinTerm] = useState("");
   const navigate = useNavigate();
 
-  const handleTermArabic = (e: any) => {
-    setArabicTerm(e.target.value);
-  };
-  const handleTermLatin = (e: any) => {
-    setLatinTerm(e.target.value);
+  const handleDefinition = (e: any, language: string) => {
+    console.log({ ...definition, [language]: e });
+
+    setDefinition({ ...definition, [language]: e });
   };
 
+  const handleExample = (e: any, language: string) => {
+    console.log({ ...example, [language]: e });
+    setExample({ ...definition, [language]: e });
+  };
+
+  const handleTerm = (e: any, language: string) => {
+    console.log({ ...term, [language]: e.target.value });
+    setTerm({ ...term, [language]: e.target.value });
+  };
   const ChangeType = (e: any) => {
     setType(e.target.value);
   };
@@ -74,30 +83,42 @@ const CreatePost = (props: Props) => {
   const handleSubmit = async () => {
     // console.log("starting");
     const createPostInput = {
-      title: latinTerm,
-      content: definition,
+      contentArabic: definition.arabic,
+      contentEnglish: definition.english,
+      contentFrench: definition.french,
+      // isU18: null,
+      titleArabic: term.arabic,
+      titleLatin: term.latin,
     };
 
     //TODO: improve
-    await newPost({ createPostInput }).then(async (postData) => {
-      console.log(postData);
-      console.log(postData.data.createPost.id);
+    await newPost({ createPostInput }).then(
+      async (postData: any) => {
+        console.log(postData);
+        const createExampleInput = {
+          contentArabic: example.arabic,
+          contentEnglish: example.english,
+          contentFrench: example.french,
+          postId: postData.data.createPost.id,
+        };
 
-      const createExampleInput = {
-        content: example,
-        postId: postData.data.createPost.id,
-      };
-      await newExample({ createExampleInput }).then((exampleData) => {
-        if (exampleData.error) {
-          console.log("ERROR");
-          console.log(exampleData.error);
-          return;
-        }
-        console.log("SUCCESS");
-        console.log(exampleData);
-        navigate("/");
-      });
-    });
+        await newExample({ createExampleInput }).then(
+          (exampleData: any) => {
+            console.log("SUCCESS");
+            console.log(exampleData);
+            navigate("/");
+          },
+          (error) => {
+            console.log("ERROR");
+            console.log(error);
+          }
+        );
+      },
+      (error) => {
+        console.log("ERROR");
+        console.log(error);
+      }
+    );
   };
 
   return (
@@ -123,7 +144,7 @@ const CreatePost = (props: Props) => {
                     type="text"
                     placeholder={"المصطلح"}
                     fontSize={"lg"}
-                    onChange={(e) => handleTermArabic(e)}
+                    onChange={(e) => handleTerm(e, "arabic")}
                   ></Input>
                 </FormControl>
                 <FormControl mb={3}>
@@ -132,7 +153,7 @@ const CreatePost = (props: Props) => {
                     type="text"
                     placeholder={"Word"}
                     fontSize={"lg"}
-                    onChange={(e) => handleTermLatin(e)}
+                    onChange={(e) => handleTerm(e, "latin")}
                   ></Input>
                 </FormControl>
                 <FormControl mb={3}>
@@ -168,13 +189,16 @@ const CreatePost = (props: Props) => {
               <TabPanel>
                 <Box p={3} pt={8}>
                   <VStack gap={5}>
-                    <DefinitionTextArea
-                      language={"Arabic"}
-                      onChange={setDefinition}
-                    ></DefinitionTextArea>
+                    <FormControl>
+                      <FormLabel>
+                        Define your word in <b>Arabic</b>
+                      </FormLabel>
+                      <DefinitionTextArea
+                        onChange={(e) => handleDefinition(e, "arabic")}
+                      ></DefinitionTextArea>
+                    </FormControl>
                     <ExampleTextArea
-                      language={"Arabic"}
-                      onChange={setExample}
+                      onChange={(e) => handleExample(e, "arabic")}
                     ></ExampleTextArea>
                   </VStack>
                 </Box>
@@ -182,13 +206,16 @@ const CreatePost = (props: Props) => {
               <TabPanel>
                 <Box p={3} pt={8}>
                   <VStack gap={5}>
-                    <DefinitionTextArea
-                      language={"English"}
-                      onChange={setDefinition}
-                    ></DefinitionTextArea>
+                    <FormControl>
+                      <FormLabel>
+                        Define your word in <b>English</b>
+                      </FormLabel>
+                      <DefinitionTextArea
+                        onChange={(e) => handleDefinition(e, "english")}
+                      ></DefinitionTextArea>
+                    </FormControl>
                     <ExampleTextArea
-                      language={"English"}
-                      onChange={setExample}
+                      onChange={(e) => handleExample(e, "english")}
                     ></ExampleTextArea>
                   </VStack>
                 </Box>
@@ -196,13 +223,16 @@ const CreatePost = (props: Props) => {
               <TabPanel>
                 <Box p={3} pt={8}>
                   <VStack gap={5}>
-                    <DefinitionTextArea
-                      language={"French"}
-                      onChange={setDefinition}
-                    ></DefinitionTextArea>
+                    <FormControl>
+                      <FormLabel>
+                        Define your word in <b>French</b>
+                      </FormLabel>
+                      <DefinitionTextArea
+                        onChange={(e) => handleDefinition(e, "french")}
+                      ></DefinitionTextArea>
+                    </FormControl>
                     <ExampleTextArea
-                      language={"French"}
-                      onChange={setExample}
+                      onChange={(e) => handleExample(e, "french")}
                     ></ExampleTextArea>
                   </VStack>
                 </Box>
