@@ -4,11 +4,10 @@ import { Language } from "../data/types";
 import "./richTextEditor/richTextEditorStyles.css";
 
 interface Props {
-  language: Language;
   onChange: (e: any) => void;
 }
 
-const ExampleTextArea = ({ language, onChange }: Props) => {
+const ExampleTextArea = ({ onChange }: Props) => {
   const [visualExample, setVisualExample] = useState("");
 
   //TODO: set conditions for each language and add conditions that would change the style of the text
