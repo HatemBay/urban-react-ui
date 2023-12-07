@@ -49,10 +49,14 @@ const PostItem = ({ post }: Props) => {
       maxWidth="2xl"
       w="100%"
     >
-      <HStack spacing={10} px={5} py={2}>
+      <HStack spacing={10} px={5} py={2} minW={"100%"}>
         <Avatar size="lg" />
-        <Flex flexDirection="column" textAlign="left" color={TextColor}>
-          <Flex direction={"row"} justifyContent={"space-between"}>
+        <Flex grow={1} flexDirection="column" textAlign="left" color={TextColor}>
+          <Flex
+            direction={"row"}
+            justifyContent={"space-between"}
+           
+          >
             <Heading
               mb={3}
               fontFamily="lora"
@@ -60,7 +64,7 @@ const PostItem = ({ post }: Props) => {
               textTransform="capitalize"
               fontSize="3xl"
             >
-              {post.title}
+              {post.titleLatin}
             </Heading>
             <Flex justifyContent={"flex-end"} gap={2}>
               {/* // TODO: change the link to a single post page view */}
@@ -86,12 +90,21 @@ const PostItem = ({ post }: Props) => {
             fontWeight="normal"
             fontSize="1.125rem"
           >
-            A mysterious word which is actually made up of the abbreviation “ur”
-            and the word “ban.” It probably hints to how the government is
-            planning to ban Urban Dictionary because it speaks the truth about
-            English and they’re jealous their dictionary can’t be the same.
-            {post.content}
+            {post.contentArabic}
           </Text>
+          {post.examples.map((example) => (
+            <Text
+              mb={6}
+              fontFamily="Source Sans Pro"
+              fontWeight="normal"
+              fontSize="1.125rem"
+            >
+              Example:
+              <Text color={"gray.500"} display={"inline"}>
+                {example.contentArabic}
+              </Text>
+            </Text>
+          ))}
           <Text mb={3} fontWeight="bold" fontSize="sm">
             by{" "}
             <Text as="span" color={ButtonPrimary} textTransform={"capitalize"}>

@@ -67,10 +67,16 @@ export const Posts = (props: Props) => {
 
   const { data, fetching, error } = result;
 
+  console.log(error);
+  
   const handleRandomPosts = () => {
     reexecuteQuery({ requestPolicy: 'network-only' });
     return window.scrollTo(0, 0);
   };
+
+  console.log("data?.posts");
+  console.log(data?.posts);
+  
 
   if (error) return <p> Something went wrong... {error.name} </p>
   if (fetching || !data) return <p>Loading...</p>;
