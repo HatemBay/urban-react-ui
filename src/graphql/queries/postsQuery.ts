@@ -8,9 +8,18 @@ query Posts($orderBy: OrderByParams, $pagination: PaginationParams, $randomize: 
       author {
         username
       }
+      examples {
+        id
+        contentArabic
+        contentEnglish
+        contentFrench
+      }
       authorId
-      title
-      content
+      titleArabic
+      titleLatin
+      contentArabic
+      contentEnglish
+      contentFrench
       published
       isU18
       likesCount
