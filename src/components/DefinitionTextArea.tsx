@@ -1,12 +1,10 @@
-import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
+import { Textarea } from "@chakra-ui/react";
 import { useState } from "react";
-import { Language } from "../data/types";
 interface Props {
-  language: Language;
   onChange: (e: any) => void;
 }
 
-const DefinitionTextArea = ({ language, onChange }: Props) => {
+const DefinitionTextArea = ({ onChange }: Props) => {
   const [visualDefinition, setVisualDefinition] = useState("");
 
   //TODO: set conditions for each language and add conditions that would change the style of the text
@@ -21,20 +19,13 @@ const DefinitionTextArea = ({ language, onChange }: Props) => {
   };
 
   return (
-    <>
-      <FormControl>
-        <FormLabel>
-          Define your word in <b>{language}</b>
-        </FormLabel>
-        <Textarea
-          value={visualDefinition}
-          id="content"
-          pr={5}
-          placeholder="Type your definition here..."
-          onChange={handleDefinition}
-        ></Textarea>
-      </FormControl>
-    </>
+    <Textarea
+      value={visualDefinition}
+      id="content"
+      pr={5}
+      placeholder="Type your definition here..."
+      onChange={handleDefinition}
+    ></Textarea>
   );
 };
 
