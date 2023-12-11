@@ -4,7 +4,7 @@ export type Post = {
   titleLatin: string;
   contentArabic: string;
   contentEnglish: string;
-  contentArabicFrench: string;
+  contentFrench: string;
   authorId?: number;
   author: User;
   examples: Example[];
@@ -43,7 +43,7 @@ export interface Example {
   id?: number;
   contentArabic: string;
   contentEnglish: string;
-  contentArabicFrench: string;
+  contentFrench: string;
   createdAt: string;
   updatedAt?: string;
 }
