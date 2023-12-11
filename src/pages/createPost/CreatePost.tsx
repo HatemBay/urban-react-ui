@@ -62,18 +62,14 @@ const CreatePost = (props: Props) => {
   const navigate = useNavigate();
 
   const handleDefinition = (e: any, language: string) => {
-    console.log({ ...definition, [language]: e });
-
     setDefinition({ ...definition, [language]: e });
   };
 
   const handleExample = (e: any, language: string) => {
-    console.log({ ...example, [language]: e });
-    setExample({ ...definition, [language]: e });
+    setExample({ ...example, [language]: e });
   };
 
   const handleTerm = (e: any, language: string) => {
-    console.log({ ...term, [language]: e.target.value });
     setTerm({ ...term, [language]: e.target.value });
   };
   const ChangeType = (e: any) => {
