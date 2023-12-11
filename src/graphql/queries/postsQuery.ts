@@ -8,7 +8,7 @@ query Posts($orderBy: OrderByParams, $pagination: PaginationParams, $randomize: 
       author {
         username
       }
-      examples {
+      example {
         id
         contentArabic
         contentEnglish
