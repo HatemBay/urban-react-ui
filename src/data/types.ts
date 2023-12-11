@@ -7,7 +7,7 @@ export type Post = {
   contentFrench: string;
   authorId?: number;
   author: User;
-  examples: Example[];
+  example: Example;
   published?: boolean;
   isU18?: boolean;
   likesCount?: number;
