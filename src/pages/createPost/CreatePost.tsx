@@ -119,22 +119,28 @@ const CreatePost = (props: Props) => {
 
   return (
     <>
-      <Container fontSize="3xl" mb={5} p={0}>
+      <Container
+        // fontSize={"3xl"}
+        minW={{ base: "7rem", sm: "60%", md: "60%" }}
+        maxW={"3xl"}
+        mb={5}
+        p={0}
+      >
         <VStack
+          minW={"27rem"}
           bg={PrimaryBgColor}
           spacing={8}
           textAlign="left"
-          fontSize="xl"
           p={0}
           pb={5}
         >
           <Heading mt={5} color={TextColor} alignSelf={"center"}>
-            Create Definition
+            New Definition
           </Heading>
-          <HStack>
-            <VStack w={"xl"} alignSelf={"flex-start"}>
-              <Box w={"md"} ml={10} p={3} pt={8}>
-                <FormControl mb={3}>
+          <HStack px={10} w={"100%"} alignItems={"center"}>
+            <VStack flexGrow={1} alignSelf={"flex-start"} textAlign={"center"}>
+              <Box w={"100%"} ml={10} p={3} pt={8}>
+                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
                   <FormLabel>Arabic letters</FormLabel>
                   <Input
                     type="text"
@@ -143,7 +149,7 @@ const CreatePost = (props: Props) => {
                     onChange={(e) => handleTerm(e, "arabic")}
                   ></Input>
                 </FormControl>
-                <FormControl mb={3}>
+                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
                   <FormLabel>latin letters</FormLabel>
                   <Input
                     type="text"
@@ -152,25 +158,34 @@ const CreatePost = (props: Props) => {
                     onChange={(e) => handleTerm(e, "latin")}
                   ></Input>
                 </FormControl>
-                <FormControl mb={3}>
+                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
                   <FormLabel>Type</FormLabel>
                   <Select
                     onChange={ChangeType}
                     value={type}
-                    width={"30%"}
                     bg={PrimaryBgColor}
                     maxWidth="2xl"
-                    w="100%"
                     _hover={{ cursor: "pointer" }}
                   >
                     <option value={"Term"}>Term</option>
                     <option value={"Proverb"}>Proverb</option>
                   </Select>
                 </FormControl>
+                <FormControl
+                  display={{ md: "none" }}
+                  textAlign={"center"}
+                  mt={4}
+                >
+                  <DialectsPopoverButton></DialectsPopoverButton>
+                </FormControl>
               </Box>
             </VStack>
-            <VStack w={"xl"} alignSelf={"flex-start"}>
-              <Box w={"md"} ml={10} p={3} pt={8}>
+            <VStack
+              flexGrow={1}
+              display={{ base: "none", md: "block" }}
+              alignSelf={"flex-start"}
+            >
+              <Box ml={10} p={3} pt={8}>
                 <DialectsPopoverButton></DialectsPopoverButton>
               </Box>
             </VStack>
