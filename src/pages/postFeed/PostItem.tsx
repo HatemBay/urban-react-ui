@@ -15,6 +15,7 @@ import {
   Tabs,
   TabPanels,
   TabPanel,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { IoMdThumbsDown, IoMdThumbsUp } from "react-icons/io";
 import formatDate from "../../utils/formatDate";
@@ -37,6 +38,9 @@ const PostItem = ({ post }: Props) => {
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
   const ButtonSecondary = useLightDark(SHARED_COLORS.ButtonSecondary);
 
+  const isBase = useBreakpointValue({ base: true, md: false });
+  const isMd = useBreakpointValue({ md: true });
+
   const reactionButtonStyles = {
     border: "1px",
     borderColor: TextColor,
@@ -58,8 +62,12 @@ const PostItem = ({ post }: Props) => {
       p={5}
       bg={PrimaryBgColor}
       borderRadius="lg"
-      maxWidth="2xl"
-      w={{ base: "100%", md: "100%" }}
+      grow={1}
+      maxW={{ base: "sm", sm: "lg", md: "2xl" }}
+      // w={{ base: "100%", md: "100%" }}
+      // minW={{ base: "100%", sm: "2xl", md: "2xl" }}
+      w={{ base: "100%", sm: "lg", md: "100%" }}
+      minW={{ base: "100%", sm: "lg", md: "2xl" }}
     >
       {/* <Flex
         boxShadow="md"
@@ -69,20 +77,32 @@ const PostItem = ({ post }: Props) => {
         maxWidth="2xl"
         w="100%"
       > */}
-      <VStack>
+      <VStack minW={{ base: "15rem", sm: "15rem", md: "100%" }} maxW={"100%"}>
         <Flex
+          position={"relative"}
           direction={"row"}
           justifyContent={"space-between"}
           minW={"100%"}
+          // grow={1}
+          // maxW={{ base: "100%", md: "100%" }}
           px={2}
         >
-          <TabList>
-            <HStack>
-              {post.contentArabic && <Tab>Arabic</Tab>}
-              {post.contentEnglish && <Tab>English</Tab>}
-              {post.contentFrench && <Tab>French</Tab>}
-            </HStack>
-          </TabList>
+          <HStack>
+            {isBase && (
+              <TabList>
+                {post.contentArabic && <Tab border={"1px blue"}>Ar</Tab>}
+                {post.contentEnglish && <Tab border={"1px blue"}>En</Tab>}
+                {post.contentFrench && <Tab>Fr</Tab>}
+              </TabList>
+            )}
+            {isMd && (
+              <TabList>
+                {post.contentArabic && <Tab>Arabic</Tab>}
+                {post.contentEnglish && <Tab>English</Tab>}
+                {post.contentFrench && <Tab>French</Tab>}
+              </TabList>
+            )}
+          </HStack>
           <Flex justifyContent={"flex-end"} gap={2}>
             {/* // TODO: change the link to a single post page view */}
             <FacebookShareButton
@@ -102,10 +122,12 @@ const PostItem = ({ post }: Props) => {
           </Flex>
         </Flex>
       </VStack>
-      <HStack spacing={10} px={5} py={2} minW={"100%"} minH={"xs"}>
-        <Box>
-          <Avatar size="lg" />
-        </Box>
+      <HStack spacing={10} px={5} py={2} w={"100%"} minH={"xs"}>
+        {isMd && (
+          <Box>
+            <Avatar size={{ base: "md", md: "lg" }} />
+          </Box>
+        )}
         {/* // TODO: extract repetitive components / Extract to a reusable component */}
         <TabPanels>
           {post.contentArabic && (
@@ -159,12 +181,13 @@ const PostItem = ({ post }: Props) => {
               </Text>
               <Text
                 mb={6}
+                pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
                 color={"gray.500"}
                 display={"inline"}
               >
-                {post.example.contentArabic}
+                "{post.example.contentArabic}"
               </Text>
             </TabPanel>
           )}
@@ -218,12 +241,13 @@ const PostItem = ({ post }: Props) => {
               </Text>
               <Text
                 mb={6}
+                pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
                 color={"gray.500"}
                 display={"inline"}
               >
-                {post.example.contentEnglish}
+                "{post.example.contentEnglish}"
               </Text>
             </TabPanel>
           )}
@@ -274,21 +298,45 @@ const PostItem = ({ post }: Props) => {
               </Text>
               <Text
                 mb={6}
+                pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
                 color={"gray.500"}
                 display={"inline"}
               >
-                {post.example.contentFrench}
+                "{post.example.contentFrench}"
               </Text>
             </TabPanel>
           )}
-          <Text mb={3} fontWeight="bold" fontSize="sm" textAlign={"left"}>
-            by{" "}
-            <Text as="span" color={ButtonPrimary} textTransform={"capitalize"}>
-              {post.author.username}
-            </Text>{" "}
-            {formatDate(post.createdAt)}
+          <Text
+            position={"relative"}
+            mb={5}
+            pt={2}
+            fontWeight="bold"
+            fontSize="sm"
+            textAlign={"left"}
+          >
+            {isBase && (
+              <Box
+                mr={2}
+                display={"inline"}
+                position={"absolute"}
+                css={{ top: "1px" }}
+              >
+                <Avatar size={{ base: "sm" }} />
+              </Box>
+            )}
+            <Text ml={10} display={"inline"} pt={2}>
+              by{" "}
+              <Text
+                as="span"
+                color={ButtonPrimary}
+                textTransform={"capitalize"}
+              >
+                {post.author.username}
+              </Text>{" "}
+              {formatDate(post.createdAt)}
+            </Text>
             {/* {month} {date}, {year} */}
             {/* //TODO: check time formatting after using data from db */}
           </Text>

@@ -8,8 +8,10 @@ type Props = {
 const Layer = ({ children }: Props) => {
   return (
     <Box
+      // maxW={{ xs: "50%" }}
+      // alignSelf={"center"}
       textAlign="center"
-      fontSize="xl"
+      // fontSize="3xl"
       bg={useColorModeValue("gray.100", "gray.700")}
     >
       <Grid minH={"3xl"} p={3}>

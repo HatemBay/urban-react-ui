@@ -80,7 +80,11 @@ export const Posts = (props: Props) => {
   if (error) return <p> Something went wrong... {error.name} </p>;
   if (fetching || !data) return <p>Loading...</p>;
   return (
-    <Box w="100%" color={TextColor}>
+    <Box
+      color={TextColor}
+      // minW={{ base: "10rem", sm: "60%", md: "60%" }}
+      maxW={"100%"}
+    >
       <Heading textTransform="capitalize" mb={4}>
         {data.posts.pagination !== undefined &&
           data.posts.pagination.totalCount === 0 &&
@@ -90,15 +94,20 @@ export const Posts = (props: Props) => {
       {/* <Button onClick={changeField}>Change</Button> */}
 
       {data.posts.pagination?.totalCount !== 0 && (
-        <VStack minH={"2xl"} spacing={4}>
+        <VStack
+          minH={"xl"}
+          minW={{ base: "10rem", sm: "100%", md: "100%" }}
+          maxW={"100%"}
+          spacing={4}
+        >
           {!randomize && (
             <Select
               onChange={changeTake}
               value={take}
-              width={"50%"}
+              // width={"50%"}
               bg={PrimaryBgColor}
               maxWidth="2xl"
-              w={"100%"}
+              w={{ base: "80%", md: "100%" }}
               _hover={{ cursor: "pointer" }}
             >
               {options.map((option) => (
