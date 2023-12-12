@@ -20,6 +20,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Container,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -42,7 +43,7 @@ import { RootState } from "../redux/store";
 import Layer from "./Layer";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
-import { getToken, getUserInfo } from "../utils/authUtils";
+import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -50,6 +51,7 @@ export default function Navbar() {
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
 
+  // clearToken();
   // const { userToken } = useSelector((state: RootState) => state.auth);
   const userToken = getToken();
 
@@ -70,7 +72,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Box>
+      <Container>
         <Flex
           bg={useColorModeValue(navbarColor, "gray.800")}
           color={useColorModeValue("white", "white")}
@@ -237,7 +239,7 @@ export default function Navbar() {
         <Collapse in={isOpen} animateOpacity>
           <MobileNav />
         </Collapse>
-      </Box>
+      </Container>
 
       <Layer>
         <Outlet />
@@ -322,6 +324,7 @@ const DesktopSubNav = ({ label, value, href, onclose }: NavItem) => {
   const dispatch = useDispatch();
   const handleFilter = (e: any) => {
     dispatch(setPage(1));
+    dispatch(setRandomize(false));
     return dispatch(setFilter(e));
   };
 
@@ -452,6 +455,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 const MobileNavSubItem = ({ value, label, children, href }: NavItem) => {
   const dispatch = useDispatch();
   const handleFilter = (e: any) => {
+    dispatch(setRandomize(false));
     return dispatch(setFilter(e));
   };
 
