@@ -12,7 +12,6 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  useColorModeValue,
   useBreakpointValue,
   useDisclosure,
   Grid,
@@ -21,16 +20,26 @@ import {
   InputLeftElement,
   InputRightElement,
   Container,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Avatar,
+  HStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
   Search2Icon,
+  SettingsIcon,
 } from "@chakra-ui/icons";
 import { IoIosShuffle } from "react-icons/io";
+import { IoIosLogOut } from "react-icons/io";
+import { MdFavorite } from "react-icons/md";
 import { Outlet, Link as ReactRouterLink } from "react-router-dom";
-import { Link as ChakraLink } from "@chakra-ui/react";
+import { Link as ChakraLink, useColorModeValue } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   forceRerender,
@@ -50,6 +59,8 @@ export default function Navbar() {
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
+  const TextColor = useLightDark(SHARED_COLORS.TextColor);
+  const SecondaryBgColor = useLightDark(SHARED_COLORS.SecondaryBgColor);
 
   // clearToken();
   // const { userToken } = useSelector((state: RootState) => state.auth);
@@ -72,7 +83,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Container>
+      <Box>
         <Flex
           bg={useColorModeValue(navbarColor, "gray.800")}
           color={useColorModeValue("white", "white")}
@@ -169,20 +180,121 @@ export default function Navbar() {
                   </Button>
                 )}
                 {userToken !== null ? (
-                  <Button
-                    as={ReactRouterLink}
-                    display={{ base: "none", md: "inline-flex" }}
-                    fontSize={"sm"}
-                    fontWeight={600}
-                    color={"white"}
-                    to={"/profile"}
-                    _hover={{
-                      bg: "blue.500",
-                    }}
-                    textTransform={"capitalize"}
-                  >
-                    {userInfo.username}
-                  </Button>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Box>
+                        <Tooltip
+                          as={Box}
+                          label="Profile"
+                          aria-label="A tooltip"
+                          borderRadius={"md"}
+                        >
+                          <Avatar
+                            as={Button}
+                            display={{ base: "none", md: "inline-flex" }}
+                          />
+                        </Tooltip>
+                      </Box>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton pt={4} color={TextColor} />
+                      <PopoverHeader
+                        as={ReactRouterLink}
+                        textAlign={"left"}
+                        color={TextColor}
+                        textTransform={"capitalize"}
+                        to={"/profile"}
+                        p={4}
+                        _hover={{
+                          cursor: "pointer",
+                          background: SecondaryBgColor,
+                        }}
+                      >
+                        <HStack gap={5}>
+                          <Avatar size={"sm"}></Avatar>
+                          <Text fontWeight={"bold"} fontSize={"lg"}>
+                            {userInfo.username}
+                          </Text>
+                        </HStack>
+                      </PopoverHeader>
+                      <PopoverBody>
+                        <Flex
+                          py={2}
+                          direction={"column"}
+                          justifyContent={"flex-start"}
+                          gap={3}
+                        >
+                          <HStack
+                            gap={3}
+                            as={ReactRouterLink}
+                            display={{ base: "none", md: "inline-flex" }}
+                            fontSize={"lg"}
+                            w={"full"}
+                            fontWeight={600}
+                            color={TextColor}
+                            bg={"transparent"}
+                            to={"/settings"}
+                            textTransform={"capitalize"}
+                            borderRadius={"md"}
+                            p={2}
+                            textAlign={"left"}
+                            _hover={{
+                              cursor: "pointer",
+                              background: SecondaryBgColor,
+                            }}
+                          >
+                            <SettingsIcon></SettingsIcon>
+                            <Text>Settings</Text>
+                          </HStack>
+                          <HStack
+                            gap={3}
+                            as={ReactRouterLink}
+                            display={{ base: "none", md: "inline-flex" }}
+                            fontSize={"lg"}
+                            w={"full"}
+                            fontWeight={600}
+                            color={TextColor}
+                            bg={"transparent"}
+                            to={"/favorite-terms"}
+                            textTransform={"capitalize"}
+                            borderRadius={"md"}
+                            p={2}
+                            textAlign={"left"}
+                            _hover={{
+                              cursor: "pointer",
+                              background: SecondaryBgColor,
+                            }}
+                          >
+                            <MdFavorite />
+                            <Text>Favorite Terms</Text>
+                          </HStack>
+                          <HStack
+                            gap={3}
+                            as={ReactRouterLink}
+                            display={{ base: "none", md: "inline-flex" }}
+                            fontSize={"lg"}
+                            w={"full"}
+                            fontWeight={600}
+                            color={TextColor}
+                            bg={"transparent"}
+                            to={"/logout"}
+                            textTransform={"capitalize"}
+                            borderRadius={"md"}
+                            p={2}
+                            textAlign={"left"}
+                            _hover={{
+                              cursor: "pointer",
+                              background: SecondaryBgColor,
+                            }}
+                          >
+                            <IoIosLogOut />
+                            <Text>Log out</Text>
+                          </HStack>
+                        </Flex>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
                 ) : (
                   <Button
                     as={ReactRouterLink}
@@ -239,7 +351,7 @@ export default function Navbar() {
         <Collapse in={isOpen} animateOpacity>
           <MobileNav />
         </Collapse>
-      </Container>
+      </Box>
 
       <Layer>
         <Outlet />
