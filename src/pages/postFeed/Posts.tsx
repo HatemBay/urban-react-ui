@@ -1,9 +1,9 @@
 import { Box, Button, Heading, Select, VStack } from "@chakra-ui/react";
 import React from "react";
-import PostItem from "./PostItem";
+import PostItem from "../../components/posts/PostItem";
 import { useQuery } from "urql";
 import { PaginatedPosts } from "../../data/types";
-import PageNavigator from "./PageNavigator";
+import PageNavigator from "../../components/posts/PageNavigator";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import useLightDark from "../../hooks/useLightDark";
@@ -82,7 +82,6 @@ export const Posts = (props: Props) => {
   return (
     <Box
       color={TextColor}
-      // minW={{ base: "10rem", sm: "60%", md: "60%" }}
       maxW={"100%"}
     >
       <Heading textTransform="capitalize" mb={4}>
@@ -104,7 +103,6 @@ export const Posts = (props: Props) => {
             <Select
               onChange={changeTake}
               value={take}
-              // width={"50%"}
               bg={PrimaryBgColor}
               maxWidth="2xl"
               w={{ base: "80%", md: "100%" }}
