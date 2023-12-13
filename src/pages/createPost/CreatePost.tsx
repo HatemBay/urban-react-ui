@@ -118,150 +118,144 @@ const CreatePost = (props: Props) => {
   };
 
   return (
-    <>
-      <Container
-        // fontSize={"3xl"}
-        minW={{ base: "7rem", sm: "60%", md: "60%" }}
-        maxW={"3xl"}
-        mb={5}
+    <Container
+      // fontSize={"3xl"}
+      minW={{ base: "7rem", sm: "60%", md: "60%" }}
+      maxW={"3xl"}
+      mb={5}
+      p={0}
+    >
+      <VStack
+        minW={"27rem"}
+        bg={PrimaryBgColor}
+        spacing={8}
+        textAlign="left"
         p={0}
+        pb={5}
       >
-        <VStack
-          minW={"27rem"}
-          bg={PrimaryBgColor}
-          spacing={8}
-          textAlign="left"
-          p={0}
-          pb={5}
-        >
-          <Heading mt={5} color={TextColor} alignSelf={"center"}>
-            New Definition
-          </Heading>
-          <HStack px={10} w={"100%"} alignItems={"center"}>
-            <VStack flexGrow={1} alignSelf={"flex-start"} textAlign={"center"}>
-              <Box w={"100%"} ml={10} p={3} pt={8}>
-                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
-                  <FormLabel>Arabic letters</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder={"المصطلح"}
-                    fontSize={"lg"}
-                    onChange={(e) => handleTerm(e, "arabic")}
-                  ></Input>
-                </FormControl>
-                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
-                  <FormLabel>latin letters</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder={"Word"}
-                    fontSize={"lg"}
-                    onChange={(e) => handleTerm(e, "latin")}
-                  ></Input>
-                </FormControl>
-                <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
-                  <FormLabel>Type</FormLabel>
-                  <Select
-                    onChange={ChangeType}
-                    value={type}
-                    bg={PrimaryBgColor}
-                    maxWidth="2xl"
-                    _hover={{ cursor: "pointer" }}
-                  >
-                    <option value={"Term"}>Term</option>
-                    <option value={"Proverb"}>Proverb</option>
-                  </Select>
-                </FormControl>
-                <FormControl
-                  display={{ md: "none" }}
-                  textAlign={"center"}
-                  mt={4}
+        <Heading mt={5} color={TextColor} alignSelf={"center"}>
+          New Definition
+        </Heading>
+        <HStack px={10} w={"100%"} alignItems={"center"}>
+          <VStack flexGrow={1} alignSelf={"flex-start"} textAlign={"center"}>
+            <Box w={"100%"} ml={10} p={3} pt={8}>
+              <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
+                <FormLabel>Arabic letters</FormLabel>
+                <Input
+                  type="text"
+                  placeholder={"المصطلح"}
+                  fontSize={"lg"}
+                  onChange={(e) => handleTerm(e, "arabic")}
+                ></Input>
+              </FormControl>
+              <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
+                <FormLabel>latin letters</FormLabel>
+                <Input
+                  type="text"
+                  placeholder={"Word"}
+                  fontSize={"lg"}
+                  onChange={(e) => handleTerm(e, "latin")}
+                ></Input>
+              </FormControl>
+              <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
+                <FormLabel>Type</FormLabel>
+                <Select
+                  onChange={ChangeType}
+                  value={type}
+                  bg={PrimaryBgColor}
+                  maxWidth="2xl"
+                  _hover={{ cursor: "pointer" }}
                 >
-                  <DialectsPopoverButton></DialectsPopoverButton>
-                </FormControl>
-              </Box>
-            </VStack>
-            <VStack
-              flexGrow={1}
-              display={{ base: "none", md: "block" }}
-              alignSelf={"flex-start"}
-            >
-              <Box ml={10} p={3} pt={8}>
+                  <option value={"Term"}>Term</option>
+                  <option value={"Proverb"}>Proverb</option>
+                </Select>
+              </FormControl>
+              <FormControl display={{ md: "none" }} textAlign={"center"} mt={4}>
                 <DialectsPopoverButton></DialectsPopoverButton>
-              </Box>
-            </VStack>
-          </HStack>
-          <Tabs width={"90%"} variant="enclosed">
-            <TabList>
-              <Tab>Arabic</Tab>
-              <Tab>English</Tab>
-              <Tab>French</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <Box p={3} pt={8}>
-                  <VStack gap={5}>
-                    <FormControl>
-                      <FormLabel>
-                        Define your word in <b>Arabic</b>
-                      </FormLabel>
-                      <DefinitionTextArea
-                        onChange={(e) => handleDefinition(e, "arabic")}
-                      ></DefinitionTextArea>
-                    </FormControl>
-                    <ExampleTextArea
-                      onChange={(e) => handleExample(e, "arabic")}
-                    ></ExampleTextArea>
-                  </VStack>
-                </Box>
-              </TabPanel>
-              <TabPanel>
-                <Box p={3} pt={8}>
-                  <VStack gap={5}>
-                    <FormControl>
-                      <FormLabel>
-                        Define your word in <b>English</b>
-                      </FormLabel>
-                      <DefinitionTextArea
-                        onChange={(e) => handleDefinition(e, "english")}
-                      ></DefinitionTextArea>
-                    </FormControl>
-                    <ExampleTextArea
-                      onChange={(e) => handleExample(e, "english")}
-                    ></ExampleTextArea>
-                  </VStack>
-                </Box>
-              </TabPanel>
-              <TabPanel>
-                <Box p={3} pt={8}>
-                  <VStack gap={5}>
-                    <FormControl>
-                      <FormLabel>
-                        Define your word in <b>French</b>
-                      </FormLabel>
-                      <DefinitionTextArea
-                        onChange={(e) => handleDefinition(e, "french")}
-                      ></DefinitionTextArea>
-                    </FormControl>
-                    <ExampleTextArea
-                      onChange={(e) => handleExample(e, "french")}
-                    ></ExampleTextArea>
-                  </VStack>
-                </Box>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-          <Button
-            mt={-5}
-            colorScheme="blue"
-            size={"lg"}
-            role="submit"
-            onClick={handleSubmit}
+              </FormControl>
+            </Box>
+          </VStack>
+          <VStack
+            flexGrow={1}
+            display={{ base: "none", md: "block" }}
+            alignSelf={"flex-start"}
           >
-            Add Definition
-          </Button>
-        </VStack>
-      </Container>
-    </>
+            <Box ml={10} p={3} pt={8}>
+              <DialectsPopoverButton></DialectsPopoverButton>
+            </Box>
+          </VStack>
+        </HStack>
+        <Tabs width={"90%"} variant="enclosed">
+          <TabList>
+            <Tab>Arabic</Tab>
+            <Tab>English</Tab>
+            <Tab>French</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Box p={3} pt={8}>
+                <VStack gap={5}>
+                  <FormControl>
+                    <FormLabel>
+                      Define your word in <b>Arabic</b>
+                    </FormLabel>
+                    <DefinitionTextArea
+                      onChange={(e) => handleDefinition(e, "arabic")}
+                    ></DefinitionTextArea>
+                  </FormControl>
+                  <ExampleTextArea
+                    onChange={(e) => handleExample(e, "arabic")}
+                  ></ExampleTextArea>
+                </VStack>
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box p={3} pt={8}>
+                <VStack gap={5}>
+                  <FormControl>
+                    <FormLabel>
+                      Define your word in <b>English</b>
+                    </FormLabel>
+                    <DefinitionTextArea
+                      onChange={(e) => handleDefinition(e, "english")}
+                    ></DefinitionTextArea>
+                  </FormControl>
+                  <ExampleTextArea
+                    onChange={(e) => handleExample(e, "english")}
+                  ></ExampleTextArea>
+                </VStack>
+              </Box>
+            </TabPanel>
+            <TabPanel>
+              <Box p={3} pt={8}>
+                <VStack gap={5}>
+                  <FormControl>
+                    <FormLabel>
+                      Define your word in <b>French</b>
+                    </FormLabel>
+                    <DefinitionTextArea
+                      onChange={(e) => handleDefinition(e, "french")}
+                    ></DefinitionTextArea>
+                  </FormControl>
+                  <ExampleTextArea
+                    onChange={(e) => handleExample(e, "french")}
+                  ></ExampleTextArea>
+                </VStack>
+              </Box>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        <Button
+          mt={-5}
+          colorScheme="blue"
+          size={"lg"}
+          role="submit"
+          onClick={handleSubmit}
+        >
+          Add Definition
+        </Button>
+      </VStack>
+    </Container>
   );
 };
 
