@@ -38,7 +38,7 @@ import {
 import { IoIosShuffle } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
-import { Outlet, Link as ReactRouterLink } from "react-router-dom";
+import { Outlet, Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { Link as ChakraLink, useColorModeValue } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -53,6 +53,7 @@ import Layer from "./Layer";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
 import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
+import { AuthInfo } from "../data/types";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -67,7 +68,7 @@ export default function Navbar() {
   const userToken = getToken();
 
   // const { userInfo } = useSelector((state: RootState) => state.auth);
-  const userInfo = getUserInfo();
+  const userInfo: AuthInfo | null = getUserInfo();
 
   const dispatch = useDispatch();
   const handleFilter = (e: any, randomize: boolean = false) => {
@@ -79,6 +80,14 @@ export default function Navbar() {
     dispatch(setRandomize(false));
     dispatch(setPage(1));
     return dispatch(setFilter(""));
+  };
+
+  //TODO: improve
+  const handleLogout = (e: any) => {
+    clearToken();
+    window.location.href = "/sign-in";
+
+    window.location.reload();
   };
 
   return (
@@ -214,7 +223,7 @@ export default function Navbar() {
                         <HStack gap={5}>
                           <Avatar size={"sm"}></Avatar>
                           <Text fontWeight={"bold"} fontSize={"lg"}>
-                            {userInfo.username}
+                            {userInfo?.username}
                           </Text>
                         </HStack>
                       </PopoverHeader>
@@ -271,14 +280,16 @@ export default function Navbar() {
                           </HStack>
                           <HStack
                             gap={3}
-                            as={ReactRouterLink}
+                            // as={ReactRouterLink}
                             display={{ base: "none", md: "inline-flex" }}
                             fontSize={"lg"}
                             w={"full"}
                             fontWeight={600}
                             color={TextColor}
                             bg={"transparent"}
-                            to={"/logout"}
+                            // TODO: improve
+                            onClick={handleLogout}
+                            // to={"/"}
                             textTransform={"capitalize"}
                             borderRadius={"md"}
                             p={2}
@@ -303,7 +314,7 @@ export default function Navbar() {
                     fontWeight={600}
                     color={"white"}
                     bg={ButtonPrimary}
-                    to={"#"}
+                    to={"/sign-up"}
                     _hover={{
                       bg: "blue.400",
                     }}
