@@ -39,6 +39,14 @@ export interface User {
   updatedAt?: string;
 }
 
+export interface AuthInfo {
+  sub: number;
+  username: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
 export interface Example {
   id?: number;
   contentArabic: string;
