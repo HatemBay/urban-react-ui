@@ -8,19 +8,25 @@ import Layer from "../layouts/Layer";
 import { Posts } from "./postFeed/Posts";
 import { USERS_QUERY } from "../graphql/queries/usersQuery";
 import {
+  redirect,
   useLocation,
   useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getUserInfo, setAuthTokens } from "../utils/authUtils";
+import { useDispatch } from "react-redux";
+import {
+  setUserInfoAsync,
+  setUserTokenAsync,
+} from "../redux/reducers/authSlice";
 
 // TODO: get number of total posts
 const posts = Math.random();
 
 export const Home = () => {
   const BgColor = useColorModeValue("gray.100", "gray.700");
-
   // TODO: remove
   const [{ data, fetching, error }] = useQuery({
     query: USERS_QUERY,
@@ -36,20 +42,25 @@ export const Home = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const code = searchParams.get("code");
+  // const token = searchParams.get("token");
+  // const token = searchParams.get("token");
+
+  // console.log("YA 3aMMMI AAAAAAAAAAAAAAAAAAAA PSWEYYYYYYY");
+
+  const [spinner, setSpinner] = useState(false);
+
+  console.log(location.pathname);
+  console.log("code");
+  console.log(code);
+  const url = `http://localhost:3001/auth/google/google-redirect?code=${code}`;
 
   const callBackendApi = async () => {
     try {
-      const code = searchParams.get("code");
-      // const token = searchParams.get("token");
-      // const token = searchParams.get("token");
+      console.log("initiating...");
 
-      // console.log("YA 3aMMMI AAAAAAAAAAAAAAAAAAAA PSWEYYYYYYY");
-
-      console.log(location.pathname);
-      console.log("code");
-      console.log(code);
-      const url = `http://localhost:3001/auth/google/google-redirect?code=${code}`;
-
+      setSpinner(true);
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -64,18 +75,23 @@ export const Home = () => {
 
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      console.log(
+        "********************************* DATA **************************************"
+      );
       const data = await response.json();
-      // const status = response.status;
-      // console.log("Data from backend:", data);
-      // console.log("MESSAGE:", data.message);
-      // console.log("ACCESS TOKEN:", data.user.accessToken);
-      // console.log("USER:", data.user.user);
-      // console.log("STAAAAAAAAAAAAAT:", status);
+      console.log("Data from backend:", data);
 
-      return data;
+      const { accessToken } = await data;
 
-      // Do something with the data, like updating state in your React component
+      await setAuthTokens(accessToken);
+      await dispatch(setUserTokenAsync(accessToken) as any);
+      await dispatch(setUserInfoAsync(getUserInfo()) as any);
+
+      const info = await getUserInfo();
+      console.log(info);
+
+      setSpinner(false);
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Error fetching data:", error);
       // Handle errors, show a message, or redirect the user to an error page
@@ -83,19 +99,16 @@ export const Home = () => {
   };
 
   useEffect(() => {
+    if (!code) {
+      console.log("NO CODE");
+      return;
+    }
     callBackendApi();
-  }, []);
-
-  // if (code) {
-  //   // navigate(`auth/email-confirmation/confirm`);
-  //   fetch("http://localhost:3001/auth/email-confirmation/confirm", {
-
-  //   })
-  // }
+  }, [code]);
 
   // TODO: return to this part when cloud registration is done
 
-  if (fetching) return <p>Loading...</p>;
+  if (fetching || spinner) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
   return (
     <>
