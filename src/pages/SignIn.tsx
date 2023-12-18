@@ -24,14 +24,14 @@ import { useMutation } from "urql";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "../graphql/mutations/loginMutation";
 import { useDispatch } from "react-redux";
 import {
   setUserInfoAsync,
   setUserTokenAsync,
 } from "../redux/reducers/authSlice";
-import { getUserInfo, setAuthTokens } from "../utils/authUtils";
+import { clearToken, getUserInfo, setAuthTokens } from "../utils/authUtils";
 import { LoginUserInput } from "../data/types";
 import { AppDispatch } from "../redux/store";
 
@@ -86,22 +86,23 @@ const SignIn = (props: Props) => {
       password: password,
     };
 
-    await signIn({ loginUserInput }).then(async (res) => {
-      if (res.error) {
-        setIsInvalidData(true);
-        setPassword("");
-        return;
-      }
-      const { accessToken } = res.data.login;
+    const res = await signIn({ loginUserInput });
 
-      setTimeout(async () => {
-        await setAuthTokens(accessToken);
-        await dispatch(setUserTokenAsync(res));
-        await dispatch(setUserInfoAsync(getUserInfo()));
-      });
+    if (res.error) {
+      setIsInvalidData(true);
+      setPassword("");
+      return;
+    }
+    const { accessToken } = res.data.login;
 
-      navigate("/");
+    setTimeout(async () => {
+      await setAuthTokens(accessToken);
+      await dispatch(setUserTokenAsync(res));
+      await dispatch(setUserInfoAsync(getUserInfo()));
     });
+
+    window.location.reload();
+    return redirect("/");
   };
 
   return (

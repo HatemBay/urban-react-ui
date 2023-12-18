@@ -38,7 +38,12 @@ import {
 import { IoIosShuffle } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
-import { Outlet, Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  Link as ReactRouterLink,
+  redirect,
+  useNavigate,
+} from "react-router-dom";
 import { Link as ChakraLink, useColorModeValue } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -71,6 +76,7 @@ export default function Navbar() {
   const userInfo: AuthInfo | null = getUserInfo();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleFilter = (e: any, randomize: boolean = false) => {
     if (randomize) {
       dispatch(setRandomize(true));
@@ -82,12 +88,16 @@ export default function Navbar() {
     return dispatch(setFilter(""));
   };
 
-  //TODO: improve
   const handleLogout = (e: any) => {
     clearToken();
-    window.location.href = "/sign-in";
-
     window.location.reload();
+    return redirect("/");
+  };
+  const goToProfile = (e: any) => {
+    dispatch(setRandomize(false));
+    dispatch(setPage(1));
+    dispatch(setFilter(""));
+    return navigate("/profile");
   };
 
   return (
@@ -209,11 +219,11 @@ export default function Navbar() {
                       <PopoverArrow />
                       <PopoverCloseButton pt={4} color={TextColor} />
                       <PopoverHeader
-                        as={ReactRouterLink}
+                        as={"a"}
                         textAlign={"left"}
                         color={TextColor}
                         textTransform={"capitalize"}
-                        to={"/profile"}
+                        onClick={goToProfile}
                         p={4}
                         _hover={{
                           cursor: "pointer",
