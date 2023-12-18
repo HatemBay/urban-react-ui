@@ -1,21 +1,21 @@
-import { filter, Heading, VStack, Select, Box } from "@chakra-ui/react";
+import { Heading, VStack, Select, Box } from "@chakra-ui/react";
 import { useQuery } from "urql";
 import PageNavigator from "../../components/posts/PageNavigator";
 import PostItem from "../../components/posts/PostItem";
-import { AuthInfo, PaginatedPosts, User } from "../../data/types";
+import { AuthInfo, PaginatedPosts } from "../../data/types";
 import { POSTS_QUERY } from "../../graphql/queries/postsQuery";
 import { SHARED_COLORS } from "../../data/constants";
 import useLightDark from "../../hooks/useLightDark";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getUserInfo } from "../../utils/authUtils";
-import { forceRerender } from "../../redux/reducers/pageSlice";
 
 type Props = {};
 
 export const Profile = (props: Props) => {
   const userInfo: AuthInfo = getUserInfo();
+  console.log(userInfo.sub);
 
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
@@ -25,13 +25,11 @@ export const Profile = (props: Props) => {
 
   const { currPage: page } = useSelector((state: RootState) => state.page);
   let { filter } = useSelector((state: RootState) => state.page);
+  let { randomize } = useSelector((state: RootState) => state.page);
 
   const changeTake = (e: any) => {
     setTake(+e.target.value);
   };
-  const dispatch = useDispatch();
-
-  //   dispatch(forceRerender());
 
   const options = [3, 5, 10];
   const [result, reexecuteQuery] = useQuery<PaginatedPosts>({
@@ -46,21 +44,11 @@ export const Profile = (props: Props) => {
         page,
         take,
       },
-      authorId: 8,
+      randomize,
+      authorId: userInfo.sub,
     },
   });
   const { data, fetching, error } = result;
-
-//   useEffect(() => {
-//     console.log("slmsssss");
-
-//     reexecuteQuery();
-//   }, [field, filter, page, take]);
-
-  console.log("erorrrrr");
-  console.log(error);
-  console.log("data?.posts");
-  console.log(data?.posts);
 
   if (error) return <p> Something went wrong... {error.name} </p>;
   if (fetching || !data) return <p>Loading...</p>;
