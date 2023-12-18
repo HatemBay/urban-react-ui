@@ -4,15 +4,21 @@ import "@fontsource/montserrat/300.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import { Home } from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Navbar from "./layouts/Navbar";
-import CreatePost from "./pages/postFeed/CreatePost";
 import { Profile } from "./pages/profile/Profile";
 import { NotFound } from "./pages/NotFound";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/store";
+import SignUp from "./pages/Signup";
+import { getToken, getUserInfo } from "./utils/authUtils";
+import CreatePost from "./pages/createPost/CreatePost";
 
 const theme = extendTheme({
   fonts: {
@@ -35,22 +41,45 @@ const theme = extendTheme({
   },
 });
 
-
 export const App = () => {
-  const { userToken } = useSelector((state: RootState) => state.auth);
+  // const { userToken } = useSelector((state: RootState) => state.auth);
+  const userToken = getToken();
 
-  const isAuthenticated = (userToken !== null);
+  const isAuthenticated = userToken !== null;
 
-  const createPrivateRoute = (isAuthenticated: boolean, fallbackPath = '/not-found') => {
-
-    return (path: string, element: any, error: Response = new Response("Not found", { status: 404 })) => {
+  const createPrivateRoute = (
+    isAuthenticated: boolean,
+    //TODO: fallback path should be unauthorized but i think it's better to just redirect to home (make decision)
+    fallbackPath = "/"
+  ) => {
+    return (
+      authRoute: boolean,
+      path: string,
+      element: any,
+      error: Response = new Response("Not found", { status: 404 })
+    ) => {
+      if (authRoute) {
+        return {
+          path,
+          element: isAuthenticated ? (
+            <Navigate to={fallbackPath} replace />
+          ) : (
+            element
+          ),
+          action: () => {
+            if (isAuthenticated) throw error;
+            return null;
+          },
+        };
+      }
+      // If the user is not logged in, redirect them to the home page
       return {
         path,
-        element: isAuthenticated ? <Navigate to={fallbackPath} replace /> : element,
+        element: isAuthenticated ? element : <Navigate to={"/"} replace />,
         action: () => {
-          if (isAuthenticated) throw error
-          return null
-        }
+          if (isAuthenticated) throw error;
+          return null;
+        },
       };
     };
   };
@@ -68,15 +97,14 @@ export const App = () => {
           path: "/",
           element: <Home />,
         },
-        privateRoute('/sign-in', < SignIn />, ForbiddenResponse),
-        {
-          path: "/create-post",
-          element: <CreatePost />,
-        },
-        {
-          path: "/profile",
-          element: <Profile />,
-        },
+        privateRoute(true, "/sign-in", <SignIn />, ForbiddenResponse),
+        privateRoute(true, "/sign-up", <SignUp />, ForbiddenResponse),
+        privateRoute(false, "/create-post", <CreatePost />, ForbiddenResponse),
+        privateRoute(false, "/profile", <Profile />, ForbiddenResponse),
+        // {
+        //   path: "/profile",
+        //   element: <Profile />,
+        // },
       ],
     },
     {
