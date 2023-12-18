@@ -19,6 +19,7 @@ import { RootState } from "./redux/store";
 import SignUp from "./pages/Signup";
 import { getToken, getUserInfo } from "./utils/authUtils";
 import CreatePost from "./pages/createPost/CreatePost";
+import { useEffect } from "react";
 
 const theme = extendTheme({
   fonts: {
@@ -42,8 +43,8 @@ const theme = extendTheme({
 });
 
 export const App = () => {
-  // const { userToken } = useSelector((state: RootState) => state.auth);
-  const userToken = getToken();
+  const { userToken } =
+    useSelector((state: RootState) => state.auth) || getToken();
 
   const isAuthenticated = userToken !== null;
 
@@ -95,6 +96,10 @@ export const App = () => {
       children: [
         {
           path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/auth/google/google-redirect",
           element: <Home />,
         },
         privateRoute(true, "/sign-in", <SignIn />, ForbiddenResponse),
