@@ -112,8 +112,6 @@ export default function Navbar() {
   // const { userInfo } = useSelector((state: RootState) => state.auth);
   const userInfo: AuthInfo | null = getUserInfo();
 
-  const buttonRef = useRef<any>(null);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleFilter = (e: any, randomize: boolean = false) => {
@@ -259,7 +257,6 @@ export default function Navbar() {
                             textAlign={"left"}
                             color={TextColor}
                             textTransform={"capitalize"}
-                            // onClick={onClose}
                             onClick={() => {
                               onClose();
                               goTo("/profile");
@@ -283,7 +280,6 @@ export default function Navbar() {
                               direction={"column"}
                               justifyContent={"flex-start"}
                               gap={3}
-                              ref={buttonRef}
                             >
                               {USER_DROPDOWN_ELEMENTS.map((element) => (
                                 <HStack
@@ -298,7 +294,6 @@ export default function Navbar() {
                                   to={element.href}
                                   textTransform={"capitalize"}
                                   borderRadius={"md"}
-                                  // onClick={element.onClick || onClose}
                                   onClick={() => {
                                     onClose();
                                     if (element.onClick) {
@@ -577,8 +572,6 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           >
             {children &&
               children.map((child) => {
-                // console.log(child.value);
-
                 return (
                   <MobileNavSubItem
                     key={child.label}
