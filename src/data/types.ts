@@ -1,5 +1,5 @@
 export type Post = {
-  id?: number;
+  id: number;
   titleArabic: string;
   titleLatin: string;
   contentArabic: string;
@@ -10,10 +10,12 @@ export type Post = {
   example: Example;
   published?: boolean;
   isU18?: boolean;
-  likesCount?: number;
-  dislikesCount?: number;
+  likesCount: number;
+  dislikesCount: number;
   createdAt: string;
   updatedAt?: string;
+  likedBy: User[];
+  dislikedBy: User[];
 };
 
 export type PaginatedPosts = {
@@ -59,6 +61,10 @@ export interface Example {
 export type LoginUserInput = {
   username: string;
   password: string;
+};
+
+export type FindPostInput = {
+  id: number;
 };
 
 export type Language = {
