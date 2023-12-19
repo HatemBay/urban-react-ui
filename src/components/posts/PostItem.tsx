@@ -1,6 +1,6 @@
 import "@fontsource/lora/600.css";
-import React from "react";
-import { Post } from "../../data/types";
+import React, { useState } from "react";
+import { FindPostInput, Post } from "../../data/types";
 import {
   Heading,
   Flex,
@@ -16,6 +16,7 @@ import {
   TabPanels,
   TabPanel,
   useBreakpointValue,
+  useInputGroupStyles,
 } from "@chakra-ui/react";
 import { IoMdThumbsDown, IoMdThumbsUp } from "react-icons/io";
 import formatDate from "../../utils/formatDate";
@@ -28,6 +29,14 @@ import {
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
 import { VStack } from "@chakra-ui/react";
+import { getUserInfo } from "../../utils/authUtils";
+import { useMutation } from "urql";
+import {
+  DISLIKE_POST_MUTATION,
+  LIKE_POST_MUTATION,
+  UNDISLIKE_POST_MUTATION,
+  UNLIKE_POST_MUTATION,
+} from "../../graphql/mutations/reactToPostMutation";
 interface Props {
   post: Post;
 }
@@ -37,9 +46,27 @@ const PostItem = ({ post }: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
   const ButtonSecondary = useLightDark(SHARED_COLORS.ButtonSecondary);
+  const [postLikesTempCountState, setPostLikesTempCountState] =
+    useState<number>(post.likesCount);
+  const [postDislikesTempCountState, setPostDislikesTempCountState] =
+    useState<number>(post.dislikesCount);
 
   const isBase = useBreakpointValue({ base: true, md: false });
   const isMd = useBreakpointValue({ md: true });
+  const userInfo = getUserInfo();
+
+  const usersThatLikedThePost = post.likedBy.map((val: any) => val.id);
+  let isLikedByUser = usersThatLikedThePost.indexOf(userInfo.sub) !== -1;
+
+  const usersThatDisLikedThePost = post.dislikedBy.map((val: any) => val.id);
+  let isDislikedByUser = usersThatDisLikedThePost.indexOf(userInfo.sub) !== -1;
+
+  const [isLikedByUserState, setIsLikedByUserState] =
+    useState<boolean>(isLikedByUser);
+  const [isDislikedByUserState, setIsDislikedByUserState] =
+    useState<boolean>(isDislikedByUser);
+
+  const ReactionCase = !isLikedByUserState && !isDislikedByUserState;
 
   const reactionButtonStyles = {
     border: "1px",
@@ -47,12 +74,87 @@ const PostItem = ({ post }: Props) => {
     width: "70px",
     px: 6,
     borderBottom: "2px",
-    background: PrimaryBgColor,
     _hover: { background: "#85CB33" },
   };
+  const likedPostStyle = {
+    ...reactionButtonStyles,
+    background: isLikedByUserState ? "#85CB33" : PrimaryBgColor,
+  };
+  const dislikedPostStyle = {
+    ...reactionButtonStyles,
+    background: isDislikedByUserState ? "#85CB33" : PrimaryBgColor,
+  };
 
-  console.log("pst");
-  console.log(post);
+  const [, likePost] = useMutation(LIKE_POST_MUTATION);
+  const [, unlikePost] = useMutation(UNLIKE_POST_MUTATION);
+  const [, dislikePost] = useMutation(DISLIKE_POST_MUTATION);
+  const [, undislikePost] = useMutation(UNDISLIKE_POST_MUTATION);
+
+  const handleLike = async () => {
+    const findPostInput: FindPostInput = {
+      id: post.id,
+    };
+
+    if (isLikedByUserState) {
+      await unlikePost({
+        findPostInput,
+      });
+      setPostLikesTempCountState(() => postLikesTempCountState - 1);
+      return setIsLikedByUserState(() => !isLikedByUserState);
+    }
+    if (!isLikedByUserState) {
+      if (!isDislikedByUserState) {
+        await likePost({
+          findPostInput,
+        });
+        setPostLikesTempCountState(() => postLikesTempCountState + 1);
+        return setIsLikedByUserState(() => !isLikedByUserState);
+      }
+      await likePost({
+        findPostInput,
+      });
+      await undislikePost({
+        findPostInput,
+      });
+      setPostLikesTempCountState(() => postLikesTempCountState + 1);
+      setPostDislikesTempCountState(() => postDislikesTempCountState - 1);
+      setIsDislikedByUserState(() => !isDislikedByUserState);
+      return setIsLikedByUserState(() => !isLikedByUserState);
+    }
+  };
+
+  const handleDislike = async () => {
+    const findPostInput: FindPostInput = {
+      id: post.id,
+    };
+
+    if (isDislikedByUserState) {
+      await undislikePost({
+        findPostInput,
+      });
+      setPostDislikesTempCountState(() => postDislikesTempCountState - 1);
+      return setIsDislikedByUserState(() => !isDislikedByUserState);
+    }
+    if (!isDislikedByUserState) {
+      if (!isLikedByUserState) {
+        await dislikePost({
+          findPostInput,
+        });
+        setPostDislikesTempCountState(() => postDislikesTempCountState + 1);
+        return setIsDislikedByUserState(() => !isDislikedByUserState);
+      }
+      await unlikePost({
+        findPostInput,
+      });
+      await dislikePost({
+        findPostInput,
+      });
+      setPostDislikesTempCountState(() => postDislikesTempCountState + 1);
+      setPostLikesTempCountState(() => postLikesTempCountState - 1);
+      setIsDislikedByUserState(() => !isDislikedByUserState);
+      return setIsLikedByUserState(() => !isLikedByUserState);
+    }
+  };
 
   return (
     <Tabs
@@ -344,24 +446,26 @@ const PostItem = ({ post }: Props) => {
             <Button
               borderRightRadius="none"
               borderLeftRadius="full"
-              sx={reactionButtonStyles}
+              sx={likedPostStyle}
+              onClick={handleLike}
             >
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsUp}></Icon>
                 <Text fontSize="10px" fontWeight="bold">
-                  {post.likesCount}
+                  {postLikesTempCountState}
                 </Text>
               </HStack>
             </Button>
             <Button
-              sx={reactionButtonStyles}
+              sx={dislikedPostStyle}
               borderRightRadius="full"
               borderLeftRadius="none"
+              onClick={handleDislike}
             >
               <HStack spacing={2}>
                 <Icon fontSize="15px" ml={-3} as={IoMdThumbsDown}></Icon>
                 <Text fontSize="10px" fontWeight="bold">
-                  {post.dislikesCount}
+                  {postDislikesTempCountState}
                 </Text>
               </HStack>
             </Button>
