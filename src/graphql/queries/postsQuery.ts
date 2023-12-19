@@ -36,6 +36,14 @@ export const POSTS_QUERY = gql`
         dislikesCount
         createdAt
         updatedAt
+        likedBy {
+          username
+          id
+        }
+        dislikedBy {
+          id
+          username
+        }
       }
       pagination {
         totalCount
