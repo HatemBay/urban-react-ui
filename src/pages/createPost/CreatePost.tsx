@@ -26,6 +26,8 @@ import ExampleTextArea from "../../components/ExampleTextArea";
 import DialectsPopoverButton from "../../components/DialectsPopoverButton";
 import { CREATE_EXAMPLE_MUTATION } from "../../graphql/mutations/createExampleMutation";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { forceRerender } from "../../redux/reducers/pageSlice";
 
 type PostsQueryRes = {
   posts: Post[];
@@ -60,6 +62,7 @@ const CreatePost = (props: Props) => {
 
   // const [latinTerm, setLatinTerm] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleDefinition = (e: any, language: string) => {
     setDefinition({ ...definition, [language]: e });
@@ -102,7 +105,9 @@ const CreatePost = (props: Props) => {
           (exampleData: any) => {
             console.log("SUCCESS");
             console.log(exampleData);
-            navigate("/");
+            console.log(postData);
+            dispatch(forceRerender());
+            return navigate("/");
           },
           (error) => {
             console.log("ERROR");
