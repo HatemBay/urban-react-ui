@@ -60,8 +60,45 @@ import { SHARED_COLORS } from "../data/constants";
 import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
 import { AuthInfo } from "../data/types";
 
+const handleLogout = (e: any) => {
+  clearToken();
+  window.location.reload();
+  return redirect("/");
+};
+
+interface UserDropDownItem {
+  label: string;
+  as: any;
+  icon: any;
+  href?: string;
+  onClick?: any;
+  onclose?: any;
+  goTo?: string;
+}
+
+const USER_DROPDOWN_ELEMENTS: Array<UserDropDownItem> = [
+  {
+    label: "Settings",
+    as: "a",
+    icon: <SettingsIcon></SettingsIcon>,
+    goTo: "/settings",
+  },
+  {
+    label: "Favorite Terms",
+    as: ReactRouterLink,
+    icon: <MdFavorite />,
+    href: "/favorite-terms",
+  },
+  {
+    label: "Logout",
+    as: ReactRouterLink,
+    icon: <IoIosLogOut />,
+    onClick: handleLogout,
+  },
+];
+
 export default function Navbar() {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onClose, onToggle } = useDisclosure();
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
@@ -74,6 +111,8 @@ export default function Navbar() {
 
   // const { userInfo } = useSelector((state: RootState) => state.auth);
   const userInfo: AuthInfo | null = getUserInfo();
+
+  const buttonRef = useRef<any>(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,16 +127,11 @@ export default function Navbar() {
     return dispatch(setFilter(""));
   };
 
-  const handleLogout = (e: any) => {
-    clearToken();
-    window.location.reload();
-    return redirect("/");
-  };
-  const goToProfile = (e: any) => {
+  const goTo = (href: string) => {
     dispatch(setRandomize(false));
     dispatch(setPage(1));
     dispatch(setFilter(""));
-    return navigate("/profile");
+    return navigate(href);
   };
 
   return (
@@ -199,122 +233,97 @@ export default function Navbar() {
                   </Button>
                 )}
                 {userToken !== null ? (
-                  <Popover>
-                    <PopoverTrigger>
-                      <Box>
-                        <Tooltip
-                          as={Box}
-                          label="Profile"
-                          aria-label="A tooltip"
-                          borderRadius={"md"}
-                        >
-                          <Avatar
-                            as={Button}
-                            display={{ base: "none", md: "inline-flex" }}
-                          />
-                        </Tooltip>
-                      </Box>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton pt={4} color={TextColor} />
-                      <PopoverHeader
-                        as={"a"}
-                        textAlign={"left"}
-                        color={TextColor}
-                        textTransform={"capitalize"}
-                        onClick={goToProfile}
-                        p={4}
-                        _hover={{
-                          cursor: "pointer",
-                          background: SecondaryBgColor,
-                        }}
-                      >
-                        <HStack gap={5}>
-                          <Avatar size={"sm"}></Avatar>
-                          <Text fontWeight={"bold"} fontSize={"lg"}>
-                            {userInfo?.username}
-                          </Text>
-                        </HStack>
-                      </PopoverHeader>
-                      <PopoverBody>
-                        <Flex
-                          py={2}
-                          direction={"column"}
-                          justifyContent={"flex-start"}
-                          gap={3}
-                        >
-                          <HStack
-                            gap={3}
-                            as={ReactRouterLink}
-                            display={{ base: "none", md: "inline-flex" }}
-                            fontSize={"lg"}
-                            w={"full"}
-                            fontWeight={600}
-                            color={TextColor}
-                            bg={"transparent"}
-                            to={"/settings"}
-                            textTransform={"capitalize"}
-                            borderRadius={"md"}
-                            p={2}
+                  <Popover trigger={"click"}>
+                    {({ onClose }) => (
+                      <>
+                        <PopoverTrigger>
+                          <Box>
+                            <Tooltip
+                              as={Box}
+                              label="Profile"
+                              aria-label="A tooltip"
+                              borderRadius={"md"}
+                            >
+                              <Avatar
+                                as={Button}
+                                display={{ base: "none", md: "inline-flex" }}
+                              />
+                            </Tooltip>
+                          </Box>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <PopoverArrow />
+                          <PopoverCloseButton pt={4} color={TextColor} />
+                          <PopoverHeader
+                            as={"a"}
                             textAlign={"left"}
+                            color={TextColor}
+                            textTransform={"capitalize"}
+                            // onClick={onClose}
+                            onClick={() => {
+                              onClose();
+                              goTo("/profile");
+                            }}
+                            p={4}
                             _hover={{
                               cursor: "pointer",
                               background: SecondaryBgColor,
                             }}
                           >
-                            <SettingsIcon></SettingsIcon>
-                            <Text>Settings</Text>
-                          </HStack>
-                          <HStack
-                            gap={3}
-                            as={ReactRouterLink}
-                            display={{ base: "none", md: "inline-flex" }}
-                            fontSize={"lg"}
-                            w={"full"}
-                            fontWeight={600}
-                            color={TextColor}
-                            bg={"transparent"}
-                            to={"/favorite-terms"}
-                            textTransform={"capitalize"}
-                            borderRadius={"md"}
-                            p={2}
-                            textAlign={"left"}
-                            _hover={{
-                              cursor: "pointer",
-                              background: SecondaryBgColor,
-                            }}
-                          >
-                            <MdFavorite />
-                            <Text>Favorite Terms</Text>
-                          </HStack>
-                          <HStack
-                            gap={3}
-                            // as={ReactRouterLink}
-                            display={{ base: "none", md: "inline-flex" }}
-                            fontSize={"lg"}
-                            w={"full"}
-                            fontWeight={600}
-                            color={TextColor}
-                            bg={"transparent"}
-                            // TODO: improve
-                            onClick={handleLogout}
-                            // to={"/"}
-                            textTransform={"capitalize"}
-                            borderRadius={"md"}
-                            p={2}
-                            textAlign={"left"}
-                            _hover={{
-                              cursor: "pointer",
-                              background: SecondaryBgColor,
-                            }}
-                          >
-                            <IoIosLogOut />
-                            <Text>Log out</Text>
-                          </HStack>
-                        </Flex>
-                      </PopoverBody>
-                    </PopoverContent>
+                            <HStack gap={5}>
+                              <Avatar size={"sm"}></Avatar>
+                              <Text fontWeight={"bold"} fontSize={"lg"}>
+                                {userInfo?.username}
+                              </Text>
+                            </HStack>
+                          </PopoverHeader>
+                          <PopoverBody>
+                            <Flex
+                              py={2}
+                              direction={"column"}
+                              justifyContent={"flex-start"}
+                              gap={3}
+                              ref={buttonRef}
+                            >
+                              {USER_DROPDOWN_ELEMENTS.map((element) => (
+                                <HStack
+                                  gap={3}
+                                  as={element.as}
+                                  display={{ base: "none", md: "inline-flex" }}
+                                  fontSize={"lg"}
+                                  w={"full"}
+                                  fontWeight={600}
+                                  color={TextColor}
+                                  bg={"transparent"}
+                                  to={element.href}
+                                  textTransform={"capitalize"}
+                                  borderRadius={"md"}
+                                  // onClick={element.onClick || onClose}
+                                  onClick={() => {
+                                    onClose();
+                                    if (element.onClick) {
+                                      element.onClick();
+                                    }
+                                    if (element.goTo) {
+                                      goTo(element.goTo);
+                                    }
+                                  }}
+                                  p={2}
+                                  textAlign={"left"}
+                                  _hover={{
+                                    cursor: "pointer",
+                                    background: SecondaryBgColor,
+                                  }}
+                                >
+                                  {element.icon}
+                                  <Text>{element.label}</Text>
+                                </HStack>
+                              ))}
+                            </Flex>
+                          </PopoverBody>
+                        </PopoverContent>
+                      </>
+                    )}
                   </Popover>
                 ) : (
                   <Button
