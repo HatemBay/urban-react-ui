@@ -1,5 +1,5 @@
 import "@fontsource/lora/600.css";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FindPostInput, Post } from "../../data/types";
 import {
   Heading,
@@ -7,6 +7,7 @@ import {
   Avatar,
   Text,
   HStack,
+  VStack,
   Button,
   Icon,
   Box,
@@ -16,7 +17,7 @@ import {
   TabPanels,
   TabPanel,
   useBreakpointValue,
-  useInputGroupStyles,
+  Divider,
 } from "@chakra-ui/react";
 import { IoMdThumbsDown, IoMdThumbsUp } from "react-icons/io";
 import formatDate from "../../utils/formatDate";
@@ -28,7 +29,6 @@ import {
 } from "react-share";
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
-import { VStack } from "@chakra-ui/react";
 import { getUserInfo } from "../../utils/authUtils";
 import { useMutation } from "urql";
 import {
@@ -37,6 +37,8 @@ import {
   UNDISLIKE_POST_MUTATION,
   UNLIKE_POST_MUTATION,
 } from "../../graphql/mutations/reactToPostMutation";
+import _ from "lodash";
+import ReportFlag from "./ReportFlag";
 interface Props {
   post: Post;
 }
@@ -46,6 +48,7 @@ const PostItem = ({ post }: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
   const ButtonSecondary = useLightDark(SHARED_COLORS.ButtonSecondary);
+
   const [postLikesTempCountState, setPostLikesTempCountState] =
     useState<number>(post.likesCount);
   const [postDislikesTempCountState, setPostDislikesTempCountState] =
@@ -56,32 +59,33 @@ const PostItem = ({ post }: Props) => {
   const userInfo = getUserInfo();
 
   const usersThatLikedThePost = post.likedBy.map((val: any) => val.id);
-  let isLikedByUser = usersThatLikedThePost.indexOf(userInfo.sub) !== -1;
+  let isLikedByUser = usersThatLikedThePost.indexOf(userInfo?.sub) !== -1;
 
   const usersThatDisLikedThePost = post.dislikedBy.map((val: any) => val.id);
-  let isDislikedByUser = usersThatDisLikedThePost.indexOf(userInfo.sub) !== -1;
+  let isDislikedByUser = usersThatDisLikedThePost.indexOf(userInfo?.sub) !== -1;
 
   const [isLikedByUserState, setIsLikedByUserState] =
     useState<boolean>(isLikedByUser);
   const [isDislikedByUserState, setIsDislikedByUserState] =
     useState<boolean>(isDislikedByUser);
 
-  const ReactionCase = !isLikedByUserState && !isDislikedByUserState;
-
   const reactionButtonStyles = {
     border: "1px",
     borderColor: TextColor,
-    width: "70px",
+    width: "140px",
     px: 6,
     borderBottom: "2px",
+    background: PrimaryBgColor,
     _hover: { background: "#85CB33" },
   };
   const likedPostStyle = {
     ...reactionButtonStyles,
+    width: "70px",
     background: isLikedByUserState ? "#85CB33" : PrimaryBgColor,
   };
   const dislikedPostStyle = {
     ...reactionButtonStyles,
+    width: "70px",
     background: isDislikedByUserState ? "#85CB33" : PrimaryBgColor,
   };
 
@@ -166,27 +170,15 @@ const PostItem = ({ post }: Props) => {
       borderRadius="lg"
       grow={1}
       maxW={{ base: "sm", sm: "lg", md: "2xl" }}
-      // w={{ base: "100%", md: "100%" }}
-      // minW={{ base: "100%", sm: "2xl", md: "2xl" }}
       w={{ base: "100%", sm: "lg", md: "100%" }}
       minW={{ base: "100%", sm: "lg", md: "2xl" }}
     >
-      {/* <Flex
-        boxShadow="md"
-        p={5}
-        bg={PrimaryBgColor}
-        borderRadius="lg"
-        maxWidth="2xl"
-        w="100%"
-      > */}
       <VStack minW={{ base: "15rem", sm: "15rem", md: "100%" }} maxW={"100%"}>
         <Flex
           position={"relative"}
           direction={"row"}
           justifyContent={"space-between"}
           minW={"100%"}
-          // grow={1}
-          // maxW={{ base: "100%", md: "100%" }}
           px={2}
         >
           <HStack>
@@ -282,7 +274,7 @@ const PostItem = ({ post }: Props) => {
                 Example:{" "}
               </Text>
               <Text
-                mb={6}
+                mb={2}
                 pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
@@ -342,7 +334,7 @@ const PostItem = ({ post }: Props) => {
                 Example:{" "}
               </Text>
               <Text
-                mb={6}
+                mb={2}
                 pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
@@ -399,7 +391,7 @@ const PostItem = ({ post }: Props) => {
                 Example:{" "}
               </Text>
               <Text
-                mb={6}
+                mb={2}
                 pl={3}
                 fontStyle={"italic"}
                 _firstLetter={{ textTransform: "uppercase" }}
@@ -410,6 +402,7 @@ const PostItem = ({ post }: Props) => {
               </Text>
             </TabPanel>
           )}
+          {/* <Divider my={3} /> */}
           <Text
             position={"relative"}
             mb={5}
@@ -428,7 +421,7 @@ const PostItem = ({ post }: Props) => {
                 <Avatar size={{ base: "sm" }} />
               </Box>
             )}
-            <Text ml={10} display={"inline"} pt={2}>
+            <Text mb={2} ml={10} display={"inline"} pt={2}>
               by{" "}
               <Text
                 as="span"
@@ -442,44 +435,41 @@ const PostItem = ({ post }: Props) => {
             {/* {month} {date}, {year} */}
             {/* //TODO: check time formatting after using data from db */}
           </Text>
-          <HStack spacing={0} w="100%" h="100%">
-            <Button
-              borderRightRadius="none"
-              borderLeftRadius="full"
-              sx={likedPostStyle}
-              onClick={handleLike}
-            >
-              <HStack spacing={2}>
-                <Icon fontSize="15px" ml={-3} as={IoMdThumbsUp}></Icon>
-                <Text fontSize="10px" fontWeight="bold">
-                  {postLikesTempCountState}
-                </Text>
-              </HStack>
-            </Button>
-            <Button
-              sx={dislikedPostStyle}
-              borderRightRadius="full"
-              borderLeftRadius="none"
-              onClick={handleDislike}
-            >
-              <HStack spacing={2}>
-                <Icon fontSize="15px" ml={-3} as={IoMdThumbsDown}></Icon>
-                <Text fontSize="10px" fontWeight="bold">
-                  {postDislikesTempCountState}
-                </Text>
-              </HStack>
-            </Button>
+          <Divider mb={6} />
+
+          <HStack w="100%" h="100%" justifyContent="space-between">
+            <HStack spacing={0}>
+              <Button
+                borderRightRadius="none"
+                borderLeftRadius="full"
+                sx={likedPostStyle}
+                onClick={handleLike}
+              >
+                <HStack spacing={2}>
+                  <Icon fontSize="15px" ml={-3} as={IoMdThumbsUp}></Icon>
+                  <Text fontSize="10px" fontWeight="bold">
+                    {postLikesTempCountState}
+                  </Text>
+                </HStack>
+              </Button>
+              <Button
+                sx={dislikedPostStyle}
+                borderRightRadius="full"
+                borderLeftRadius="none"
+                onClick={handleDislike}
+              >
+                <HStack spacing={2}>
+                  <Icon fontSize="15px" ml={-3} as={IoMdThumbsDown}></Icon>
+                  <Text fontSize="10px" fontWeight="bold">
+                    {postDislikesTempCountState}
+                  </Text>
+                </HStack>
+              </Button>
+            </HStack>
+            <ReportFlag styles={reactionButtonStyles} post={post}></ReportFlag>
           </HStack>
         </TabPanels>
-        {/* <Flex
-          grow={1}
-          flexDirection="column"
-          textAlign="left"
-          color={TextColor}
-        > */}
-        {/* </Flex> */}
       </HStack>
-      {/* </Flex> */}
     </Tabs>
   );
 };
