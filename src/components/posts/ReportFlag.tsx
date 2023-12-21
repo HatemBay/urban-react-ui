@@ -142,10 +142,8 @@ const ReportFlag = ({ styles, post }: Props) => {
 
     const report = createFlag({ createFlagInput });
     toast.promise(
-      report.then((report) => {
-        if (!report.error) {
-          return clearData();
-        }
+      report.then(() => {
+        return clearData();
       }),
       {
         success: {
