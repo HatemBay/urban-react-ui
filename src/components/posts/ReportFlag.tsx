@@ -25,6 +25,7 @@ import {
   UnorderedList,
   VStack,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { IoIosFlag } from "react-icons/io";
 import { Reason } from "../../data/enums";
@@ -44,6 +45,8 @@ interface Props {
 }
 
 const ReportFlag = ({ styles, post }: Props) => {
+  const toast = useToast();
+
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
@@ -119,10 +122,27 @@ const ReportFlag = ({ styles, post }: Props) => {
       createFlagInput = { ...createFlagInput, content: otherContent };
     }
 
-    const report = await createFlag({ createFlagInput });
-    if (!report.error) {
-      return clearData();
-    }
+    const report = createFlag({ createFlagInput });
+    toast.promise(
+      report.then((report) => {
+        if (!report.error) {
+          return clearData();
+        }
+      }),
+      {
+        success: {
+          title: "Success",
+          colorScheme: "green",
+          description: "Your report has been submitted, thank you!",
+        },
+        error: {
+          title: "Error",
+          colorScheme: "red",
+          description: "Something went wrong... please try again later",
+        },
+        loading: { title: "Pending", description: "Please wait.." },
+      }
+    );
   };
 
   return (
