@@ -20,7 +20,6 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
-  Stack,
   Text,
   Textarea,
   UnorderedList,
@@ -48,6 +47,7 @@ interface Props {
 }
 
 const ReportFlag = ({ styles, post }: Props) => {
+  const userInfo = getUserInfo();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -73,6 +73,7 @@ const ReportFlag = ({ styles, post }: Props) => {
     reason: Reason.PRIVATE,
     content: "It includes someone's full name or other personal information",
     postId: post.id,
+    userId: userInfo?.sub,
   });
   const [otherContent, setOtherContent] = useState<string>("");
 
@@ -84,27 +85,23 @@ const ReportFlag = ({ styles, post }: Props) => {
     {
       reason: Reason.PRIVATE,
       content: "It includes someone's full name or other personal information",
-      postId: post.id,
     },
     {
       reason: Reason.OFFENSIVE,
       content: "It includes hate speech, bullying, or other hurtful comments",
-      postId: post.id,
     },
     {
       reason: Reason.TABOO,
       content: "It conveys sensitive or inappropriate information",
-      postId: post.id,
     },
     {
       reason: Reason.OTHER,
       content: "Other",
-      postId: post.id,
     },
   ];
 
   const handleOpenModal = () => {
-    getUserInfo() ? onOpenModal() : onOpenRedirectDialog();
+    userInfo ? onOpenModal() : onOpenRedirectDialog();
   };
 
   const goTo = (url: string) => {
@@ -127,7 +124,7 @@ const ReportFlag = ({ styles, post }: Props) => {
     setOtherContent("");
     setFlag(() => FLAG_OPTIONS[0] as Flag);
     onCloseConfirmDialog();
-    onCloseModal();
+    return onCloseModal();
   };
 
   const reportDefinition = async () => {
@@ -135,6 +132,7 @@ const ReportFlag = ({ styles, post }: Props) => {
       reason: flag.reason,
       content: flag.content,
       postId: post.id,
+      userId: userInfo?.sub,
     };
     if (flag.reason === "OTHER") {
       createFlagInput = { ...createFlagInput, content: otherContent };
@@ -142,9 +140,17 @@ const ReportFlag = ({ styles, post }: Props) => {
 
     const report = createFlag({ createFlagInput });
     toast.promise(
-      report.then(() => {
-        return clearData();
-      }),
+      report
+        .then((report) => {
+          if (report.error) {
+            clearData();
+            throw new Error(report.error.message);
+          }
+          return clearData();
+        })
+        .catch((err) => {
+          throw new Error(err.message);
+        }),
       {
         success: {
           title: "Success",
@@ -222,11 +228,7 @@ const ReportFlag = ({ styles, post }: Props) => {
               </VStack>
               <Heading ml={5}>Why should this definition be removed?</Heading>
               <Box>
-                <RadioGroup
-                  // onChange={handleFlag}
-                  defaultValue={Reason.PRIVATE}
-                  colorScheme="green"
-                >
+                <RadioGroup defaultValue={Reason.PRIVATE} colorScheme="green">
                   <VStack spacing={2} alignItems={"left"} mb={2}>
                     {FLAG_OPTIONS.map((option) => {
                       return (

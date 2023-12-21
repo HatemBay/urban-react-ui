@@ -65,13 +65,13 @@ export interface Flag {
   reason: Reason;
   content: string;
   postId: number;
+  userId: number;
   createdAt?: string;
 }
 
 export type FlagOptionsRadioGroup = {
   reason: Reason;
   content: string;
-  postId: number;
 };
 
 export type LoginUserInput = {
@@ -83,6 +83,7 @@ export type CreateFlagInput = {
   reason: Reason;
   content: string;
   postId: number;
+  userId: number;
 };
 
 export type FindPostInput = {
