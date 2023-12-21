@@ -465,7 +465,13 @@ const PostItem = ({ post }: Props) => {
                 </HStack>
               </Button>
             </HStack>
-            <ReportFlag styles={reactionButtonStyles} post={post}></ReportFlag>
+            {(userInfo?.sub && userInfo?.sub !== post.authorId) ||
+              (!userInfo && (
+                <ReportFlag
+                  styles={reactionButtonStyles}
+                  post={post}
+                ></ReportFlag>
+              ))}
           </HStack>
         </TabPanels>
       </HStack>
