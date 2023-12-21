@@ -1,3 +1,5 @@
+import { Reason } from "./enums";
+
 export type Post = {
   id: number;
   titleArabic: string;
@@ -58,9 +60,29 @@ export interface Example {
   updatedAt?: string;
 }
 
+export interface Flag {
+  id?: number;
+  reason: Reason;
+  content: string;
+  postId: number;
+  createdAt?: string;
+}
+
+export type FlagOptionsRadioGroup = {
+  reason: Reason;
+  content: string;
+  postId: number;
+};
+
 export type LoginUserInput = {
   username: string;
   password: string;
+};
+
+export type CreateFlagInput = {
+  reason: Reason;
+  content: string;
+  postId: number;
 };
 
 export type FindPostInput = {
