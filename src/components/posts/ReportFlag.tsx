@@ -1,4 +1,10 @@
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   HStack,
@@ -23,7 +29,12 @@ import {
 import { IoIosFlag } from "react-icons/io";
 import { Reason } from "../../data/enums";
 import { useRef, useState } from "react";
-import { CreateFlagInput, Flag, FlagOptionsRadioGroup, Post } from "../../data/types";
+import {
+  CreateFlagInput,
+  Flag,
+  FlagOptionsRadioGroup,
+  Post,
+} from "../../data/types";
 import { CREATE_FLAG_MUTATION } from "../../graphql/mutations/createFlagMutation";
 import { useMutation } from "urql";
 
@@ -33,7 +44,16 @@ interface Props {
 }
 
 const ReportFlag = ({ styles, post }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenModal,
+    onOpen: onOpenModal,
+    onClose: onCloseModal,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDialog,
+    onOpen: onOpenDialog,
+    onClose: onCloseDialog,
+  } = useDisclosure();
 
   const [, createFlag] = useMutation(CREATE_FLAG_MUTATION);
 
@@ -45,6 +65,7 @@ const ReportFlag = ({ styles, post }: Props) => {
   const [otherContent, setOtherContent] = useState<string>("");
 
   const flagTextAreaRef = useRef<HTMLTextAreaElement>(null);
+  const cancelRef = useRef<any>();
 
   const FLAG_OPTIONS: Array<FlagOptionsRadioGroup> = [
     {
@@ -84,7 +105,8 @@ const ReportFlag = ({ styles, post }: Props) => {
   const clearData = () => {
     setOtherContent("");
     setFlag(() => FLAG_OPTIONS[0] as Flag);
-    onClose();
+    onCloseDialog();
+    onCloseModal();
   };
 
   const reportDefinition = async () => {
@@ -110,7 +132,7 @@ const ReportFlag = ({ styles, post }: Props) => {
         sx={styles}
         borderRightRadius="full"
         borderLeftRadius="full"
-        onClick={onOpen}
+        onClick={onOpenModal}
       >
         <HStack spacing={2}>
           <Icon fontSize="15px" ml={-3} as={IoIosFlag}></Icon>
@@ -120,7 +142,12 @@ const ReportFlag = ({ styles, post }: Props) => {
         </HStack>
       </Button>
 
-      <Modal size={"4xl"} isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal
+        size={"4xl"}
+        isOpen={isOpenModal}
+        onClose={onCloseModal}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign={"center"}>Report Post</ModalHeader>
@@ -194,12 +221,40 @@ const ReportFlag = ({ styles, post }: Props) => {
             <Button colorScheme="blue" mr={3} onClick={clearData}>
               Close
             </Button>
-            <Button colorScheme="yellow" onClick={reportDefinition}>
+            <Button colorScheme="yellow" onClick={onOpenDialog}>
               Report Definition
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <AlertDialog
+        isOpen={isOpenDialog}
+        leastDestructiveRef={cancelRef}
+        onClose={onCloseDialog}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Report Definition
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onCloseDialog}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={reportDefinition} ml={3}>
+                Report
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };
