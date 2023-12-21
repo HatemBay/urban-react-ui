@@ -56,6 +56,7 @@ const PostItem = ({ post }: Props) => {
   const isBase = useBreakpointValue({ base: true, md: false });
   const isMd = useBreakpointValue({ md: true });
   const userInfo = getUserInfo();
+  console.log(userInfo?.sub);
 
   const usersThatLikedThePost = post.likedBy.map((val: any) => val.id);
   let isLikedByUser = usersThatLikedThePost.indexOf(userInfo?.sub) !== -1;
@@ -465,13 +466,13 @@ const PostItem = ({ post }: Props) => {
                 </HStack>
               </Button>
             </HStack>
-            {(userInfo?.sub && userInfo?.sub !== post.authorId) ||
-              (!userInfo && (
-                <ReportFlag
-                  styles={reactionButtonStyles}
-                  post={post}
-                ></ReportFlag>
-              ))}
+            {((userInfo?.sub && userInfo?.sub !== post.authorId) ||
+              !userInfo) && (
+              <ReportFlag
+                styles={reactionButtonStyles}
+                post={post}
+              ></ReportFlag>
+            )}
           </HStack>
         </TabPanels>
       </HStack>

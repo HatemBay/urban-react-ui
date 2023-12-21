@@ -20,6 +20,7 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
+  Stack,
   Text,
   Textarea,
   UnorderedList,
@@ -38,6 +39,8 @@ import {
 } from "../../data/types";
 import { CREATE_FLAG_MUTATION } from "../../graphql/mutations/createFlagMutation";
 import { useMutation } from "urql";
+import { getUserInfo } from "../../utils/authUtils";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   styles: any;
@@ -46,6 +49,7 @@ interface Props {
 
 const ReportFlag = ({ styles, post }: Props) => {
   const toast = useToast();
+  const navigate = useNavigate();
 
   const {
     isOpen: isOpenModal,
@@ -53,9 +57,14 @@ const ReportFlag = ({ styles, post }: Props) => {
     onClose: onCloseModal,
   } = useDisclosure();
   const {
-    isOpen: isOpenDialog,
-    onOpen: onOpenDialog,
-    onClose: onCloseDialog,
+    isOpen: isOpenConfirmDialog,
+    onOpen: onOpenConfirmDialog,
+    onClose: onCloseConfirmDialog,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenRedirectDialog,
+    onOpen: onOpenRedirectDialog,
+    onClose: onCloseRedirectDialog,
   } = useDisclosure();
 
   const [, createFlag] = useMutation(CREATE_FLAG_MUTATION);
@@ -68,7 +77,8 @@ const ReportFlag = ({ styles, post }: Props) => {
   const [otherContent, setOtherContent] = useState<string>("");
 
   const flagTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  const cancelRef = useRef<any>();
+  const cancelConfirmRef = useRef<any>();
+  const cancelRedirectRef = useRef<any>();
 
   const FLAG_OPTIONS: Array<FlagOptionsRadioGroup> = [
     {
@@ -93,6 +103,14 @@ const ReportFlag = ({ styles, post }: Props) => {
     },
   ];
 
+  const handleOpenModal = () => {
+    getUserInfo() ? onOpenModal() : onOpenRedirectDialog();
+  };
+
+  const goTo = (url: string) => {
+    return navigate(url);
+  };
+
   const handleFlag = (e: any) => {
     const flagTextArea = flagTextAreaRef.current as HTMLTextAreaElement;
     flagTextArea.disabled = !(e.target.value === Reason.OTHER);
@@ -108,7 +126,7 @@ const ReportFlag = ({ styles, post }: Props) => {
   const clearData = () => {
     setOtherContent("");
     setFlag(() => FLAG_OPTIONS[0] as Flag);
-    onCloseDialog();
+    onCloseConfirmDialog();
     onCloseModal();
   };
 
@@ -152,7 +170,7 @@ const ReportFlag = ({ styles, post }: Props) => {
         sx={styles}
         borderRightRadius="full"
         borderLeftRadius="full"
-        onClick={onOpenModal}
+        onClick={handleOpenModal}
       >
         <HStack spacing={2}>
           <Icon fontSize="15px" ml={-3} as={IoIosFlag}></Icon>
@@ -241,7 +259,7 @@ const ReportFlag = ({ styles, post }: Props) => {
             <Button colorScheme="blue" mr={3} onClick={clearData}>
               Close
             </Button>
-            <Button colorScheme="yellow" onClick={onOpenDialog}>
+            <Button colorScheme="yellow" onClick={onOpenConfirmDialog}>
               Report Definition
             </Button>
           </ModalFooter>
@@ -249,9 +267,9 @@ const ReportFlag = ({ styles, post }: Props) => {
       </Modal>
 
       <AlertDialog
-        isOpen={isOpenDialog}
-        leastDestructiveRef={cancelRef}
-        onClose={onCloseDialog}
+        isOpen={isOpenConfirmDialog}
+        leastDestructiveRef={cancelConfirmRef}
+        onClose={onCloseConfirmDialog}
         isCentered
       >
         <AlertDialogOverlay>
@@ -265,11 +283,52 @@ const ReportFlag = ({ styles, post }: Props) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onCloseDialog}>
+              <Button ref={cancelConfirmRef} onClick={onCloseConfirmDialog}>
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={reportDefinition} ml={3}>
                 Report
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <AlertDialog
+        isOpen={isOpenRedirectDialog}
+        leastDestructiveRef={cancelRedirectRef}
+        onClose={onCloseRedirectDialog}
+        isCentered
+        size={"xl"}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Sign In required
+            </AlertDialogHeader>
+
+            <AlertDialogBody mb={3}>
+              You must be signed in to report a definition.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRedirectRef} onClick={onCloseRedirectDialog}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="blue"
+                onClick={() => goTo("/sign-up")}
+                ml={3}
+              >
+                Sign Up
+              </Button>
+              <Button
+                colorScheme="green"
+                onClick={() => goTo("/sign-in")}
+                ml={3}
+                px={2}
+              >
+                Sign In
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
