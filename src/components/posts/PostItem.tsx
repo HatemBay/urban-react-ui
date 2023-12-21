@@ -37,7 +37,6 @@ import {
   UNDISLIKE_POST_MUTATION,
   UNLIKE_POST_MUTATION,
 } from "../../graphql/mutations/reactToPostMutation";
-import _ from "lodash";
 import ReportFlag from "./ReportFlag";
 interface Props {
   post: Post;
