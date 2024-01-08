@@ -64,16 +64,16 @@ const CreatePost = (props: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleDefinition = (e: any, language: string) => {
-    setDefinition({ ...definition, [language]: e });
+  const handleDefinition = (language: string) => {
+    return (e: any) => setDefinition({ ...definition, [language]: e });
   };
 
-  const handleExample = (e: any, language: string) => {
-    setExample({ ...example, [language]: e });
+  const handleExample = (language: string) => {
+    return (e: any) => setExample({ ...example, [language]: e });
   };
 
-  const handleTerm = (e: any, language: string) => {
-    setTerm({ ...term, [language]: e.target.value });
+  const handleTerm = (language: string) => {
+    return (e: any) => setTerm({ ...term, [language]: e.target.value });
   };
   const ChangeType = (e: any) => {
     setType(e.target.value);
@@ -93,7 +93,6 @@ const CreatePost = (props: Props) => {
     //TODO: improve
     await newPost({ createPostInput }).then(
       async (postData: any) => {
-        console.log(postData);
         const createExampleInput = {
           contentArabic: example.arabic,
           contentEnglish: example.english,
@@ -106,6 +105,7 @@ const CreatePost = (props: Props) => {
             console.log("SUCCESS");
             console.log(exampleData);
             console.log(postData);
+            //TODO: Test more thouroughly, (when i created a post with full language and example when there was one post existing, none showed up after redirect)
             dispatch(forceRerender());
             return navigate("/");
           },
@@ -150,7 +150,7 @@ const CreatePost = (props: Props) => {
                   type="text"
                   placeholder={"المصطلح"}
                   fontSize={"lg"}
-                  onChange={(e) => handleTerm(e, "arabic")}
+                  onChange={handleTerm("arabic")}
                 ></Input>
               </FormControl>
               <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
@@ -159,7 +159,7 @@ const CreatePost = (props: Props) => {
                   type="text"
                   placeholder={"Word"}
                   fontSize={"lg"}
-                  onChange={(e) => handleTerm(e, "latin")}
+                  onChange={handleTerm("latin")}
                 ></Input>
               </FormControl>
               <FormControl w={{ base: "90%", sm: "90%", md: "80%" }} mb={3}>
@@ -205,11 +205,11 @@ const CreatePost = (props: Props) => {
                       Define your word in <b>Arabic</b>
                     </FormLabel>
                     <DefinitionTextArea
-                      onChange={(e) => handleDefinition(e, "arabic")}
+                      onChange={handleDefinition("arabic")}
                     ></DefinitionTextArea>
                   </FormControl>
                   <ExampleTextArea
-                    onChange={(e) => handleExample(e, "arabic")}
+                    onChange={handleExample("arabic")}
                   ></ExampleTextArea>
                 </VStack>
               </Box>
@@ -222,11 +222,11 @@ const CreatePost = (props: Props) => {
                       Define your word in <b>English</b>
                     </FormLabel>
                     <DefinitionTextArea
-                      onChange={(e) => handleDefinition(e, "english")}
+                      onChange={handleDefinition("english")}
                     ></DefinitionTextArea>
                   </FormControl>
                   <ExampleTextArea
-                    onChange={(e) => handleExample(e, "english")}
+                    onChange={handleExample("english")}
                   ></ExampleTextArea>
                 </VStack>
               </Box>
@@ -239,11 +239,11 @@ const CreatePost = (props: Props) => {
                       Define your word in <b>French</b>
                     </FormLabel>
                     <DefinitionTextArea
-                      onChange={(e) => handleDefinition(e, "french")}
+                      onChange={handleDefinition("french")}
                     ></DefinitionTextArea>
                   </FormControl>
                   <ExampleTextArea
-                    onChange={(e) => handleExample(e, "french")}
+                    onChange={handleExample("french")}
                   ></ExampleTextArea>
                 </VStack>
               </Box>
