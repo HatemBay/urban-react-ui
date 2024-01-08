@@ -60,9 +60,11 @@ const PostItem = ({ post }: Props) => {
 
   const usersThatLikedThePost = post.likedBy.map((val: any) => val.id);
   let isLikedByUser = usersThatLikedThePost.indexOf(userInfo?.sub) !== -1;
+  
+  const usersThatDislikedThePost = post.dislikedBy.map((val: any) => val.id);
+  let isDislikedByUser = usersThatDislikedThePost.indexOf(userInfo?.sub) !== -1;
 
-  const usersThatDisLikedThePost = post.dislikedBy.map((val: any) => val.id);
-  let isDislikedByUser = usersThatDisLikedThePost.indexOf(userInfo?.sub) !== -1;
+  console.log("users that disliked the post", usersThatDislikedThePost);
 
   const [isLikedByUserState, setIsLikedByUserState] =
     useState<boolean>(isLikedByUser);

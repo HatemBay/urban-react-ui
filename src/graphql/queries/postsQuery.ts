@@ -37,8 +37,8 @@ export const POSTS_QUERY = gql`
         createdAt
         updatedAt
         likedBy {
-          username
           id
+          username
         }
         dislikedBy {
           id
