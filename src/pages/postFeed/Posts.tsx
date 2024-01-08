@@ -1,28 +1,29 @@
 import { Box, Button, Heading, Select, VStack } from "@chakra-ui/react";
-import React from "react";
 import PostItem from "../../components/posts/PostItem";
-import { useQuery } from "urql";
-import { PaginatedPosts } from "../../data/types";
+import { Post } from "../../data/types";
 import PageNavigator from "../../components/posts/PageNavigator";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import useLightDark from "../../hooks/useLightDark";
 import { SHARED_COLORS } from "../../data/constants";
-import { POSTS_QUERY } from "../../graphql/queries/postsQuery";
+import { useOutletContext } from "react-router-dom";
 
 type Props = {};
 
 export const Posts = (props: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
-
-  const [field, setOrderByField] = React.useState("createdAt");
-  let [take, setTake] = React.useState(5);
-
-  const { currPage: page } = useSelector((state: RootState) => state.page);
-  let { filter } = useSelector((state: RootState) => state.page);
   let { randomize } = useSelector((state: RootState) => state.page);
-  let { rerender } = useSelector((state: RootState) => state.page);
+  let { filter } = useSelector((state: RootState) => state.page);
+
+  // TODO: set hooks instead of context
+  const [PostsQueryResult, setOrderByField, take, setTake, handleRandomize]: [
+    any,
+    any,
+    any,
+    any,
+    any
+  ] = useOutletContext();
 
   const filterActions: { [key: string]: () => void } = {
     "#": () => {
@@ -45,32 +46,15 @@ export const Posts = (props: Props) => {
   const changeField = (e: any) => {
     setOrderByField(() => "title");
   };
-  const options = [3, 5, 10];
+  const options = [2, 5, 10];
 
-  const [result, reexecuteQuery] = useQuery<PaginatedPosts>({
-    query: POSTS_QUERY,
-    variables: {
-      orderBy: {
-        field,
-        direction: "desc",
-      },
-      pagination: {
-        filter,
-        page,
-        take,
-      },
-      randomize,
-      //rerender is a fake value used to bypass the cache when needed and trigger the query
-      rerender,
-    },
-  });
-
-  const { data, fetching, error } = result;
+  let { data, fetching, error } = PostsQueryResult;
   console.log("erorrrrr");
   console.log(error);
 
   const handleRandomPosts = () => {
-    reexecuteQuery({ requestPolicy: "network-only" });
+    handleRandomize();
+
     return window.scrollTo(0, 0);
   };
 
@@ -80,10 +64,7 @@ export const Posts = (props: Props) => {
   if (error) return <p> Something went wrong... {error.name} </p>;
   if (fetching || !data) return <p>Loading...</p>;
   return (
-    <Box
-      color={TextColor}
-      maxW={"100%"}
-    >
+    <Box color={TextColor} maxW={"100%"}>
       <Heading textTransform="capitalize" mb={4}>
         {data.posts.pagination !== undefined &&
           data.posts.pagination.totalCount === 0 &&
@@ -115,11 +96,8 @@ export const Posts = (props: Props) => {
               ))}
             </Select>
           )}
-          {/* ********************************************* */}
-          {/* TODO: check with undefined and length */}
-          {/* ********************************************* */}
           {data.posts.data &&
-            data.posts.data.map((post) => (
+            data.posts.data.map((post: Post) => (
               <PostItem key={post.id} post={post}></PostItem>
             ))}
           {!randomize && (

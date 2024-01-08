@@ -19,7 +19,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Container,
   PopoverArrow,
   PopoverCloseButton,
   PopoverHeader,
@@ -52,13 +51,15 @@ import {
   setPage,
   setRandomize,
 } from "../redux/reducers/pageSlice";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
 import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
-import { AuthInfo } from "../data/types";
+import { AuthInfo, PaginatedPosts } from "../data/types";
+import { useQuery } from "urql";
+import { POSTS_QUERY } from "../graphql/queries/postsQuery";
 
 const handleLogout = (e: any) => {
   clearToken();
@@ -105,6 +106,32 @@ export default function Navbar() {
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
   const SecondaryBgColor = useLightDark(SHARED_COLORS.SecondaryBgColor);
 
+  const [field, setOrderByField] = useState("createdAt");
+  let [take, setTake] = useState(5);
+
+  const { currPage: page } = useSelector((state: RootState) => state.page);
+  let { filter } = useSelector((state: RootState) => state.page);
+  let { randomize } = useSelector((state: RootState) => state.page);
+  let { rerender } = useSelector((state: RootState) => state.page);
+
+  const [PostsQueryResult, reexecutePostsQuery] = useQuery<PaginatedPosts>({
+    query: POSTS_QUERY,
+    variables: {
+      orderBy: {
+        field,
+        direction: "desc",
+      },
+      pagination: {
+        filter,
+        page,
+        take,
+      },
+      randomize,
+      //rerender is a fake value used to bypass the cache when needed and trigger the query
+      rerender,
+    },
+  });
+
   // clearToken();
   // const { userToken } = useSelector((state: RootState) => state.auth);
   const userToken = getToken();
@@ -114,10 +141,17 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleRandomize = () => {
+    dispatch(setRandomize(true));
+    return reexecutePostsQuery({
+      requestPolicy: "network-only",
+    });
+  };
+
   const handleFilter = (e: any, randomize: boolean = false) => {
     if (randomize) {
-      dispatch(setRandomize(true));
-      return dispatch(forceRerender());
+      return handleRandomize();
     }
 
     dispatch(setRandomize(false));
@@ -377,9 +411,16 @@ export default function Navbar() {
           <MobileNav />
         </Collapse>
       </Box>
-
       <Layer>
-        <Outlet />
+        <Outlet
+          context={[
+            PostsQueryResult,
+            setOrderByField,
+            take,
+            setTake,
+            handleRandomize,
+          ]}
+        />
       </Layer>
     </>
   );
