@@ -1,3 +1,4 @@
+import { AnyVariables, UseQueryExecute, UseQueryState } from "urql";
 import { Reason } from "./enums";
 
 export type Post = {
@@ -104,6 +105,13 @@ export type TermForm = {
 export type Dialect = {
   label: string;
   dialect: string;
-  flag?: any;
-  value?: string;
+  country: string;
+  flag: JSX.Element | null;
+};
+
+export type ResultContextType = {
+  posts: UseQueryState<PaginatedPosts, AnyVariables> | null;
+};
+export type ReexecuteContextType = {
+  reexecutePostsQuery: UseQueryExecute | null;
 };
