@@ -17,6 +17,10 @@ import {
   AlertIcon,
   AlertDescription,
   FormErrorMessage,
+  HStack,
+  Divider,
+  Text,
+  Stack,
 } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
@@ -26,14 +30,14 @@ import { SHARED_COLORS } from "../data/constants";
 import { useState, useEffect } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION } from "../graphql/mutations/loginMutation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setUserInfoAsync,
   setUserTokenAsync,
 } from "../redux/reducers/authSlice";
 import { clearToken, getUserInfo, setAuthTokens } from "../utils/authUtils";
 import { LoginUserInput } from "../data/types";
-import { AppDispatch } from "../redux/store";
+import { AppDispatch, RootState } from "../redux/store";
 
 type Props = {};
 
@@ -52,6 +56,8 @@ const SignIn = (props: Props) => {
 
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const navigate = useNavigate();
+
+  const { userToken } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
@@ -97,12 +103,16 @@ const SignIn = (props: Props) => {
 
     setTimeout(async () => {
       await setAuthTokens(accessToken);
-      await dispatch(setUserTokenAsync(res));
-      await dispatch(setUserInfoAsync(getUserInfo()));
+      await dispatch(setUserTokenAsync(accessToken) as any);
+      await dispatch(setUserInfoAsync(getUserInfo()) as any);
     });
 
-    window.location.reload();
+    // window.location.reload();
     return redirect("/");
+  };
+
+  const handleGoogleSignup = async () => {
+    window.location.href = "http://localhost:3001/auth";
   };
 
   return (
@@ -113,8 +123,9 @@ const SignIn = (props: Props) => {
           spacing={8}
           textAlign="center"
           fontSize="xl"
+          borderRadius={"lg"}
         >
-          <Box width={"100%"} bg={ButtonPrimary} py={5}>
+          <Box width={"100%"} bg={ButtonPrimary} py={5} borderTopRadius={"lg"}>
             <Heading color={"white"}>Sign In</Heading>
           </Box>
           <VStack width={"100%"} px={4} pb={8}>
@@ -152,6 +163,29 @@ const SignIn = (props: Props) => {
                     onBlur={checkPassword}
                   ></Input>
                 </InputGroup>
+
+                {isInvalidData && (
+                  <Alert status="error">
+                    <AlertIcon />
+                    <AlertDescription fontSize={"sm"}>
+                      Incorrect email or password
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <InputGroup>
+                  <Input
+                    type="button"
+                    role="submit"
+                    pr={5}
+                    value={"Login"}
+                    size={"lg"}
+                    fontWeight={"bold"}
+                    background={ButtonPrimary}
+                    _hover={{ background: "blue.400" }}
+                    onClick={handleSubmit}
+                  ></Input>
+                </InputGroup>
                 <Flex
                   mt={2}
                   width={"100%"}
@@ -172,25 +206,22 @@ const SignIn = (props: Props) => {
                     Forgot password?
                   </Link>
                 </Flex>
-                {isInvalidData && (
-                  <Alert status="error">
-                    <AlertIcon />
-                    <AlertDescription fontSize={"sm"}>
-                      Incorrect email or password
-                    </AlertDescription>
-                  </Alert>
-                )}
-                <Button
-                  // colorScheme={"blue"}
-                  background={ButtonPrimary}
-                  color={"black"}
-                  _hover={{ background: "blue.400" }}
-                  size={"lg"}
+                <HStack width={"100%"} alignSelf={"flex-start"}>
+                  <Divider></Divider>
+                  <Text>Or</Text>
+                  <Divider></Divider>
+                </HStack>
+                <Input
+                  type="button"
                   role="submit"
-                  onClick={handleSubmit}
-                >
-                  Login
-                </Button>
+                  pr={5}
+                  value={"Sign in with google"}
+                  size={"lg"}
+                  fontWeight={"bold"}
+                  // background={ButtonPrimary}
+                  _hover={{ background: "blue.400" }}
+                  onClick={handleGoogleSignup}
+                ></Input>
               </VStack>
             </FormControl>
           </VStack>
