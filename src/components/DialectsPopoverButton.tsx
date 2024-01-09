@@ -12,24 +12,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Dialect } from "../data/types";
-import Flags from "country-flag-icons/react/3x2";
 import { useState } from "react";
+import { DIALECT_ITEMS } from "../data/constants";
 
 interface Props {}
-
-// TODO: complete with all arabic dialects
-const DIALECT_ITEMS: Array<Dialect> = [
-  {
-    label: "TN",
-    dialect: "Tunisian",
-    flag: <Flags.TN style={{ width: "20px" }} />,
-  },
-  {
-    label: "EG",
-    dialect: "Egyptian",
-    flag: <Flags.EG style={{ width: "20px" }} />,
-  },
-];
 
 const DialectsPopoverButton = (props: Props) => {
   const [dialects, setDialects] = useState<Array<Dialect>>([]);
@@ -51,55 +37,58 @@ const DialectsPopoverButton = (props: Props) => {
   return (
     <>
       <FormControl mb={3}>
-        <FormLabel>Dialect(s)*</FormLabel>
-        <Popover
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          trigger={"click"}
-          placement={"bottom-start"}
-        >
-          <PopoverTrigger>
-            <Button
-              border={"gray.200"}
-              // role="group"
-              p={2}
-              fontSize={"sm"}
-              fontWeight={900}
-              // color={"blue"}
-              _hover={{
-                textDecoration: "none",
-                // color: "red",
-              }}
-            >
-              Choose
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent
-            border={0}
-            boxShadow={"xl"}
-            // bg={popoverContentBgColor}
-            p={4}
-            rounded={"xl"}
-            minW={"100%"}
+        <Flex direction={{ base: "row", md: "column" }} gap={2}>
+          <FormLabel pt={2}>Dialect(s)*</FormLabel>
+          <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            trigger={"click"}
+            placement={"bottom-start"}
           >
-            <Flex alignContent={"center"} direction={"column"} gap={2}>
-              {DIALECT_ITEMS.map((element) => (
-                <Checkbox
-                  minH={"30px"}
-                  colorScheme="blue"
-                  onSelect={handleSelectDialects}
-                >
-                  <HStack>
-                    {element.flag}
-                    <Text>{element.dialect}</Text>
-                  </HStack>
-                </Checkbox>
-              ))}
-            </Flex>
-          </PopoverContent>
-        </Popover>
+            <PopoverTrigger>
+              <Button
+                maxWidth={"6em"}
+                border={"gray.200"}
+                // role="group"
+                p={2}
+                fontSize={"sm"}
+                fontWeight={900}
+                // color={"blue"}
+                _hover={{
+                  textDecoration: "none",
+                  // color: "red",
+                }}
+              >
+                Choose
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent
+              border={0}
+              boxShadow={"xl"}
+              // bg={popoverContentBgColor}
+              p={4}
+              rounded={"xl"}
+              minW={"100%"}
+            >
+              <Flex alignContent={"center"} direction={"column"} gap={2}>
+                {DIALECT_ITEMS.map((element) => (
+                  <Checkbox
+                    minH={"30px"}
+                    colorScheme="blue"
+                    onSelect={handleSelectDialects}
+                  >
+                    <HStack>
+                      {element.flag}
+                      <Text>{element.dialect}</Text>
+                    </HStack>
+                  </Checkbox>
+                ))}
+              </Flex>
+            </PopoverContent>
+          </Popover>
+        </Flex>
       </FormControl>
     </>
   );
