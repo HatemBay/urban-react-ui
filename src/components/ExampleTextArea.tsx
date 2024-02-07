@@ -1,7 +1,11 @@
 import { Box, FormControl, FormLabel, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { Language } from "../data/types";
+<<<<<<< HEAD
 // import "./richTextEditor/richTextEditorStyles.css";
+=======
+import "./richTextEditor/richTextEditorStyles.css";
+>>>>>>> 846f6cb141ed49dc7a2547f910356b8ffe19a2b7
 
 interface Props {
   onChange: (e: any) => void;

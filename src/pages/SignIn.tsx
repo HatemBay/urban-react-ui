@@ -35,7 +35,7 @@ import {
   setUserInfoAsync,
   setUserTokenAsync,
 } from "../redux/reducers/authSlice";
-import { clearToken, getToken, getUserInfo, setAuthTokens } from "../utils/authUtils";
+import { clearToken, getUserInfo, setAuthTokens } from "../utils/authUtils";
 import { LoginUserInput } from "../data/types";
 import { AppDispatch, RootState } from "../redux/store";
 

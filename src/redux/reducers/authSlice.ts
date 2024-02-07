@@ -28,6 +28,7 @@ const authSlice = createSlice({
         }).addCase(setUserTokenAsync.fulfilled, (state, action: PayloadAction<any>) => {
             state.userToken = action.payload;
         }).addCase(setUserTokenAsync.rejected, (state, action) => {
+            console.log(action.error);
             state.error = action.error;
         });
 
