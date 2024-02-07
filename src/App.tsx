@@ -20,6 +20,7 @@ import SignUp from "./pages/Signup";
 import { getToken, getUserInfo } from "./utils/authUtils";
 import CreatePost from "./pages/createPost/CreatePost";
 import { useEffect } from "react";
+import { Settings } from "./pages/profile/Settings";
 
 const theme = extendTheme({
   fonts: {
@@ -106,6 +107,7 @@ export const App = () => {
         privateRoute(true, "/sign-up", <SignUp />, ForbiddenResponse),
         privateRoute(false, "/create-post", <CreatePost />, ForbiddenResponse),
         privateRoute(false, "/profile", <Profile />, ForbiddenResponse),
+        privateRoute(false, "/settings", <Settings />, ForbiddenResponse),
         // {
         //   path: "/profile",
         //   element: <Profile />,
