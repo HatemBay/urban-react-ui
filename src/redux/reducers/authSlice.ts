@@ -44,7 +44,7 @@ const authSlice = createSlice({
 
 export const setUserTokenAsync = createAsyncThunk("auth/setUserTokenAsync",
     async (signInData: any) => {
-        return await signInData.data.login;
+        return await signInData.data;
     })
 export const setUserInfoAsync = createAsyncThunk("auth/setUserInfoAsync",
     async (userInfo: any) => {
