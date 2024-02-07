@@ -50,7 +50,7 @@ export const Settings = (props: Props) => {
       oldPassword: "",
       newPassword: "",
     },
-    onSubmit: (values) => {
+    onSubmit: (values: any) => {
       alert(JSON.stringify(values, null, 2));
     },
   });
@@ -112,7 +112,7 @@ export const Settings = (props: Props) => {
               {userInfo.username}
             </Text>
           </VStack>
-          <VStack align={"flex-start"} spacing={5} p={4} minW={"60vw"}>
+          <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
             <VStack alignItems={"flex-start"}>
               <Text> User Info </Text>
               <HStack spacing={5}>
