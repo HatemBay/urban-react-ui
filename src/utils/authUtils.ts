@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // import formatDate from "./formatDate";
-=======
-import formatDate from "./formatDate";
->>>>>>> 846f6cb141ed49dc7a2547f910356b8ffe19a2b7
 
 export const setAuthTokens = async (accessToken: any) => {
   localStorage.setItem("TOKEN_KEY", accessToken);
@@ -13,11 +9,7 @@ export const setAuthTokens = async (accessToken: any) => {
 
   localStorage.setItem("USER_INFO", JSON.stringify(user));
 
-<<<<<<< HEAD
   // const expirationTime = new Date(user.exp * 1000);
-=======
-  const expirationTime = new Date(user.exp * 1000);
->>>>>>> 846f6cb141ed49dc7a2547f910356b8ffe19a2b7
 
   localStorage.setItem(
     "EXPIRATION_TIME",
