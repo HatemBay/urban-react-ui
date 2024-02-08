@@ -1,5 +1,4 @@
 import {
-  Button,
   Container,
   FormControl,
   Heading,
@@ -20,7 +19,6 @@ import {
   HStack,
   Divider,
   Text,
-  Stack,
 } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { BiDotsHorizontal } from "react-icons/bi";
@@ -35,7 +33,7 @@ import {
   setUserInfoAsync,
   setUserTokenAsync,
 } from "../redux/reducers/authSlice";
-import { clearToken, getUserInfo, setAuthTokens } from "../utils/authUtils";
+import { getUserInfo, setAuthTokens } from "../utils/authUtils";
 import { LoginUserInput } from "../data/types";
 import { AppDispatch, RootState } from "../redux/store";
 
@@ -182,7 +180,7 @@ const SignIn = (props: Props) => {
                     size={"lg"}
                     fontWeight={"bold"}
                     background={ButtonPrimary}
-                    _hover={{ background: "blue.400" }}
+                    _hover={{ background: "blue.400", cursor: "pointer" }}
                     onClick={handleSubmit}
                   ></Input>
                 </InputGroup>
@@ -219,7 +217,7 @@ const SignIn = (props: Props) => {
                   size={"lg"}
                   fontWeight={"bold"}
                   // background={ButtonPrimary}
-                  _hover={{ background: "blue.400" }}
+                  _hover={{ background: "blue.400", cursor: "pointer" }}
                   onClick={handleGoogleSignup}
                 ></Input>
               </VStack>

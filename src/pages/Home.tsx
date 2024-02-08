@@ -4,16 +4,9 @@ import "@fontsource/montserrat/300.css";
 
 import { VStack, useColorModeValue } from "@chakra-ui/react";
 import { useQuery } from "urql";
-import Layer from "../layouts/Layer";
 import { Posts } from "./postFeed/Posts";
 import { USERS_QUERY } from "../graphql/queries/usersQuery";
-import {
-  redirect,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getUserInfo, setAuthTokens } from "../utils/authUtils";
 import { useDispatch } from "react-redux";
@@ -73,7 +66,8 @@ export const Home = () => {
           "********************************* ERROR **************************************"
         );
 
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        console.log(await response.json());
+        throw new Error(`HTTP error! Status: `);
       }
       console.log(
         "********************************* DATA **************************************"

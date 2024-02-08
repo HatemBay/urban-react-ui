@@ -1,5 +1,3 @@
-import formatDate from "./formatDate";
-
 export const setAuthTokens = async (accessToken: any) => {
   localStorage.setItem("TOKEN_KEY", accessToken);
 
@@ -8,8 +6,6 @@ export const setAuthTokens = async (accessToken: any) => {
   const user = { ...JSON.parse(payload) };
 
   localStorage.setItem("USER_INFO", JSON.stringify(user));
-
-  const expirationTime = new Date(user.exp * 1000);
 
   localStorage.setItem(
     "EXPIRATION_TIME",

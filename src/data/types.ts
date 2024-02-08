@@ -80,6 +80,10 @@ export type LoginUserInput = {
   password: string;
 };
 
+export type FindUserInput = {
+  id?: number;
+};
+
 export type CreateFlagInput = {
   reason: Reason;
   content: string;

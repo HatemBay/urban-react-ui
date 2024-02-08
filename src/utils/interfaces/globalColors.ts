@@ -8,5 +8,6 @@ export interface GlobalColors {
   SecondaryBgColor: LightDark;
   TextColor: LightDark;
   ButtonPrimary: LightDark;
+  ButtonSecondary: LightDark;
 }
 
