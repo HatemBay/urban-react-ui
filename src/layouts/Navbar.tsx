@@ -26,6 +26,9 @@ import {
   Avatar,
   HStack,
   Tooltip,
+  useToast,
+  createStandaloneToast,
+  textDecoration,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -38,6 +41,7 @@ import { IoIosShuffle } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
 import {
+  Link,
   Outlet,
   Link as ReactRouterLink,
   redirect,
@@ -51,15 +55,17 @@ import {
   setPage,
   setRandomize,
 } from "../redux/reducers/pageSlice";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
 import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
-import { AuthInfo, PaginatedPosts } from "../data/types";
+import { AuthInfo, FindUserInput, PaginatedPosts, User } from "../data/types";
 import { useQuery } from "urql";
 import { POSTS_QUERY } from "../graphql/queries/postsQuery";
+import { USERS_QUERY } from "../graphql/queries/usersQuery";
+import { FIND_USER_QUERY } from "../graphql/queries/findUserQuery";
 
 const handleLogout = (e: any) => {
   clearToken();
@@ -165,6 +171,98 @@ export default function Navbar() {
     dispatch(setFilter(""));
     return navigate(href);
   };
+
+  const findUserInput: FindUserInput = {
+    id: userInfo?.sub,
+  };
+
+  const [{ data, fetching, error }] = useQuery({
+    query: FIND_USER_QUERY,
+    variables: { findUserInput },
+  });
+  const user: User = data?.user;
+  console.log("user data");
+  console.log(user);
+
+  // const toast = useToast();
+  const { toast } = createStandaloneToast();
+  const makeToast = (user: User) => {
+    if (!toast.isActive("email-verify")) {
+      toast({
+        id: "email-verify",
+        render: () => {
+          const resendEmail = async () => {
+            // window.location.href =
+            //   "http://localhost:3001/email-confirmation/resend-confirmation-link";
+            await fetch(
+              "http://localhost:3001/email-confirmation/resend-confirmation-link",
+              {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ user }),
+              }
+            );
+          };
+          return (
+            <div
+              style={{
+                background: "#FEB2B2",
+                padding: "10px",
+                paddingLeft: "20px",
+                borderRadius: "10px",
+              }}
+            >
+              <span style={{ color: "black", fontFamily: "sans-serif" }}>
+                Please verify your email,{" "}
+              </span>
+              <button
+                onClick={() => resendEmail()}
+                style={{
+                  color: "blue",
+                  textDecoration: "underline",
+                  fontWeight: "thin",
+                  fontFamily: "sans-serif",
+                }}
+              >
+                Resend confirmation email.
+              </button>
+              <button
+                style={{
+                  color: "black",
+                  fontFamily: "sans-serif",
+                  fontWeight: "bold",
+                  marginLeft: "10px",
+                }}
+                onClick={() => toast.closeAll()}
+              >
+                <strong>
+                  <sup
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {"  "}X
+                  </sup>
+                </strong>
+              </button>
+            </div>
+          );
+        },
+        status: "error",
+        duration: 9000,
+        colorScheme: "red",
+      });
+    }
+  };
+
+  if (!user?.emailVerified && user) {
+    makeToast(user);
+  }
+
+  // if ()
 
   return (
     <>
