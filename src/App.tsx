@@ -49,6 +49,9 @@ export const App = () => {
 
   const isAuthenticated = userToken !== null;
 
+  console.log("isAuthenticated: " + isAuthenticated);
+
+
   const createPrivateRoute = (
     isAuthenticated: boolean,
     //TODO: fallback path should be unauthorized but i think it's better to just redirect to home (make decision)
@@ -107,6 +110,7 @@ export const App = () => {
         privateRoute(true, "/sign-up", <SignUp />, ForbiddenResponse),
         privateRoute(false, "/create-post", <CreatePost />, ForbiddenResponse),
         privateRoute(false, "/profile", <Profile />, ForbiddenResponse),
+        privateRoute(false, "/settings", <Settings />, ForbiddenResponse),
         privateRoute(false, "/settings", <Settings />, ForbiddenResponse),
         // {
         //   path: "/profile",

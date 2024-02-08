@@ -66,6 +66,8 @@ export const Settings = (props: Props) => {
       gap={4}
       mb={5}
       minH={"300vh"}
+      maxW={"100%"}
+      p={4}
     >
       <GridItem colSpan={2} textColor={TextColor}>
         <DynamicStickyIndex bg={PrimaryBgColor} />
@@ -87,7 +89,7 @@ export const Settings = (props: Props) => {
         <HStack
           divider={<StackDivider borderColor="gray.700" />}
           bg={PrimaryBgColor}
-          maxW={"100%"}
+          // maxW={"100%"}
           minH={"33vh"}
           spacing={4}
           borderRadius={"lg"}

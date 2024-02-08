@@ -98,15 +98,18 @@ const SignIn = (props: Props) => {
       return;
     }
     const { accessToken } = res.data.login;
+    console.log("AccessToken");
+    console.log(accessToken);
+    
 
-    setTimeout(async () => {
+    return setTimeout(async () => {
       await setAuthTokens(accessToken);
       await dispatch(setUserTokenAsync(accessToken) as any);
       await dispatch(setUserInfoAsync(getUserInfo()) as any);
     });
 
-    // window.location.reload();
-    return redirect("/");
+    // window.location.reload();  
+    // return redirect("/");
   };
 
   const handleGoogleSignup = async () => {
