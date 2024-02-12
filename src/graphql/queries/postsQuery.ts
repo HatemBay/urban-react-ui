@@ -17,6 +17,7 @@ export const POSTS_QUERY = gql`
         id
         author {
           username
+          profilePicture
         }
         example {
           id

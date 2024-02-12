@@ -6,6 +6,7 @@ export const FIND_USER_QUERY = gql`
       id
       username
       email
+      profilePicture
       emailVerified
       name
       isU18
