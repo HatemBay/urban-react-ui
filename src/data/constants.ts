@@ -1,6 +1,7 @@
 import { GlobalColors } from "../utils/interfaces/globalColors";
 import { DialectCode, FlagElement } from "../components/FlagElement";
-import { Dialect } from "./types";
+import { Dialect, FlagOptionsRadioGroup, GenderOptions } from "./types";
+import { Gender, Reason } from "./enums";
 
 // TODO: rename the colors
 export const SHARED_COLORS: GlobalColors = {
@@ -23,5 +24,39 @@ export const DIALECT_ITEMS: Array<Dialect> = dialectCodes.map((code) => ({
   country: `${code} Country`, // TODO: add from db after dialects table is created
   flag: FlagElement(code),
 }));
+
+export const FLAG_OPTIONS: Array<FlagOptionsRadioGroup> = [
+  {
+    reason: Reason.PRIVATE,
+    content: "It includes someone's full name or other personal information",
+  },
+  {
+    reason: Reason.OFFENSIVE,
+    content: "It includes hate speech, bullying, or other hurtful comments",
+  },
+  {
+    reason: Reason.TABOO,
+    content: "It conveys sensitive or inappropriate information",
+  },
+  {
+    reason: Reason.OTHER,
+    content: "Other",
+  },
+];
+
+export const GENDER_OPTIONS: Array<GenderOptions> = [
+  {
+    gender: Gender.MALE,
+    content: Gender.MALE,
+  },
+  {
+    gender: Gender.FEMALE,
+    content: Gender.FEMALE,
+  },
+  {
+    gender: Gender.NONE,
+    content: "",
+  },
+];
 
 export const BACKEND_URL = "http://localhost:3001/graphql";
