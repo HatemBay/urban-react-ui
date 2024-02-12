@@ -1,5 +1,5 @@
 import { AnyVariables, UseQueryExecute, UseQueryState } from "urql";
-import { Reason } from "./enums";
+import { Gender, Reason } from "./enums";
 
 export type Post = {
   id: number;
@@ -41,12 +41,20 @@ export type GoogleInfo = {
   sub: string;
 };
 
+export type Country = {
+  id?: number;
+  name: string;
+};
+
 export type User = {
   id?: number;
   username: string;
   email: string;
   name?: string;
   countryId?: number;
+  country?: Country;
+  gender?: string;
+  accountLanguage?: string;
   role?: string;
   isU18?: boolean;
   profilePicture?: string;
@@ -89,6 +97,11 @@ export type FlagOptionsRadioGroup = {
   reason: Reason;
   content: string;
 };
+
+// export type GenderOptions = {
+//   gender: Gender;
+//   content: string;
+// };
 
 export type LoginUserInput = {
   username: string;
