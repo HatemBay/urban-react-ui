@@ -60,6 +60,9 @@ export const Settings = (props: Props) => {
     setCountry(e.target.value);
   };
 
+  console.log("picture:");
+  console.log(userInfo.googleProfile?.picture);
+
   return (
     <Grid
       templateColumns="repeat(8, 1fr)"
@@ -101,6 +104,7 @@ export const Settings = (props: Props) => {
           <VStack p={4} minW={"25vw"} spacing={4} alignSelf={"center"}>
             <Avatar
               name={userInfo.username}
+              src={userInfo.googleProfile?.picture}
               bg={"teal.500"}
               // src="https://bit.ly/dan-abramov"
               // w={"4em"}
