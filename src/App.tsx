@@ -17,9 +17,8 @@ import { NotFound } from "./pages/NotFound";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import SignUp from "./pages/Signup";
-import { getToken, getUserInfo } from "./utils/authUtils";
+import { getToken } from "./utils/authUtils";
 import CreatePost from "./pages/createPost/CreatePost";
-import { useEffect } from "react";
 import { Settings } from "./pages/profile/Settings";
 
 const theme = extendTheme({
@@ -44,13 +43,12 @@ const theme = extendTheme({
 });
 
 export const App = () => {
-  const { userToken } =
-    useSelector((state: RootState) => state.auth) || getToken();
+  const userToken =
+    useSelector((state: RootState) => state.auth).userToken || getToken();
 
   const isAuthenticated = userToken !== null;
 
   console.log("isAuthenticated: " + isAuthenticated);
-
 
   const createPrivateRoute = (
     isAuthenticated: boolean,
