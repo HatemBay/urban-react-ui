@@ -1,3 +1,5 @@
+import { User } from "../data/types";
+
 export const setAuthTokens = async (accessToken: any) => {
   localStorage.setItem("TOKEN_KEY", accessToken);
 
@@ -10,6 +12,16 @@ export const setAuthTokens = async (accessToken: any) => {
   localStorage.setItem(
     "EXPIRATION_TIME",
     ((user.exp * 1000) as number).toString()
+  );
+};
+
+export const setUserInfo = async (user: User) => {
+  localStorage.setItem(
+    "USER_INFO",
+    JSON.stringify({
+      ...JSON.parse(localStorage.getItem("USER_INFO") as string),
+      ...user,
+    })
   );
 };
 
