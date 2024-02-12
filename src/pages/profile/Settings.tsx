@@ -14,13 +14,17 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import useLightDark from "../../hooks/useLightDark";
-import { DIALECT_ITEMS, SHARED_COLORS } from "../../data/constants";
+import {
+  DIALECT_ITEMS,
+  GENDER_OPTIONS,
+  SHARED_COLORS,
+} from "../../data/constants";
 import { getUserInfo } from "../../utils/authUtils";
 import { useFormik } from "formik";
 import DynamicStickyIndex from "./DynamicStickyIndex";
-import { UserInfo } from "../../data/types";
+import { User, UserInfo } from "../../data/types";
 
 type Props = {};
 
@@ -29,9 +33,13 @@ export const Settings = (props: Props) => {
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
   const userInfo: UserInfo = getUserInfo();
   console.log("userInfo: " + JSON.stringify(userInfo));
+  console.log(userInfo);
 
   //TODO: change with country from user data
+  let [user, setUser] = useState<User>(userInfo);
   let [country, setCountry] = useState("");
+  let [image, setImage] = useState("");
+  const profilePictureChangeRef = useRef<any>();
 
   // const [ip, setIP] = useState("");
 
@@ -46,7 +54,20 @@ export const Settings = (props: Props) => {
   //   getData();
   // }, []);
 
-  const passwordReset = useFormik({
+  const updateUserInfo = useFormik({
+    initialValues: {
+      profilePicture: user.profilePicture || user.googleProfile?.picture,
+      gender: user.gender,
+      dateOfBirth: "",
+      language: "english",
+      country: user.country?.name,
+    },
+    onSubmit: (values: any) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
+  const resetPassword = useFormik({
     initialValues: {
       oldPassword: "",
       newPassword: "",
@@ -60,8 +81,26 @@ export const Settings = (props: Props) => {
     setCountry(e.target.value);
   };
 
-  console.log("picture:");
-  console.log(userInfo.googleProfile?.picture);
+  const changeGender = (e: any) => {
+    console.log(e.target.value);
+
+    setUser({ ...user, gender: "Female" });
+    console.log(user.gender);
+  };
+
+  const selectProfilePicture = (e: any) => {
+    profilePictureChangeRef.current.click();
+  };
+
+  const changeProfilePicture = (e: any) => {
+    if (e.target.files[0] && e.target.files[0] !== null) {
+      const img = e.target.files[0];
+      const url = URL.createObjectURL(img);
+      setImage(url);
+      console.log("sjup");
+      console.log(url);
+    }
+  };
 
   return (
     <Grid
@@ -89,7 +128,6 @@ export const Settings = (props: Props) => {
           // borderColor={TextColor}
           ></Divider>
         </HStack>
-
         <HStack
           divider={<StackDivider borderColor="gray.700" />}
           bg={PrimaryBgColor}
@@ -102,30 +140,65 @@ export const Settings = (props: Props) => {
           mb={4}
         >
           <VStack p={4} minW={"25vw"} spacing={4} alignSelf={"center"}>
+            <input
+              type="file"
+              ref={profilePictureChangeRef}
+              style={{ display: "none" }}
+              onChange={changeProfilePicture}
+            />
             <Avatar
               name={userInfo.username}
-              src={userInfo.googleProfile?.picture}
-              bg={"teal.500"}
+              src={image || userInfo.googleProfile?.picture}
+              // bg={image || userInfo.googleProfile?.picture}
               // src="https://bit.ly/dan-abramov"
               // w={"4em"}
               // h={"4em"}
+              title="profile picture"
               size={"2xl"}
               // boxSize={"10em"}
-              fontWeight={"normal"}
-              __css={{ color: "red" }}
+              // fontWeight={"normal"}
+              // __css={{ color: "red" }}
               // fontSize={"10em"}
+              // cursor={"pointer"}
+              _hover={{ cursor: "pointer" }}
+              onClick={selectProfilePicture}
             ></Avatar>
             <Text fontSize={"2xl"} fontWeight={"bold"}>
               {userInfo.username}
             </Text>
           </VStack>
           <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
+            {/* <FormControl>
+              <FormLabel htmlFor="oldPassword">Old Password</FormLabel>
+              <Input
+                id="oldPassword"
+                name="oldPassword"
+                type="password"
+                variant="filled"
+                onChange={resetPassword.handleChange}
+                value={resetPassword.values.oldPassword}
+              />
+            </FormControl> */}
+
             <VStack alignItems={"flex-start"}>
               <Text> User Info </Text>
               <HStack spacing={5}>
                 <HStack>
                   <Text>Gender: </Text>
-                  <Text fontWeight={"bold"}> Male </Text>
+                  <Select
+                    onChange={changeGender}
+                    // value={updateUserInfo.values.gender}
+                    bg={PrimaryBgColor}
+                    maxWidth="2xl"
+                    w={{ base: "80%", md: "100%" }}
+                    _hover={{ cursor: "pointer" }}
+                  >
+                    {GENDER_OPTIONS.map((item) => (
+                      <option key={item.gender} value={item.content}>
+                        {item.gender}
+                      </option>
+                    ))}
+                  </Select>
                 </HStack>
                 <HStack>
                   <Text>Date of Birth: </Text>
@@ -161,6 +234,9 @@ export const Settings = (props: Props) => {
                   </Select>
                 </HStack>
               </HStack>
+              <Button type="submit" colorScheme="purple" width="full" w={"xs"}>
+                Save
+              </Button>
             </VStack>
           </VStack>
         </HStack>
@@ -189,7 +265,7 @@ export const Settings = (props: Props) => {
           p={5}
           pl={10}
         >
-          <form onSubmit={passwordReset.handleSubmit}>
+          <form onSubmit={resetPassword.handleSubmit}>
             <VStack spacing={4} align={"flex-start"} w={"xl"}>
               <FormControl>
                 <FormLabel htmlFor="oldPassword">Old Password</FormLabel>
@@ -198,8 +274,8 @@ export const Settings = (props: Props) => {
                   name="oldPassword"
                   type="password"
                   variant="filled"
-                  onChange={passwordReset.handleChange}
-                  value={passwordReset.values.oldPassword}
+                  onChange={resetPassword.handleChange}
+                  value={resetPassword.values.oldPassword}
                 />
               </FormControl>
               <FormControl>
@@ -209,8 +285,8 @@ export const Settings = (props: Props) => {
                   name="newPassword"
                   type="password"
                   variant="filled"
-                  onChange={passwordReset.handleChange}
-                  value={passwordReset.values.newPassword}
+                  onChange={resetPassword.handleChange}
+                  value={resetPassword.values.newPassword}
                 />
               </FormControl>
               <Button type="submit" colorScheme="purple" width="full" w={"xs"}>
