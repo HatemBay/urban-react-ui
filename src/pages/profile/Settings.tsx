@@ -18,16 +18,17 @@ import { useState } from "react";
 import useLightDark from "../../hooks/useLightDark";
 import { DIALECT_ITEMS, SHARED_COLORS } from "../../data/constants";
 import { getUserInfo } from "../../utils/authUtils";
-import { AuthInfo } from "../../data/types";
 import { useFormik } from "formik";
 import DynamicStickyIndex from "./DynamicStickyIndex";
+import { UserInfo } from "../../data/types";
 
 type Props = {};
 
 export const Settings = (props: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
-  const userInfo: AuthInfo = getUserInfo();
+  const userInfo: UserInfo = getUserInfo();
+  console.log("userInfo: " + JSON.stringify(userInfo));
 
   //TODO: change with country from user data
   let [country, setCountry] = useState("");

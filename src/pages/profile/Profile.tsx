@@ -2,7 +2,7 @@ import { Heading, VStack, Select, Box } from "@chakra-ui/react";
 import { useQuery } from "urql";
 import PageNavigator from "../../components/posts/PageNavigator";
 import PostItem from "../../components/posts/PostItem";
-import { AuthInfo, PaginatedPosts } from "../../data/types";
+import { PaginatedPosts, UserInfo } from "../../data/types";
 import { POSTS_QUERY } from "../../graphql/queries/postsQuery";
 import { SHARED_COLORS } from "../../data/constants";
 import useLightDark from "../../hooks/useLightDark";
@@ -14,7 +14,7 @@ import { getUserInfo } from "../../utils/authUtils";
 type Props = {};
 
 export const Profile = (props: Props) => {
-  const userInfo: AuthInfo = getUserInfo();
+  const userInfo: UserInfo = getUserInfo();
   console.log(userInfo.sub);
 
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);

@@ -60,8 +60,19 @@ import { RootState } from "../redux/store";
 import Layer from "./Layer";
 import useLightDark from "../hooks/useLightDark";
 import { SHARED_COLORS } from "../data/constants";
-import { clearToken, getToken, getUserInfo } from "../utils/authUtils";
-import { AuthInfo, FindUserInput, PaginatedPosts, User } from "../data/types";
+import {
+  clearToken,
+  getToken,
+  getUserInfo,
+  setUserInfo,
+} from "../utils/authUtils";
+import {
+  AuthInfo,
+  FindUserInput,
+  PaginatedPosts,
+  User,
+  UserInfo,
+} from "../data/types";
 import { useQuery } from "urql";
 import { POSTS_QUERY } from "../graphql/queries/postsQuery";
 import { USERS_QUERY } from "../graphql/queries/usersQuery";
@@ -143,7 +154,22 @@ export default function Navbar() {
   const userToken = getToken();
 
   // const { userInfo } = useSelector((state: RootState) => state.auth);
-  const userInfo: AuthInfo | null = getUserInfo();
+  const userInfo: UserInfo | null = getUserInfo();
+
+  const findUserInput: FindUserInput = {
+    id: userInfo?.sub,
+  };
+
+  const [{ data, fetching, error }] = useQuery({
+    query: FIND_USER_QUERY,
+    variables: { findUserInput },
+  });
+
+  const user: User = data?.user;
+  setUserInfo(user);
+
+  console.log("infor");
+  console.log(userInfo);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -171,18 +197,6 @@ export default function Navbar() {
     dispatch(setFilter(""));
     return navigate(href);
   };
-
-  const findUserInput: FindUserInput = {
-    id: userInfo?.sub,
-  };
-
-  const [{ data, fetching, error }] = useQuery({
-    query: FIND_USER_QUERY,
-    variables: { findUserInput },
-  });
-  const user: User = data?.user;
-  console.log("user data");
-  console.log(user);
 
   // const toast = useToast();
   const { toast } = createStandaloneToast();

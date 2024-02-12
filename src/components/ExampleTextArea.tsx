@@ -1,6 +1,5 @@
-import { Box, FormControl, FormLabel, Textarea } from "@chakra-ui/react";
+import { FormControl, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
-import { Language } from "../data/types";
 
 interface Props {
   onChange: (e: any) => void;

@@ -10,6 +10,7 @@ export const FIND_USER_QUERY = gql`
       name
       isU18
       countryId
+      googleProfile
     }
   }
 `;

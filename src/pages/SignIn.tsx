@@ -91,7 +91,6 @@ const SignIn = (props: Props) => {
     };
 
     const res = await signIn({ loginUserInput });
-
     if (res.error) {
       setIsInvalidData(true);
       setPassword("");
