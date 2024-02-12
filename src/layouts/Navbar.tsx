@@ -77,6 +77,7 @@ import { useQuery } from "urql";
 import { POSTS_QUERY } from "../graphql/queries/postsQuery";
 import { USERS_QUERY } from "../graphql/queries/usersQuery";
 import { FIND_USER_QUERY } from "../graphql/queries/findUserQuery";
+import { setUserInfoAsync } from "../redux/reducers/authSlice";
 
 const handleLogout = (e: any) => {
   clearToken();
@@ -131,6 +132,9 @@ export default function Navbar() {
   let { randomize } = useSelector((state: RootState) => state.page);
   let { rerender } = useSelector((state: RootState) => state.page);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [PostsQueryResult, reexecutePostsQuery] = useQuery<PaginatedPosts>({
     query: POSTS_QUERY,
     variables: {
@@ -165,14 +169,11 @@ export default function Navbar() {
     variables: { findUserInput },
   });
 
+  console.log(fetching);
+
   const user: User = data?.user;
   setUserInfo(user);
-
-  console.log("infor");
-  console.log(userInfo);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  console.log(data);
 
   const handleRandomize = () => {
     dispatch(setRandomize(true));
