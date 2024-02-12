@@ -30,7 +30,18 @@ export type PaginatedPosts = {
   };
 };
 
-export interface User {
+export type GoogleInfo = {
+  email: string;
+  email_verified: boolean;
+  family_name: string;
+  given_name: string;
+  locale: string;
+  name: string;
+  picture: string;
+  sub: string;
+};
+
+export type User = {
   id?: number;
   username: string;
   email: string;
@@ -40,17 +51,20 @@ export interface User {
   isU18?: boolean;
   emailVerified?: boolean;
   googleId?: string;
+  googleProfile?: GoogleInfo;
   createdAt: string;
   updatedAt?: string;
-}
+};
 
-export interface AuthInfo {
+export type AuthInfo = {
   sub: number;
   username: string;
   role: string;
   iat: number;
   exp: number;
-}
+};
+
+export type UserInfo = User & AuthInfo;
 
 export interface Example {
   id?: number;
