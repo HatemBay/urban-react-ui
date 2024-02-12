@@ -49,7 +49,7 @@ export type User = {
   countryId?: number;
   role?: string;
   isU18?: boolean;
-  profilePicture: string;
+  profilePicture?: string;
   emailVerified?: boolean;
   googleId?: string;
   googleProfile?: GoogleInfo;
