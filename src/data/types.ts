@@ -98,10 +98,10 @@ export type FlagOptionsRadioGroup = {
   content: string;
 };
 
-// export type GenderOptions = {
-//   gender: Gender;
-//   content: string;
-// };
+export type GenderOptions = {
+  gender: Gender;
+  content: string;
+};
 
 export type LoginUserInput = {
   username: string;
