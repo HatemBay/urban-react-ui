@@ -6,7 +6,7 @@ export enum Reason {
 }
 
 export enum Gender {
+  NONE = "_",
   MALE = "Male",
   FEMALE = "Female",
-  NONE = "Rather not tell",
 }
