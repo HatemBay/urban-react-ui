@@ -1,7 +1,12 @@
 import { GlobalColors } from "../utils/interfaces/globalColors";
 import { DialectCode, FlagElement } from "../components/FlagElement";
-import { Dialect, FlagOptionsRadioGroup, GenderOptions } from "./types";
-import { Gender, Reason } from "./enums";
+import {
+  AccountLanguageOptions,
+  Dialect,
+  FlagOptionsRadioGroup,
+  GenderOptions,
+} from "./types";
+import { AccountLanguage, Gender, Reason } from "./enums";
 
 // TODO: rename the colors
 export const SHARED_COLORS: GlobalColors = {
@@ -56,6 +61,21 @@ export const GENDER_OPTIONS: Array<GenderOptions> = [
   {
     gender: Gender.FEMALE,
     content: Gender.FEMALE,
+  },
+];
+
+export const ACCOUNT_LANGUAGE_OPTIONS: Array<AccountLanguageOptions> = [
+  {
+    language: AccountLanguage.ENGLISH,
+    abbreviation: "en",
+  },
+  {
+    language: AccountLanguage.FRENCH,
+    abbreviation: "fr",
+  },
+  {
+    language: AccountLanguage.ARABIC,
+    abbreviation: "ar",
   },
 ];
 
