@@ -17,6 +17,8 @@ export const UPDATE_USER_MUTATION = gql`
       role
       isU18
       emailVerified
+      gender
+      accountLanguage
       createdAt
       updatedAt
       googleId

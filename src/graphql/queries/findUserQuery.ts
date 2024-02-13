@@ -7,13 +7,12 @@ export const FIND_USER_QUERY = gql`
       username
       email
       profilePicture
+      gender
+      accountLanguage
       emailVerified
       name
       isU18
       countryId
-      country {
-        name
-      }
       googleProfile
     }
   }
