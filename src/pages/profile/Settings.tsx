@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Divider,
   FormControl,
@@ -13,10 +14,12 @@ import {
   StackDivider,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import useLightDark from "../../hooks/useLightDark";
 import {
+  ACCOUNT_LANGUAGE_OPTIONS,
   DIALECT_ITEMS,
   GENDER_OPTIONS,
   SHARED_COLORS,
@@ -26,13 +29,15 @@ import { useFormik } from "formik";
 import DynamicStickyIndex from "./DynamicStickyIndex";
 import {
   FindUserInput,
-  UpdateUserInput,
   UpdateUserSettingsInput,
   User,
   UserInfo,
 } from "../../data/types";
 import { useMutation } from "urql";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUserMutation";
+import useCustomToast from "../../utils/facades/customToast";
+import toastPromise from "../../utils/facades/customToast";
+import customToast from "../../utils/facades/customToast";
 
 type Props = {};
 
@@ -40,8 +45,8 @@ export const Settings = (props: Props) => {
   const PrimaryBgColor = useLightDark(SHARED_COLORS.PrimaryBgColor);
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
   const userInfo: UserInfo = getUserInfo();
-  console.log("userInfo: " + JSON.stringify(userInfo));
-  console.log(userInfo);
+
+  const toast = useToast();
 
   //TODO: change with country from user data
   let [user, setUser] = useState<User>(userInfo);
@@ -70,27 +75,36 @@ export const Settings = (props: Props) => {
 
   // let res: ExtractedType = {};
 
-  const updateUserInput: UpdateUserSettingsInput = {
-    profilePicture: user.profilePicture || user.googleProfile?.picture,
-    gender: user.gender || "",
-    accountLanguage: user.accountLanguage || "",
-    name: user.name || "",
-    username: user.username,
-  };
-
   const updateUserInfo = useFormik({
     initialValues: {
       profilePicture: user.profilePicture || user.googleProfile?.picture,
       gender: user.gender || "",
       dateOfBirth: "",
-      language: user.accountLanguage || "",
+      accountLanguage: user.accountLanguage || "",
       country: user.country?.name,
     },
     onSubmit: (values: any) => {
-      setUser({ ...user, ...values });
-      //TODO: result seems to record the last value not he current, from experience this fixes itsself after pc reset => check it out
-      updateUser({ findUserInput, updateUserInput });
-      // alert(JSON.stringify(values, null, 2));
+      if (updateUserInfo.dirty) {
+        const updateUserInput: UpdateUserSettingsInput = {
+          profilePicture:
+            values.profilePicture || values.googleProfile?.picture,
+          gender: values.gender || "",
+          accountLanguage: values.accountLanguage || "",
+        };
+        setUser({ ...user, ...values });
+
+        const saveUser = updateUser({ findUserInput, updateUserInput });
+        customToast(
+          toast,
+          saveUser,
+          "Your profile has been updated",
+          "Something went wrong... please try again later"
+        );
+
+        updateUserInfo.resetForm({
+          values: { ...updateUserInfo.values },
+        });
+      }
     },
   });
 
@@ -241,7 +255,22 @@ export const Settings = (props: Props) => {
                 <HStack spacing={5}>
                   <HStack>
                     <Text>Language: </Text>
-                    <Text fontWeight={"bold"}> English </Text>
+                    <Select
+                      id="accountLanguage"
+                      name="accountLanguage"
+                      onChange={updateUserInfo.handleChange}
+                      value={updateUserInfo.values.accountLanguage}
+                      bg={PrimaryBgColor}
+                      maxWidth="2xl"
+                      w={{ base: "80%", md: "100%" }}
+                      _hover={{ cursor: "pointer" }}
+                    >
+                      {ACCOUNT_LANGUAGE_OPTIONS.map((item) => (
+                        <option key={item.language} value={item.abbreviation}>
+                          {item.language}
+                        </option>
+                      ))}
+                    </Select>
                   </HStack>
                   <HStack>
                     <Text>Country: </Text>
@@ -264,7 +293,13 @@ export const Settings = (props: Props) => {
                     </Select>
                   </HStack>
                 </HStack>
-                <Button type="submit" colorScheme="purple" w={"s"}>
+                <Button
+                  as="button"
+                  type="submit"
+                  colorScheme="purple"
+                  w={"s"}
+                  disabled={true}
+                >
                   Save
                 </Button>
               </VStack>

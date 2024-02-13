@@ -30,16 +30,13 @@ import {
 import { IoIosFlag } from "react-icons/io";
 import { Reason } from "../../data/enums";
 import { useRef, useState } from "react";
-import {
-  CreateFlagInput,
-  Flag,
-  FlagOptionsRadioGroup,
-  Post,
-} from "../../data/types";
+import { CreateFlagInput, Flag, Post } from "../../data/types";
 import { CREATE_FLAG_MUTATION } from "../../graphql/mutations/createFlagMutation";
 import { useMutation } from "urql";
 import { getUserInfo } from "../../utils/authUtils";
 import { useNavigate } from "react-router-dom";
+import { FLAG_OPTIONS } from "../../data/constants";
+import customToast from "../../utils/facades/customToast";
 
 interface Props {
   styles: any;
@@ -81,25 +78,6 @@ const ReportFlag = ({ styles, post }: Props) => {
   const cancelConfirmRef = useRef<any>();
   const cancelRedirectRef = useRef<any>();
 
-  const FLAG_OPTIONS: Array<FlagOptionsRadioGroup> = [
-    {
-      reason: Reason.PRIVATE,
-      content: "It includes someone's full name or other personal information",
-    },
-    {
-      reason: Reason.OFFENSIVE,
-      content: "It includes hate speech, bullying, or other hurtful comments",
-    },
-    {
-      reason: Reason.TABOO,
-      content: "It conveys sensitive or inappropriate information",
-    },
-    {
-      reason: Reason.OTHER,
-      content: "Other",
-    },
-  ];
-
   const handleOpenModal = () => {
     userInfo ? onOpenModal() : onOpenRedirectDialog();
   };
@@ -139,32 +117,13 @@ const ReportFlag = ({ styles, post }: Props) => {
     }
 
     const report = createFlag({ createFlagInput });
-    toast.promise(
-      report
-        .then((report) => {
-          if (report.error) {
-            clearData();
-            throw new Error(report.error.message);
-          }
-          return clearData();
-        })
-        .catch((err) => {
-          throw new Error(err.message);
-        }),
-      {
-        success: {
-          title: "Success",
-          colorScheme: "green",
-          description: "Your report has been submitted, thank you!",
-        },
-        error: {
-          title: "Error",
-          colorScheme: "red",
-          description: "Something went wrong... please try again later",
-        },
-        loading: { title: "Pending", description: "Please wait.." },
-      }
+    customToast(
+      toast,
+      report,
+      "Your report has been submitted, thank you!",
+      "Something went wrong... please try again later"
     );
+    clearData();
   };
 
   return (
