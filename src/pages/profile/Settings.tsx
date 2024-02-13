@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Button,
   Divider,
   FormControl,
@@ -16,7 +15,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useLightDark from "../../hooks/useLightDark";
 import {
   ACCOUNT_LANGUAGE_OPTIONS,
@@ -36,6 +35,7 @@ import {
 import { useMutation } from "urql";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUserMutation";
 import customToast from "../../utils/facades/customToast";
+import { Base64 } from "js-base64";
 
 type Props = {};
 
@@ -127,7 +127,22 @@ export const Settings = (props: Props) => {
   const changeProfilePicture = (e: any) => {
     if (e.target.files[0] && e.target.files[0] !== null) {
       const img = e.target.files[0];
-      const url = URL.createObjectURL(img);
+      // const url = URL.createObjectURL(img);
+      const url = Base64.btoa(img);
+      if (img) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = (reader.result as string).split(",")[1];
+          setImage(base64String);
+        };
+        reader.readAsDataURL(img);
+      }
+
+      console.log("image");
+      console.log(img);
+      console.log("encoded image");
+      console.log(url);
+
       setImage(url);
       console.log("sjup");
       console.log(url);
@@ -181,7 +196,10 @@ export const Settings = (props: Props) => {
               />
               <Avatar
                 name={userInfo.username}
-                src={image || userInfo.googleProfile?.picture}
+                src={
+                  `data:image/png;base64,${image}` ||
+                  userInfo.googleProfile?.picture
+                }
                 // bg={image || userInfo.googleProfile?.picture}
                 // src="https://bit.ly/dan-abramov"
                 // w={"4em"}
@@ -196,6 +214,7 @@ export const Settings = (props: Props) => {
                 _hover={{ cursor: "pointer" }}
                 onClick={selectProfilePicture}
               ></Avatar>
+              <img src={Base64.atob(image)} alt="" />
               <Text fontSize={"2xl"} fontWeight={"bold"}>
                 {userInfo.username}
               </Text>
