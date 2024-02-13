@@ -35,8 +35,6 @@ import {
 } from "../../data/types";
 import { useMutation } from "urql";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUserMutation";
-import useCustomToast from "../../utils/facades/customToast";
-import toastPromise from "../../utils/facades/customToast";
 import customToast from "../../utils/facades/customToast";
 
 type Props = {};
@@ -120,13 +118,6 @@ export const Settings = (props: Props) => {
 
   const changeCountry = (e: any) => {
     setCountry(e.target.value);
-  };
-
-  const changeGender = (e: any) => {
-    console.log(e.target.value);
-
-    setUser({ ...user, gender: "Female" });
-    console.log(user.gender);
   };
 
   const selectProfilePicture = (e: any) => {
