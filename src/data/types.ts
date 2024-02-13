@@ -1,5 +1,5 @@
 import { AnyVariables, UseQueryExecute, UseQueryState } from "urql";
-import { Gender, Reason } from "./enums";
+import { AccountLanguage, Gender, Reason } from "./enums";
 
 export type Post = {
   id: number;
@@ -103,6 +103,11 @@ export type GenderOptions = {
   content: string;
 };
 
+export type AccountLanguageOptions = {
+  language: AccountLanguage;
+  abbreviation: string;
+};
+
 export type LoginUserInput = {
   username: string;
   password: string;
@@ -111,6 +116,21 @@ export type LoginUserInput = {
 export type FindUserInput = {
   id?: number;
 };
+
+export type UpdateUserPasswordInput = {
+  password: String;
+};
+
+export type UpdateUserSettingsInput = {
+  username?: String;
+  name?: String;
+  profilePicture?: String;
+  gender?: String;
+  accountLanguage?: String;
+  isU18?: Boolean;
+};
+
+export type UpdateUserInput = UpdateUserPasswordInput & UpdateUserSettingsInput;
 
 export type CreateFlagInput = {
   reason: Reason;
