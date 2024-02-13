@@ -10,3 +10,9 @@ export enum Gender {
   MALE = "Male",
   FEMALE = "Female",
 }
+
+export enum AccountLanguage {
+  ARABIC = "Arabic",
+  ENGLISH = "English",
+  FRENCH = "French",
+}
