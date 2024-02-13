@@ -46,16 +46,16 @@ export const FLAG_OPTIONS: Array<FlagOptionsRadioGroup> = [
 
 export const GENDER_OPTIONS: Array<GenderOptions> = [
   {
+    gender: Gender.NONE,
+    content: "",
+  },
+  {
     gender: Gender.MALE,
     content: Gender.MALE,
   },
   {
     gender: Gender.FEMALE,
     content: Gender.FEMALE,
-  },
-  {
-    gender: Gender.NONE,
-    content: "",
   },
 ];
 
