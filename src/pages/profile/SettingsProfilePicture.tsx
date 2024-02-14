@@ -62,6 +62,13 @@ const SettingsProfilePicture = ({
     }
   };
 
+  /* If the user chooses a profile picture then removes it then chooses it again, the picture would still be 
+  stored in the input which will prevent the onChange from triggering and thus not showing the chosen image again,
+  therefore we need to clear the input */
+  const emptyValues = (e: any) => {
+    e.target.value = "";
+  };
+
   return (
     <VStack p={4} minW={"25vw"} spacing={4} alignSelf={"center"}>
       <input
@@ -70,6 +77,7 @@ const SettingsProfilePicture = ({
         ref={profilePictureChangeRef}
         style={{ display: "none" }}
         onChange={changeProfilePicture}
+        onClick={emptyValues}
       />
       <Avatar
         key={avatarKey}
