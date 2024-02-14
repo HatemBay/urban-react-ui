@@ -16,3 +16,8 @@ export enum AccountLanguage {
   ENGLISH = "English",
   FRENCH = "French",
 }
+
+export enum Country {
+  TN = "TN",
+  EG = "EG",
+}
