@@ -1,5 +1,6 @@
 import {
   Avatar,
+  AvatarBadge,
   Button,
   Divider,
   FormControl,
@@ -35,6 +36,7 @@ import {
 import { useMutation } from "urql";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUserMutation";
 import customToast from "../../utils/facades/customToast";
+import { IoIosClose } from "react-icons/io";
 
 type Props = {};
 
@@ -50,6 +52,7 @@ export const Settings = (props: Props) => {
   let [country, setCountry] = useState("");
 
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const [imageModified, setImageModified] = useState(false);
   const profilePictureChangeRef = useRef<any>();
 
   // const [ip, setIP] = useState("");
@@ -80,7 +83,7 @@ export const Settings = (props: Props) => {
       country: user.country?.name,
     },
     onSubmit: (values: any) => {
-      if (user.profilePicture !== "") {
+      if (imageModified) {
         values.profilePicture = user.profilePicture;
         updateUserInfo.dirty = true;
       }
@@ -103,6 +106,7 @@ export const Settings = (props: Props) => {
         updateUserInfo.resetForm({
           values: { ...updateUserInfo.values },
         });
+        setImageModified(false);
       }
     },
   });
@@ -137,6 +141,12 @@ export const Settings = (props: Props) => {
         reader.readAsDataURL(img);
       }
     }
+  };
+
+  const removeProfilePicture = (e: any) => {
+    e.stopPropagation();
+    setImageModified(true);
+    setUser({ ...user, profilePicture: "_" });
   };
 
   return (
@@ -204,11 +214,31 @@ export const Settings = (props: Props) => {
                 // cursor={"pointer"}
                 _hover={{ cursor: "pointer" }}
                 onClick={selectProfilePicture}
-              ></Avatar>
+              >
+                {user.profilePicture !== "_" && (
+                  <AvatarBadge
+                    title="remove profile picture"
+                    borderWidth={"5px"}
+                    boxSize="0.7em"
+                    bg="papayawhip"
+                    textColor={"black"}
+                    _hover={{
+                      filter: "brightness(1.3)",
+                      textColor: "gray.700",
+                    }}
+                    onClick={removeProfilePicture}
+                  >
+                    <IoIosClose />
+                  </AvatarBadge>
+                )}
+              </Avatar>
+
               {/* <img src={Base64.atob(image)} alt="" /> */}
-              <Text fontSize={"2xl"} fontWeight={"bold"}>
-                {userInfo.username}
-              </Text>
+              <HStack>
+                <Text fontSize={"2xl"} fontWeight={"bold"}>
+                  {userInfo.username}
+                </Text>
+              </HStack>
             </VStack>
             <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
               {/* <FormControl>
