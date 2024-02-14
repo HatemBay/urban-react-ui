@@ -49,8 +49,7 @@ export const Settings = (props: Props) => {
   //TODO: change with country from user data
   let [user, setUser] = useState<User>(userInfo);
   let [country, setCountry] = useState("");
-  let [image, setImage] = useState(user.profilePicture || "");
-
+  
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION);
   const profilePictureChangeRef = useRef<any>();
 
