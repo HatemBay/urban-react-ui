@@ -2,11 +2,12 @@ import { GlobalColors } from "../utils/interfaces/globalColors";
 import { DialectCode, FlagElement } from "../components/FlagElement";
 import {
   AccountLanguageOptions,
+  CountryOptions,
   Dialect,
   FlagOptionsRadioGroup,
   GenderOptions,
 } from "./types";
-import { AccountLanguage, Gender, Reason } from "./enums";
+import { AccountLanguage, Gender, Reason, Country } from "./enums";
 
 // TODO: rename the colors
 export const SHARED_COLORS: GlobalColors = {
@@ -19,14 +20,21 @@ export const SHARED_COLORS: GlobalColors = {
 };
 
 // TODO: complete with all arabic dialects
-export const dialectCodesArray = ["TN", "EG"] as const;
+export const COUNTRY_OPTIONS: Record<Country, CountryOptions> = {
+  TN: { country: "Tunisia", dialect: "Tunisian" },
+  EG: { country: "Egypt", dialect: "Egyptian" },
+};
+
+const dialectCodesList = Object.values(Country);
+
+export const dialectCodesArray = [...dialectCodesList] as const;
 
 const dialectCodes: DialectCode[] = dialectCodesArray.flatMap((code) => [code]);
 
 export const DIALECT_ITEMS: Array<Dialect> = dialectCodes.map((code) => ({
   label: code,
-  dialect: `${code} Dialect`, // TODO: add from db after dialects table is created
-  country: `${code} Country`, // TODO: add from db after dialects table is created
+  dialect: COUNTRY_OPTIONS[code].dialect, // TODO: add from db after dialects table is created
+  country: COUNTRY_OPTIONS[code].country, // TODO: add from db after dialects table is created
   flag: FlagElement(code),
 }));
 

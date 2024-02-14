@@ -5,7 +5,7 @@ import { dialectCodesArray } from "../data/constants";
 export type DialectCode = (typeof dialectCodesArray)[number];
 
 export const FlagElement = (dialectCode: DialectCode) => {
-  const flagComponent = Flags[dialectCode];
+  const flagComponent = Flags[dialectCode as keyof typeof Flags];
   if (!flagComponent) {
     console.error(`Flag component for ${dialectCode} not found.`);
     return null;
