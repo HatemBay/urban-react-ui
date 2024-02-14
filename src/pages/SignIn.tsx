@@ -99,7 +99,6 @@ const SignIn = (props: Props) => {
     const { accessToken } = res.data.login;
     console.log("AccessToken");
     console.log(accessToken);
-    
 
     return setTimeout(async () => {
       await setAuthTokens(accessToken);
@@ -107,7 +106,7 @@ const SignIn = (props: Props) => {
       await dispatch(setUserInfoAsync(getUserInfo()) as any);
     });
 
-    // window.location.reload();  
+    // window.location.reload();
     // return redirect("/");
   };
 

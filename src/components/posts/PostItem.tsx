@@ -220,7 +220,14 @@ const PostItem = ({ post }: Props) => {
       <HStack spacing={10} px={5} py={2} w={"100%"} minH={"xs"}>
         {isMd && (
           <Box>
-            <Avatar size={{ base: "md", md: "lg" }} />
+            <Avatar
+              name={post.author.username}
+              src={
+                `data:image/jpg;base64,${post.author.profilePicture}` ||
+                userInfo.googleProfile?.picture
+              }
+              size={{ base: "md", md: "lg" }}
+            />
           </Box>
         )}
         {/* // TODO: extract repetitive components / Extract to a reusable component */}
@@ -419,7 +426,14 @@ const PostItem = ({ post }: Props) => {
                 position={"absolute"}
                 css={{ top: "1px" }}
               >
-                <Avatar size={{ base: "sm" }} />
+                <Avatar
+                  size={{ base: "sm" }}
+                  name={post.author.username}
+                  src={
+                    `data:image/jpg;base64,${post.author.profilePicture}` ||
+                    userInfo.googleProfile?.picture
+                  }
+                />
               </Box>
             )}
             <Text mb={2} ml={10} display={"inline"} pt={2}>
