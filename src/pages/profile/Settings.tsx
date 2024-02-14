@@ -1,6 +1,4 @@
 import {
-  Avatar,
-  AvatarBadge,
   Button,
   Divider,
   FormControl,
@@ -16,7 +14,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import useLightDark from "../../hooks/useLightDark";
 import {
   ACCOUNT_LANGUAGE_OPTIONS,
@@ -36,7 +34,7 @@ import {
 import { useMutation } from "urql";
 import { UPDATE_USER_MUTATION } from "../../graphql/mutations/updateUserMutation";
 import customToast from "../../utils/facades/customToast";
-import { IoIosClose } from "react-icons/io";
+import SettingsProfilePicture from "./SettingsProfilePicture";
 
 type Props = {};
 
@@ -50,10 +48,8 @@ export const Settings = (props: Props) => {
   //TODO: change with country from user data
   let [user, setUser] = useState<User>(userInfo);
   let [country, setCountry] = useState("");
-
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [imageModified, setImageModified] = useState(false);
-  const profilePictureChangeRef = useRef<any>();
 
   // const [ip, setIP] = useState("");
 
@@ -82,7 +78,7 @@ export const Settings = (props: Props) => {
       accountLanguage: user.accountLanguage || "",
       country: user.country?.name,
     },
-    onSubmit: (values: any) => {
+    onSubmit: async (values: any) => {
       if (imageModified) {
         values.profilePicture = user.profilePicture;
         updateUserInfo.dirty = true;
@@ -125,30 +121,6 @@ export const Settings = (props: Props) => {
     setCountry(e.target.value);
   };
 
-  const selectProfilePicture = (e: any) => {
-    profilePictureChangeRef.current.click();
-  };
-
-  const changeProfilePicture = (e: any) => {
-    if (e.target.files[0] && e.target.files[0] !== null) {
-      const img = e.target.files[0];
-      if (img) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = (reader.result as string).split(",")[1];
-          setUser({ ...user, profilePicture: base64String });
-        };
-        reader.readAsDataURL(img);
-      }
-    }
-  };
-
-  const removeProfilePicture = (e: any) => {
-    e.stopPropagation();
-    setImageModified(true);
-    setUser({ ...user, profilePicture: "_" });
-  };
-
   return (
     <Grid
       templateColumns="repeat(8, 1fr)"
@@ -187,59 +159,15 @@ export const Settings = (props: Props) => {
             align={"flex-start"}
             mb={4}
           >
-            <VStack p={4} minW={"25vw"} spacing={4} alignSelf={"center"}>
-              <input
-                type="file"
-                accept="image/*"
-                ref={profilePictureChangeRef}
-                style={{ display: "none" }}
-                onChange={changeProfilePicture}
-              />
-              <Avatar
-                name={userInfo.username}
-                src={
-                  `data:image/jpg;base64,${user.profilePicture}` ||
-                  userInfo.googleProfile?.picture
-                }
-                // bg={image || userInfo.googleProfile?.picture}
-                // src="https://bit.ly/dan-abramov"
-                // w={"4em"}
-                // h={"4em"}
-                title="profile picture"
-                size={"2xl"}
-                // boxSize={"10em"}
-                // fontWeight={"normal"}
-                // __css={{ color: "red" }}
-                // fontSize={"10em"}
-                // cursor={"pointer"}
-                _hover={{ cursor: "pointer" }}
-                onClick={selectProfilePicture}
-              >
-                {user.profilePicture !== "_" && (
-                  <AvatarBadge
-                    title="remove profile picture"
-                    borderWidth={"5px"}
-                    boxSize="0.7em"
-                    bg="papayawhip"
-                    textColor={"black"}
-                    _hover={{
-                      filter: "brightness(1.3)",
-                      textColor: "gray.700",
-                    }}
-                    onClick={removeProfilePicture}
-                  >
-                    <IoIosClose />
-                  </AvatarBadge>
-                )}
-              </Avatar>
-
-              {/* <img src={Base64.atob(image)} alt="" /> */}
-              <HStack>
-                <Text fontSize={"2xl"} fontWeight={"bold"}>
-                  {userInfo.username}
-                </Text>
-              </HStack>
-            </VStack>
+            <SettingsProfilePicture
+              user={user}
+              setUser={setUser}
+              setImageModified={setImageModified}
+              name={userInfo.username}
+              title="profile picture"
+              size={"2xl"}
+              profilePicture={user.profilePicture}
+            ></SettingsProfilePicture>
             <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
               {/* <FormControl>
               <FormLabel htmlFor="oldPassword">Old Password</FormLabel>
