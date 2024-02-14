@@ -103,6 +103,11 @@ export type GenderOptions = {
   content: string;
 };
 
+export type CountryOptions = {
+  country: string;
+  dialect: string;
+};
+
 export type AccountLanguageOptions = {
   language: AccountLanguage;
   abbreviation: string;
