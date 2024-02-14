@@ -49,7 +49,7 @@ export const Settings = (props: Props) => {
   //TODO: change with country from user data
   let [user, setUser] = useState<User>(userInfo);
   let [country, setCountry] = useState("");
-  let [image, setImage] = useState("");
+  let [image, setImage] = useState(user.profilePicture || "");
 
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION);
   const profilePictureChangeRef = useRef<any>();
@@ -82,10 +82,13 @@ export const Settings = (props: Props) => {
       country: user.country?.name,
     },
     onSubmit: (values: any) => {
+      if (user.profilePicture !== "") {
+        values.profilePicture = user.profilePicture;
+        updateUserInfo.dirty = true;
+      }
       if (updateUserInfo.dirty) {
         const updateUserInput: UpdateUserSettingsInput = {
-          profilePicture:
-            values.profilePicture || values.googleProfile?.picture,
+          profilePicture: user.profilePicture,
           gender: values.gender || "",
           accountLanguage: values.accountLanguage || "",
         };
@@ -127,25 +130,14 @@ export const Settings = (props: Props) => {
   const changeProfilePicture = (e: any) => {
     if (e.target.files[0] && e.target.files[0] !== null) {
       const img = e.target.files[0];
-      // const url = URL.createObjectURL(img);
-      const url = Base64.btoa(img);
       if (img) {
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64String = (reader.result as string).split(",")[1];
-          setImage(base64String);
+          setUser({ ...user, profilePicture: base64String });
         };
         reader.readAsDataURL(img);
       }
-
-      console.log("image");
-      console.log(img);
-      console.log("encoded image");
-      console.log(url);
-
-      setImage(url);
-      console.log("sjup");
-      console.log(url);
     }
   };
 
@@ -190,6 +182,7 @@ export const Settings = (props: Props) => {
             <VStack p={4} minW={"25vw"} spacing={4} alignSelf={"center"}>
               <input
                 type="file"
+                accept="image/*"
                 ref={profilePictureChangeRef}
                 style={{ display: "none" }}
                 onChange={changeProfilePicture}
@@ -197,7 +190,7 @@ export const Settings = (props: Props) => {
               <Avatar
                 name={userInfo.username}
                 src={
-                  `data:image/png;base64,${image}` ||
+                  `data:image/jpg;base64,${user.profilePicture}` ||
                   userInfo.googleProfile?.picture
                 }
                 // bg={image || userInfo.googleProfile?.picture}
@@ -214,7 +207,7 @@ export const Settings = (props: Props) => {
                 _hover={{ cursor: "pointer" }}
                 onClick={selectProfilePicture}
               ></Avatar>
-              <img src={Base64.atob(image)} alt="" />
+              {/* <img src={Base64.atob(image)} alt="" /> */}
               <Text fontSize={"2xl"} fontWeight={"bold"}>
                 {userInfo.username}
               </Text>
@@ -292,14 +285,16 @@ export const Settings = (props: Props) => {
                       w={{ base: "80%", md: "100%" }}
                       _hover={{ cursor: "pointer" }}
                     >
-                      {DIALECT_ITEMS.map((item) => (
-                        <option key={item.label} value={item.dialect}>
-                          <HStack>
-                            {item.flag}
-                            <Text>{item.dialect}</Text>
-                          </HStack>
-                        </option>
-                      ))}
+                      {DIALECT_ITEMS.map((item) => {
+                        return (
+                          <option key={item.label} value={item.dialect}>
+                            <HStack>
+                              {item.flag}
+                              <Text>{item.country}</Text>
+                            </HStack>
+                          </option>
+                        );
+                      })}
                     </Select>
                   </HStack>
                 </HStack>
