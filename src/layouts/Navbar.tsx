@@ -148,8 +148,7 @@ export default function Navbar() {
   const userInfo: UserInfo | null = getUserInfo();
 
   useEffect(() => {
-    console.log("changed avatar");
-
+    // we need to update the avatar key when the user changes to prevent rerendering bugs
     setAvatarKey((prevKey) => prevKey + 1);
   }, [userInfo?.profilePicture]);
 
