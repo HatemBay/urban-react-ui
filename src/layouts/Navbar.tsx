@@ -26,9 +26,8 @@ import {
   Avatar,
   HStack,
   Tooltip,
-  useToast,
   createStandaloneToast,
-  textDecoration,
+  AvatarBadge,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -41,7 +40,6 @@ import { IoIosShuffle } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
 import {
-  Link,
   Outlet,
   Link as ReactRouterLink,
   redirect,
@@ -49,12 +47,7 @@ import {
 } from "react-router-dom";
 import { Link as ChakraLink, useColorModeValue } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  forceRerender,
-  setFilter,
-  setPage,
-  setRandomize,
-} from "../redux/reducers/pageSlice";
+import { setFilter, setPage, setRandomize } from "../redux/reducers/pageSlice";
 import { useEffect, useRef, useState } from "react";
 import { RootState } from "../redux/store";
 import Layer from "./Layer";
@@ -66,18 +59,11 @@ import {
   getUserInfo,
   setUserInfo,
 } from "../utils/authUtils";
-import {
-  AuthInfo,
-  FindUserInput,
-  PaginatedPosts,
-  User,
-  UserInfo,
-} from "../data/types";
+import { FindUserInput, PaginatedPosts, User, UserInfo } from "../data/types";
 import { useQuery } from "urql";
 import { POSTS_QUERY } from "../graphql/queries/postsQuery";
-import { USERS_QUERY } from "../graphql/queries/usersQuery";
 import { FIND_USER_QUERY } from "../graphql/queries/findUserQuery";
-import { setUserInfoAsync } from "../redux/reducers/authSlice";
+import { IoIosArrowDown } from "react-icons/io";
 
 const handleLogout = (e: any) => {
   clearToken();
@@ -117,7 +103,7 @@ const USER_DROPDOWN_ELEMENTS: Array<UserDropDownItem> = [
 ];
 
 export default function Navbar() {
-  const { isOpen, onClose, onToggle } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure();
   const navbarColor = "#1B2936";
   const navbarItemColor = useColorModeValue("white", "white");
   const ButtonPrimary = useLightDark(SHARED_COLORS.ButtonPrimary);
@@ -125,7 +111,8 @@ export default function Navbar() {
   const SecondaryBgColor = useLightDark(SHARED_COLORS.SecondaryBgColor);
 
   const [field, setOrderByField] = useState("createdAt");
-  let [take, setTake] = useState(5);
+  const [take, setTake] = useState(5);
+  const [avatarKey, setAvatarKey] = useState(0);
 
   const { currPage: page } = useSelector((state: RootState) => state.page);
   let { filter } = useSelector((state: RootState) => state.page);
@@ -160,6 +147,12 @@ export default function Navbar() {
   // const { userInfo } = useSelector((state: RootState) => state.auth);
   const userInfo: UserInfo | null = getUserInfo();
 
+  useEffect(() => {
+    console.log("changed avatar");
+
+    setAvatarKey((prevKey) => prevKey + 1);
+  }, [userInfo?.profilePicture]);
+
   const findUserInput: FindUserInput = {
     id: userInfo?.sub,
   };
@@ -169,10 +162,9 @@ export default function Navbar() {
     variables: { findUserInput },
   });
 
-  console.log(fetching);
-
   const user: User = data?.user;
   setUserInfo(user);
+  console.log("userinfo");
   console.log(data);
 
   const handleRandomize = () => {
@@ -390,9 +382,36 @@ export default function Navbar() {
                               borderRadius={"md"}
                             >
                               <Avatar
-                                as={Button}
+                                key={avatarKey}
+                                name={userInfo?.username}
+                                src={
+                                  `${userInfo?.profilePicture}` &&
+                                  `${userInfo?.profilePicture}` !== ""
+                                    ? `data:image/png;base64,${userInfo?.profilePicture}`
+                                    : userInfo?.googleProfile?.picture
+                                }
+                                // as={Button}
+                                // borderRadius={"full"}
+                                cursor={"pointer"}
+                                _hover={{
+                                  filter: "brightness(1.3)",
+                                }}
                                 display={{ base: "none", md: "inline-flex" }}
-                              />
+                              >
+                                <AvatarBadge
+                                  mr={1}
+                                  mb={1}
+                                  borderWidth={"1px"}
+                                  boxSize="0.7em"
+                                  bg="gray.800"
+                                  textColor={"gray.600"}
+                                  _hover={{
+                                    textColor: "gray.500",
+                                  }}
+                                >
+                                  <IoIosArrowDown />
+                                </AvatarBadge>
+                              </Avatar>
                             </Tooltip>
                           </Box>
                         </PopoverTrigger>
@@ -415,7 +434,14 @@ export default function Navbar() {
                             }}
                           >
                             <HStack gap={5}>
-                              <Avatar size={"sm"}></Avatar>
+                              <Avatar
+                                size={"sm"}
+                                name={userInfo?.username}
+                                src={
+                                  `data:image/jpg;base64,${userInfo?.profilePicture}` ||
+                                  userInfo?.googleProfile?.picture
+                                }
+                              ></Avatar>
                               <Text fontWeight={"bold"} fontSize={"lg"}>
                                 {userInfo?.username}
                               </Text>
