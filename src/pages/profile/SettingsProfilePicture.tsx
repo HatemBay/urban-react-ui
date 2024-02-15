@@ -2,14 +2,13 @@ import { Avatar, AvatarBadge, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { User } from "../../data/types";
 import { IoIosClose } from "react-icons/io";
+import imageCompression from "browser-image-compression";
 interface Props {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setImageModified: React.Dispatch<React.SetStateAction<boolean>>;
-  name: string;
   title: string;
   size: string;
-  profilePicture: string | undefined;
 }
 
 /**
@@ -28,18 +27,19 @@ const SettingsProfilePicture = ({
   user,
   setUser,
   setImageModified,
-  name,
   title,
   size,
-  profilePicture,
 }: Props): JSX.Element => {
   const [avatarKey, setAvatarKey] = useState(0);
   const profilePictureChangeRef = useRef<any>();
 
+  console.log("zap");
+  console.log(user);
+
   const removeProfilePicture = (e: any) => {
     e.stopPropagation();
     setImageModified(true);
-    setUser({ ...user, profilePicture: "_" });
+    setUser({ ...user, profilePicture: "" });
     setAvatarKey((prevKey) => prevKey + 1);
   };
 
@@ -47,17 +47,31 @@ const SettingsProfilePicture = ({
     profilePictureChangeRef.current.click();
   };
 
-  const changeProfilePicture = (e: any) => {
+  const changeProfilePicture = async (e: any) => {
     if (e.target.files[0] && e.target.files[0] !== null) {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
       const img = e.target.files[0];
       if (img) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = (reader.result as string).split(",")[1];
-          setUser({ ...user, profilePicture: base64String });
-          setImageModified(true);
-        };
-        reader.readAsDataURL(img);
+        try {
+          const compressedFile = await imageCompression(img, options);
+          let base64String = await imageCompression.getDataUrlFromFile(
+            compressedFile
+          );
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            base64String = base64String.split(",")[1];
+
+            setUser({ ...user, profilePicture: base64String });
+            setImageModified(true);
+          };
+          reader.readAsDataURL(compressedFile);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -81,11 +95,11 @@ const SettingsProfilePicture = ({
       />
       <Avatar
         key={avatarKey}
-        name={name}
+        name={user.username}
         src={
-          `${user?.profilePicture}` && `${user?.profilePicture}` !== ""
-            ? `data:image/png;base64,${user?.profilePicture}`
-            : user?.googleProfile?.picture
+          `${user.profilePicture}` && `${user.profilePicture}` !== ""
+            ? `data:image/png;base64,${user.profilePicture}`
+            : user.googleProfile?.picture
         }
         title={title}
         size={size}
@@ -94,23 +108,24 @@ const SettingsProfilePicture = ({
         }}
         onClick={selectProfilePicture}
       >
-        {profilePicture !== "_" && (
-          <AvatarBadge
-            mr={2}
-            title="remove profile picture"
-            borderWidth={"5px"}
-            boxSize="0.7em"
-            bg="papayawhip"
-            textColor={"black"}
-            _hover={{
-              filter: "brightness(1.3)",
-              textColor: "gray.700",
-            }}
-            onClick={removeProfilePicture}
-          >
-            <IoIosClose />
-          </AvatarBadge>
-        )}
+        {user.profilePicture !== "" &&
+          !(user?.googleProfile === null && user.profilePicture === null) && (
+            <AvatarBadge
+              mr={2}
+              title="remove profile picture"
+              borderWidth={"5px"}
+              boxSize="0.7em"
+              bg="papayawhip"
+              textColor={"black"}
+              _hover={{
+                filter: "brightness(1.3)",
+                textColor: "gray.700",
+              }}
+              onClick={removeProfilePicture}
+            >
+              <IoIosClose />
+            </AvatarBadge>
+          )}
       </Avatar>
     </VStack>
   );
