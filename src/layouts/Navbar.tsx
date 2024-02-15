@@ -519,8 +519,9 @@ export default function Navbar() {
                   ></Search2Icon>
                 </InputLeftElement>
                 <Input
-                  bg={"white"}
+                  // bg={"white"}
                   color={"gray.900"}
+                  textColor={"gray.100"}
                   placeholder="Search"
                 ></Input>
                 <InputRightElement>
