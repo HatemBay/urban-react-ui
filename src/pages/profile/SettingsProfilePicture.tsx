@@ -33,13 +33,10 @@ const SettingsProfilePicture = ({
   const [avatarKey, setAvatarKey] = useState(0);
   const profilePictureChangeRef = useRef<any>();
 
-  console.log("zap");
-  console.log(user);
-
   const removeProfilePicture = (e: any) => {
     e.stopPropagation();
     setImageModified(true);
-    setUser({ ...user, profilePicture: "" });
+    setUser({ ...user, profilePicture: "_" });
     setAvatarKey((prevKey) => prevKey + 1);
   };
 
@@ -108,7 +105,7 @@ const SettingsProfilePicture = ({
         }}
         onClick={selectProfilePicture}
       >
-        {user.profilePicture !== "" &&
+        {user.profilePicture !== "_" &&
           !(user?.googleProfile === null && user.profilePicture === null) && (
             <AvatarBadge
               mr={2}
