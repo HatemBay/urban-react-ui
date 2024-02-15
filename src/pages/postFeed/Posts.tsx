@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Select, VStack } from "@chakra-ui/react";
 import PostItem from "../../components/posts/PostItem";
-import { Post } from "../../data/types";
+import { Post, User } from "../../data/types";
 import PageNavigator from "../../components/posts/PageNavigator";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
@@ -17,13 +17,8 @@ export const Posts = (props: Props) => {
   let { filter } = useSelector((state: RootState) => state.page);
 
   // TODO: set hooks instead of context
-  const [PostsQueryResult, setOrderByField, take, setTake, handleRandomize]: [
-    any,
-    any,
-    any,
-    any,
-    any
-  ] = useOutletContext();
+  const { PostsQueryResult, setOrderByField, take, setTake, handleRandomize } =
+    useOutletContext<any>();
 
   const filterActions: { [key: string]: () => void } = {
     "#": () => {

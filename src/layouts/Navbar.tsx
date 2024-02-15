@@ -64,6 +64,7 @@ import { useQuery } from "urql";
 import { POSTS_QUERY } from "../graphql/queries/postsQuery";
 import { FIND_USER_QUERY } from "../graphql/queries/findUserQuery";
 import { IoIosArrowDown } from "react-icons/io";
+import { setUserInfoAsync } from "../redux/reducers/authSlice";
 
 const handleLogout = (e: any) => {
   clearToken();
@@ -146,6 +147,8 @@ export default function Navbar() {
 
   // const { userInfo } = useSelector((state: RootState) => state.auth);
   const userInfo: UserInfo | null = getUserInfo();
+  console.log("local");
+  console.log(localStorage.getItem("USER_INFO"));
 
   useEffect(() => {
     // we need to update the avatar key when the user changes to prevent rerendering bugs
@@ -382,12 +385,12 @@ export default function Navbar() {
                             >
                               <Avatar
                                 key={avatarKey}
-                                name={userInfo?.username}
+                                name={user?.username}
                                 src={
-                                  `${userInfo?.profilePicture}` &&
-                                  `${userInfo?.profilePicture}` !== ""
-                                    ? `data:image/png;base64,${userInfo?.profilePicture}`
-                                    : userInfo?.googleProfile?.picture
+                                  `${user?.profilePicture}` &&
+                                  `${user?.profilePicture}` !== ""
+                                    ? `data:image/png;base64,${user?.profilePicture}`
+                                    : user?.googleProfile?.picture
                                 }
                                 // as={Button}
                                 // borderRadius={"full"}
@@ -552,13 +555,13 @@ export default function Navbar() {
       </Box>
       <Layer>
         <Outlet
-          context={[
+          context={{
             PostsQueryResult,
             setOrderByField,
             take,
             setTake,
             handleRandomize,
-          ]}
+          }}
         />
       </Layer>
     </>
