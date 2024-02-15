@@ -55,6 +55,7 @@ export type User = {
   country?: Country;
   gender?: string;
   accountLanguage?: string;
+  dateOfBirth?: string | Date;
   role?: string;
   isU18?: boolean;
   profilePicture?: string;
@@ -132,6 +133,7 @@ export type UpdateUserSettingsInput = {
   profilePicture?: String;
   gender?: String;
   accountLanguage?: String;
+  dateOfBirth?: String | Date;
   isU18?: Boolean;
 };
 
