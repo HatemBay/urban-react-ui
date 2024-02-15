@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Divider,
   FormControl,
@@ -43,38 +44,28 @@ export const Settings = (props: Props) => {
   const TextColor = useLightDark(SHARED_COLORS.TextColor);
   const userInfo: UserInfo = getUserInfo();
 
+  console.log("SettingsUserInfo");
+  console.log(userInfo);
+
   const toast = useToast();
 
-  //TODO: change with country from user data
   let [user, setUser] = useState<User>(userInfo);
   let [country, setCountry] = useState("");
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION);
   const [imageModified, setImageModified] = useState(false);
+  const [dateModified, setDateModified] = useState(false);
 
-  // const [ip, setIP] = useState("");
-
-  // const getData = async () => {
-  //   const res = await axios.get("https://api.ipify.org/?format=json");
-  //   console.log(res.data);
-  //   setIP(res.data.ip);
-  // };
-
-  // useEffect(() => {
-  //   //passing getData method to the lifecycle method
-  //   getData();
-  // }, []);
+  const today = new Date().toISOString().split("T")[0];
 
   const findUserInput: FindUserInput = {
     id: userInfo?.id,
   };
 
-  // let res: ExtractedType = {};
-
   const updateUserInfo = useFormik({
     initialValues: {
       profilePicture: user.profilePicture || user.googleProfile?.picture,
       gender: user.gender || "",
-      dateOfBirth: "",
+      dateOfBirth: user.dateOfBirth,
       accountLanguage: user.accountLanguage || "",
       country: user.country?.name,
     },
@@ -83,10 +74,18 @@ export const Settings = (props: Props) => {
         values.profilePicture = user.profilePicture;
         updateUserInfo.dirty = true;
       }
+      if (dateModified) {
+        values.dateOfBirth = user.dateOfBirth;
+        updateUserInfo.dirty = true;
+      }
       if (updateUserInfo.dirty) {
+        console.log("BIRTHDAY");
+        console.log(typeof user.dateOfBirth);
+
         const updateUserInput: UpdateUserSettingsInput = {
           profilePicture: user.profilePicture,
           gender: values.gender || "",
+          dateOfBirth: user.dateOfBirth,
           accountLanguage: values.accountLanguage || "",
         };
         setUser({ ...user, ...values });
@@ -119,6 +118,14 @@ export const Settings = (props: Props) => {
 
   const changeCountry = (e: any) => {
     setCountry(e.target.value);
+  };
+
+  const selectDateOfBirth = (e: any) => {
+    console.log("BDATE");
+    console.log();
+
+    setUser({ ...user, dateOfBirth: new Date(e.target.value) });
+    setDateModified(true);
   };
 
   return (
@@ -163,24 +170,10 @@ export const Settings = (props: Props) => {
               user={user}
               setUser={setUser}
               setImageModified={setImageModified}
-              name={userInfo.username}
               title="profile picture"
               size={"2xl"}
-              profilePicture={user.profilePicture}
             ></SettingsProfilePicture>
             <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
-              {/* <FormControl>
-              <FormLabel htmlFor="oldPassword">Old Password</FormLabel>
-              <Input
-                id="oldPassword"
-                name="oldPassword"
-                type="password"
-                variant="filled"
-                onChange={resetPassword.handleChange}
-                value={resetPassword.values.oldPassword}
-              />
-            </FormControl> */}
-
               <VStack alignItems={"flex-start"}>
                 <Text> User Info </Text>
                 <HStack spacing={5}>
@@ -205,7 +198,20 @@ export const Settings = (props: Props) => {
                   </HStack>
                   <HStack>
                     <Text>Date of Birth: </Text>
-                    <Text fontWeight={"bold"}> 20/05/1997 </Text>
+                    <Input
+                      id="dateOfBirth"
+                      name="dateOfBirth"
+                      placeholder="Select Date and Time"
+                      size="md"
+                      type="date"
+                      value={
+                        new Date(user.dateOfBirth as string)
+                          ?.toISOString()
+                          .split("T")[0]
+                      }
+                      max={today}
+                      onChange={selectDateOfBirth}
+                    />
                   </HStack>
                 </HStack>
               </VStack>
@@ -254,15 +260,23 @@ export const Settings = (props: Props) => {
                     </Select>
                   </HStack>
                 </HStack>
-                <Button
+                <Box
                   as="button"
                   type="submit"
-                  colorScheme="purple"
-                  w={"s"}
-                  disabled={true}
+                  bg={"purple.200"}
+                  color={"black"}
+                  fontWeight={"bold"}
+                  p={2}
+                  px={4}
+                  borderRadius={"lg"}
+                  _hover={{ bg: "purple.300" }}
+                  disabled={
+                    !(imageModified || dateModified || updateUserInfo.dirty)
+                  }
+                  _disabled={{ opacity: "0.5", cursor: "auto" }}
                 >
                   Save
-                </Button>
+                </Box>
               </VStack>
             </VStack>
           </HStack>
@@ -275,9 +289,7 @@ export const Settings = (props: Props) => {
           >
             Password Reset
           </Heading>
-          <Divider
-          // borderColor={TextColor}
-          ></Divider>
+          <Divider></Divider>
         </HStack>
         <VStack
           bg={PrimaryBgColor}
