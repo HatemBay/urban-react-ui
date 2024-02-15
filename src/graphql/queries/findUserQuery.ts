@@ -10,6 +10,7 @@ export const FIND_USER_QUERY = gql`
       gender
       accountLanguage
       emailVerified
+      dateOfBirth
       name
       isU18
       countryId
