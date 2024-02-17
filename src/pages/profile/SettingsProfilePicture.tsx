@@ -1,35 +1,43 @@
-import { Avatar, AvatarBadge, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarBadgeProps,
+  AvatarProps,
+  VStack,
+} from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { User } from "../../data/types";
 import { IoIosClose } from "react-icons/io";
 import imageCompression from "browser-image-compression";
-interface Props {
+
+interface ISettingsProfilePictureProps extends AvatarProps {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setImageModified: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  size: string;
+  avatarBadgeProps?: AvatarBadgeProps; // Properties for AvatarBadge
 }
 
 /**
- * Renders a profile picture component with the ability to change and remove the profile picture.
+ * SettingsProfilePicture component for managing user profile pictures in settings.
  *
- * @param {Props} user - The user object
- * @param {function} setUser - The function to update the user object
- * @param {function} setImageModified - The function to update the image modification status
- * @param {string} name - The name of the user
- * @param {string} title - The title of the user
- * @param {string} size - The size of the profile picture
- * @param {string} profilePicture - The profile picture of the user
- * @return {JSX.Element} The profile picture component
+ * @component
+ *
+ * @param {Object} props - The component's props.
+ * @param {User} props.user - The user object.
+ * @param {React.Dispatch<React.SetStateAction<User>>} props.setUser - The function to set the user state.
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} props.setImageModified - The function to set the image modification state.
+ * @param {AvatarBadgeProps} [props.avatarBadgeProps] - Properties for AvatarBadge.
+ * @param {AvatarProps} props.avatarProps - Properties for Avatar (without prefix).
+ *
+ * @returns {JSX.Element} The rendered SettingsProfilePicture component.
  */
 const SettingsProfilePicture = ({
   user,
   setUser,
   setImageModified,
-  title,
-  size,
-}: Props): JSX.Element => {
+  avatarBadgeProps,
+  ...avatarProps
+}: ISettingsProfilePictureProps): React.JSX.Element => {
   const [avatarKey, setAvatarKey] = useState(0);
   const profilePictureChangeRef = useRef<any>();
 
@@ -92,18 +100,19 @@ const SettingsProfilePicture = ({
       />
       <Avatar
         key={avatarKey}
+        title="profile picture"
+        size={"2xl"}
         name={user.username}
         src={
           `${user.profilePicture}` && `${user.profilePicture}` !== ""
             ? `data:image/png;base64,${user.profilePicture}`
             : user.googleProfile?.picture
         }
-        title={title}
-        size={size}
         _hover={{
           cursor: "pointer",
         }}
         onClick={selectProfilePicture}
+        {...avatarProps}
       >
         {user.profilePicture !== "_" &&
           !(user?.googleProfile === null && user.profilePicture === null) && (
@@ -119,6 +128,7 @@ const SettingsProfilePicture = ({
                 textColor: "gray.700",
               }}
               onClick={removeProfilePicture}
+              {...avatarBadgeProps}
             >
               <IoIosClose />
             </AvatarBadge>

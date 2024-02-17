@@ -170,8 +170,6 @@ export const Settings = (props: Props) => {
               user={user}
               setUser={setUser}
               setImageModified={setImageModified}
-              title="profile picture"
-              size={"2xl"}
             ></SettingsProfilePicture>
             <VStack align={"flex-start"} spacing={5} p={4} minW={"60%"}>
               <VStack alignItems={"flex-start"}>
